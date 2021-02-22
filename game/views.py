@@ -26,11 +26,10 @@ def login(request):
 					auth_login(request, user)
 					return redirect(reverse('home'))
 				else:
-					print('password error')
 					form.add_error('password', "Password incorrect")
 					return render(request, 'login.html', {'form':form})
 			else:
-				form.add_error('username', "MTurk ID not found")
+				form.add_error('username', "Username does not exist")
 				return render(request, 'login.html', {'form':form})
 	else:
 		form = LoginForm()
@@ -80,16 +79,6 @@ def consent(request):
 			user.doneConsent = datetime.now()
 			user.save()
 			return redirect('home')
-		else:
-			print('invalid')
-			if User.objects.filter(username=username).exists():
-				print('exists')
-				form.add_error('username', "Username already exists")
-				return render(request, 'consent.html', {'form':form})
-			elif password1 != password2:
-				print('no match')
-				form.add_error('password1', "Passwords do not match")
-				return render(request, 'consent.html', {'form':form})
 	else:
 		form = CreateForm()
 	return render(request, 'consent.html', {'form': form})

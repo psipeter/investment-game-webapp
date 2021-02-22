@@ -34,10 +34,15 @@
 				</table>
 				<input hidden id="submit" type="submit" />
 			</form>
-			{% if form.errors.username %}
-				<p class="error">Username already exists</p>
-			{% elif form.errors.password1 %}
-				<p class="error">Passwords do not match</p>
+			{% if form.errors %}
+				{% for field in form %}
+					{% for error in field.errors %}
+						<p class="error">{{ error|escape }}</p>
+					{% endfor %}
+				{% endfor %}
+				{% for error in form.non_field_errors %}
+					<p class="error">{{ error|escape }}</p>
+				{% endfor %}
 			{% endif %}
 			<div id="submit-wrapper">
 				<button id=submit-button> <label for="submit" tabindex="0">Sign and Register</label></button>

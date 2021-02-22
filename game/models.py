@@ -17,7 +17,6 @@ import mpld3
 import json
 
 from .RL.agents import *
-from .RL.experiments import *
 from .parameters import *
 
 
