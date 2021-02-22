@@ -16,8 +16,8 @@ import seaborn as sns
 import mpld3
 import json
 
-from .agents import *
-from .experiments import *
+from .RL.agents import *
+from .RL.experiments import *
 from .parameters import *
 
 
