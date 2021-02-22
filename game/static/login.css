@@ -1,0 +1,76 @@
+#body-wrapper {
+	display: flex-box;
+	background: var(--myGray);
+	width: 70%;
+	margin-top: 5%;
+	margin-left: 15%;
+	border: solid black;
+	border-radius: 30px;
+}
+
+form {
+	display: flex;
+	justify-content: center;
+}
+
+input, button {
+	font-size: inherit;
+	font-family: inherit;
+}
+
+.error {
+	font-family: 'Roboto', sans-serif;
+	font-size: small;
+	color: var(--myRed);
+	text-align: center;
+}
+
+.flair {
+	font-family: 'Roboto', sans-serif;
+	font-size: small;
+	color: var(--myBlue);
+	text-align: center;	
+}
+
+#login-wrapper {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 2%;
+}
+
+#reset-register-wrapper {
+	width: 100%;
+	display: flex;
+	margin-bottom: 2%;
+}
+
+#login-button {
+	font: inherit;
+	color: inherit;
+	/*border: solid black;*/
+	/*background: var(--myYellow);*/
+	/*border-radius: 30px;*/
+}
+
+#reset, #register {
+	padding: 0.5%;
+	width: 20%;
+	margin-left: 15%;
+	margin-right: 15%;
+	text-align: center;
+	font-size: small;
+	background: var(--myWhite);
+	border: solid black;
+	border-radius: 10px;
+}
+
+#reset:visited, #reset:link {
+	text-decoration: none;
+	color: var(--myTeal);
+}
+
+#register:visited, #register:link {
+	text-decoration: none;
+	color: var(--myPink);
+}

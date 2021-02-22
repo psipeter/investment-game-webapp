@@ -1,5 +1,5 @@
-# investment-game-webapp
-Web application to play the investment game...for science!
+# investment-game
+Web application for playing the investment game
 
 # Production
 In ```settings.py```

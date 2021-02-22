@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	{% block title %}{% endblock %}
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Jaldi:wght@700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'default.css' %}">
+	{% block css %}{% endblock %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"> </script>
+</head>
+
+<body>
+	{% block body %}{% endblock %}
+	{% block javascript %}{% endblock %}
+</body>

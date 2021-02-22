@@ -1,0 +1,121 @@
+{% extends "default.html" %}
+{% load static %}
+
+{% block title %}
+	<title>Tutorial</title>
+{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'tutorial.css' %}">
+{% endblock %}
+
+{% block body %}
+	<div id="top-bar">
+		<h1>TUTORIAL</h1>		
+		<h3 id="t1" class="title">Introduction</h3>		
+		<h3 id="t2" class="title">Rules</h3>		
+		<h3 id="t3" class="title">Strategy</h3>		
+		<h3 id="t4" class="title">Interface</h3>		
+	</div>
+
+	<div id="m1" class="main">
+		<div id='m1a' class="row">
+			<p class="text">The investment game is a two player, turn based game</p>
+			<img id="img1a" src="{% static 'two-player.png' %}">
+		</div>
+		<div id='m1b' class="row">
+			<img id="img1b" src="{% static 'sending.png' %}">
+			<p class="text">Each turn, one player sends points to the other</p>
+		</div>
+		<div id='m1c' class="row">
+			<div>
+				<p class="text">This action represents doing something like</p>
+				<ul id="m1c1">
+					<li>doing somebody a favor</li>
+					<li>investing in a startup</li>
+					<li>lending money to a friend</li>
+				</ul>
+			</div>
+			<img id="img1c" src="{% static 'dollar-coin.png' %}">
+		</div>
+	</div>
+
+	<div id="m2" class="main">
+		<p id="m2a">Each round of the game has <strong>four</strong> steps</p>
+		<p id="aTotalm2" class="top left totals game">$0</p>
+		<p class="top center totals game">Total</p>
+		<p id="bTotalm2" class="top right totals game">$0</p>
+		<p id="aNowm2" class="middle left nows game">$0</p>
+		<p class="middle center nows game">Currently Available</p>
+		<p id="bNowm2" class="middle right nows game">$0</p>
+		<p class="bottom left game">Player A</p>
+		<p class="bottom right game">Player B</p>
+		<p id="m2b1" class="bubble">1. A receives capital</p>
+		<p id="m2b2" class="bubble">2. A sends some money to B</p>
+		<p id="m2b3" class="bubble">3. B receives 3X this amount</p>
+		<p id="m2b4" class="bubble">4. B sends some money back to A</p>
+		<p id="m2b5" class="bubble">Update score</p>
+		<p id="m2c">Each game has <strong>five</strong> rounds</p>
+	</div>
+
+	<div id="m3" class="main">
+		<p id="m3a">There is a tradeoff between <strong>immediate reward</strong> and <strong>long-term reputation</strong></p>
+		<p id="aTotalm3" class="top left totals game">$0</p>
+		<p class="top center totals game">Total</p>
+		<p id="bTotalm3" class="top right totals game">$0</p>
+		<p id="aNowm3" class="middle left nows game">$0</p>
+		<p class="middle center nows game">Currently Available</p>
+		<p id="bNowm3" class="middle right nows game">$0</p>
+		<p class="bottom left game">Player A</p>
+		<p class="bottom right game">Player B</p>
+		<p id="m3c">If A and B are both <strong>generous</strong>,<br> each will earn a moderate sum</p>
+		<p id="m3d">If one player is <strong>greedy</strong>,<br> they will earn a large sum immediately,<br>but the other player will earn nothing</p>
+		<p id="m3e">There is no optimal strategy —<br>you must learn through <strong>trial and error</strong>!</p>
+	</div>
+
+	<div id="m4" class="main">
+		<p id="m4a">You will be randomly assigned to player A or B</p>
+		<p id="m4c">Use the <strong>slider</strong> to choose an amount, then press <strong>send</strong> to submit</p>
+		<p id="m4d"><strong>Wait</strong> while the other player makes a choice</p>
+		<p id="m4e">A grayed out slider indicates <strong>their move</strong></p>
+		<p id="m4f">The website will <strong>record</strong> both players' moves</p>
+		<p id="aTotalm4" class="top left totals game">$0</p>
+		<p class="top center totals game">Total</p>
+		<p id="bTotalm4" class="top right totals game">$0</p>
+		<p id="aNowm4" class="middle left nows game">$0</p>
+		<p class="middle center nows game">Currently Available</p>
+		<p id="bNowm4" class="middle right nows game">$0</p>
+		<p class="bottom left game">You</p>
+		<p class="bottom right game">Computer</p>
+		<div id="transfer">
+			<div id="cash">
+				<p id="sendA">$0</p>
+				<p id="sendB">$0</p>
+			</div>
+			<form id="form">{% csrf_token %}
+				<div id="slider" class="ui-slider-handle"></div>
+			</form>
+			<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+		</div>
+		<div id="loading" class="middle center">
+			<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+		</div>
+	</div>
+
+
+	<div id="bottom-bar">
+		<div id="back-next">
+			<button type="button" disabled id="back">Back</button>
+			<button type="button" id="next">Next</button>
+		</div>
+		<div id="progress-bar-bg">
+			<div id="progress-bar-fg"></div>	
+		</div>
+		<p hidden><a href="{% url 'home' %}">Finish</a></p>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'tutorial.js' %}"></script>
+{% endblock %}

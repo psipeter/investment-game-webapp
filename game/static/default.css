@@ -1,0 +1,35 @@
+:root {
+	--myBlue: #314f9cff;
+	--myBackground: #f5ffff;
+	--myYellow: #f0e200ff;
+	--myTeal: #66c3d2ff;
+	--myPink: #d8388bff;
+	--myGray: #a3a3a3;
+	--myRed: #990000;
+	--myWhite: #ffffff;
+}
+
+html {
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+body {
+	width: 100%;
+	/*height: 100%;*/
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	font-size: x-large;
+	font-family: 'Roboto', sans-serif;
+	background-color: var(--myBackground);
+	color: var(--myBlue);
+}
+
+h1 {
+	margin: 0;
+	font-family: 'Jaldi', sans-serif;
+	font-size: xxx-large;
+	font-weight: bold;
+	text-align: center;
+}

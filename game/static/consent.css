@@ -1,0 +1,82 @@
+body {
+	text-align: justify;
+	font-size: small;
+}
+
+#form-disclaimer {
+	font-size: normal;
+	text-align: center;
+	color: var(--myRed);
+}
+
+#form-wrapper {
+	font-size: large;
+	font-family: inherit;
+	display: flex-box;
+	background: var(--myGray);
+	width: 70%;
+	margin-top: 5%;
+	margin-left: 15%;
+	border: solid black;
+	border-radius: 30px;
+}
+
+form {
+	display: flex;
+	justify-content: center;
+}
+
+input, button {
+	font-size: inherit;
+	font-family: inherit;
+}
+
+.error {
+	font-size: small;
+	color: var(--myRed);
+	text-align: center;
+}
+
+#submit-wrapper {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 2%;
+}
+
+#submit-button {
+	margin-top: 2%;
+	font: inherit;
+	color: var(--myBlue);
+	/*border: solid black;*/
+	/*background: var(--myYellow);*/
+	/*border-radius: 30px;*/
+}
+
+#username, #doneConsent {
+	padding: 1%;
+	width: 40%;
+	margin-left: 30%;
+	background: var(--myWhite);
+}
+
+#link-wrapper {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 2%;
+}
+
+#link {
+	width: 10%;
+	text-align: center;
+	padding: 1%;
+	background: white;
+	border: solid black;
+	border-radius: 10px;
+}
+
+#link:visited, #link:link {
+	color: var(--myBlue);
+}
+

@@ -1,0 +1,76 @@
+{% extends "default.html" %}
+{% load static %}
+
+{% block title %}
+	<title>Home</title>
+{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'home.css' %}">
+{% endblock %}
+
+{% block body %}
+	<div id="top-box">
+		<p id="ID">ID: {{username}}</p>
+		<h1 id="home">THE INVESTMENT GAME</h1>
+		<p id="logout"><a id="logout-link" href="{% url 'logout' %}">Logout</a></p>
+	</div>
+	<div id="error-box">
+		{% for message in messages %}
+		    <p class='error'>{{ message }}</p>
+		{% endfor %}				
+	</div>
+	<div id="information-box" class="box" href="{% url 'information' %}">
+		<img id="information-img" class="image" src="{% static 'information.png' %}" alt="information icon">
+		<p id="information-text" class="text">Information</p>
+	</div>
+	<div id="consent-box" class="box" href="{% url 'consent' %}">
+		<img id="consent-img" class="image" src="{% static 'consent.png' %}" alt="consent icon">
+		<p id="consent-text" class="text">Consent</p>
+	</div>
+	<div id="survey-box" class="box" href="{% url 'survey' %}">
+		<img id="survey-img" class="image" src="{% static 'survey.png' %}" alt="survey icon">
+		<p id="survey-text" class="text">Survey</p>
+	</div>
+	<div id="tutorial-box" class="box" href="{% url 'tutorial' %}">
+		<img id="tutorial-img" class="image" src="{% static 'tutorial.png' %}" alt="tutorial icon">
+		<p id="tutorial-text" class="text">Tutorial</p>
+	</div>
+	<div id="required-box" class="box" href="{% url 'game' %}">
+		<img id="required-img" class="image" src="{% static 'required.png' %}" alt="required icon">
+		<p id="required-text" class="text">Required Games</p>
+	</div>
+	<div id="bonus-box" class="box" href="{% url 'game' %}">
+		<img id="bonus-img" class="image" src="{% static 'bonus.png' %}" alt="bonus icon">
+		<p id="bonus-text" class="text">Bonus Games</p>
+	</div>
+	<div id="stats-box" class="box" href="{% url 'stats' %}">
+		<img id="stats-img" class="image" src="{% static 'stats.png' %}" alt="stats icon">
+		<p id="stats-text" class="text">Game Stats</p>		
+	</div>
+	<div id="cash-box" class="box" href="{% url 'cash_out' %}">
+		<img id="cash-img" class="image" src="{% static 'cash.png' %}" alt="cash icon">
+		<p id="cash-text" class="text">Cash Out</p>		
+	</div>
+	<div id="feedback-box" class="box" href="{% url 'feedback' %}">
+		<img id="feedback-img" class="image" src="{% static 'feedback.png' %}" alt="feedback icon">
+		<p id="feedback-text" class="text">Feedback</p>		
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		//pass django variables to external javascript
+		let N_REQUIRED = "{{N_REQUIRED}}"
+		let N_BONUS = "{{N_BONUS}}"
+		let nRequired = "{{nRequired}}"
+		let nBonus = "{{nBonus}}"
+		let doneConsent = "{{doneConsent}}"
+		let doneSurvey = "{{doneSurvey}}"
+		let doneTutorial = "{{doneTutorial}}"
+		let doneRequired = "{{doneRequired}}"
+		let doneBonus = "{{doneBonus}}"
+		let doneCash = "{{doneCash}}"
+	</script>
+	<script src="{% static 'home.js' %}"></script>
+{% endblock %}

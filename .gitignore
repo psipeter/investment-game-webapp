@@ -1,3 +1,10 @@
+# Data and plots from RL experiments
+game/RL/data
+game/RL/plots
+
+#SQLite database
+.sqlite3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

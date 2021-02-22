@@ -1,0 +1,103 @@
+body {
+	display: grid;
+	grid-template-rows: 70px 25px 190px 190px 190px;
+	grid-template-columns: 1fr 1fr 1fr;
+	z-index: 1;
+}
+
+#top-box {
+	display: inline-flex;
+	justify-content: space-between;	
+	grid-row: 1;
+	grid-column: 1/4;
+	background: white;
+}
+#ID, #logout {
+	font-size: small;
+	color: var(--myGray);
+}
+
+#logout-link:link, #logout-link:visited {
+	text-decoration: none;
+	color: var(--myGray);
+}
+
+#error-box {
+	grid-row: 2;
+	grid-column: 1/4;
+}
+.error {
+	font-size: small;
+	color: var(--myRed);
+	text-align: center;
+}
+
+.box {
+	width: 90%;
+	height: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
+	background: var(--myWhite);
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
+}
+.box:hover {
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+}
+.image {
+	margin-top: 2%;
+	height: 70%;
+	width: 70%;
+}
+.text {
+	margin-top: 2%;
+	margin-left: 10%;
+	width: 80%;
+}
+
+#information-box {
+	grid-row: 3;
+	grid-column: 1;	
+}
+#consent-box {
+	grid-row: 3;
+	grid-column: 2;	
+}
+#survey-box {
+	grid-row: 3;
+	grid-column: 3;	
+}
+#tutorial-box {
+	grid-row: 4;
+	grid-column: 1;	
+}
+#required-box {
+	grid-row: 4;
+	grid-column: 2;	
+}
+#bonus-box {
+	grid-row: 4;
+	grid-column: 3;	
+}
+#stats-box {
+	grid-row: 5;
+	grid-column: 1;	
+}
+#cash-box {
+	grid-row: 5;
+	grid-column: 2;	
+}
+#feedback-box {
+	grid-row: 5;
+	grid-column: 3;	
+}
+
+.inactive {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+.inactive:hover {
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
+}

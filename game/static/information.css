@@ -1,0 +1,34 @@
+body {
+	text-align: justify;
+	font-size: small;
+}
+
+.red {
+	color: var(--myRed);
+	text-align: center;
+}
+
+.question {
+	color: var(--myRed);
+	text-align: center;
+	background: var(--myWhite);
+}
+
+.link {
+	padding: 1%;
+	font-size: large;
+	display: flex;
+	justify-content: center;
+	background: var(--myWhite);
+	width: 30%;
+	margin-left: 35%;
+	margin-top: 1%;
+	margin-bottom: 1%;
+	border: solid black;
+	border-radius: 10px;
+}
+
+.link:visited, .link:link {
+	color: var(--myBlue);
+	/*text-decoration: none;*/
+}

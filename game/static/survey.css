@@ -1,0 +1,48 @@
+body {
+	text-align: justify;
+	font-size: small;
+}
+
+h2 {
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+.f1 {width: 20%;}
+.f2 {width: 80%; padding-left: 2%;}
+
+.c1 {width: 15%; padding-bottom: 2%;}
+.c2 {width: 50%; padding-bottom: 2%; padding-left: 2%;}
+.c3 {width: 35%; padding-bottom: 2%; padding-left: 2%;}
+
+input, select {
+	width: 100%;
+	height: 100%;
+	font: inherit;
+	font-size: inherit;
+}
+
+table {
+	background-color: var(--myGray);
+	padding: 1%;
+	border-radius: 10px
+}
+
+#submitWrapper {
+	margin-top: 2%;
+	width: 100%;
+}
+
+#submitButton {
+	margin-top: 1%;
+	margin-bottom: 1%;
+	width: 10%;
+	margin-left: 45%;
+	text-align: center;
+	font-size: large;
+	color: inherit;
+	/*border: solid black;*/
+	/*background: var(--myWhite);*/
+	/*border-radius: 30px;*/
+
+}

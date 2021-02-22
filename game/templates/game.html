@@ -1,0 +1,58 @@
+{% extends "default.html" %}
+{% load static %}
+
+{% block title %}
+	<title>Game</title>
+{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'game.css' %}">
+{% endblock %}
+
+{% block body %}
+	<p id="aTotal" class="top left totals">$0</p>
+	<p id="total" class="top center totals">Total</p>
+	<p id="bTotal" class="top right totals">$0</p>
+	<p id="aNow" class="top left nows" href="{% url 'home' %}">$0</p>
+	<p id="current" class="top center nows">Currently Available</p>
+	<p id="bNow" class="top right nows" href="{% url 'game' %}">$10</p>
+	<img id="imgA" class="middle left" src="{% static 'user1.png' %}">
+	<div id="transfer" class="middle">
+		<div id="cash">
+			<p id="sendA">$0</p>
+			<p id="sendB">$0</p>
+		</div>
+		<form id="form">{% csrf_token %}
+			<div id="slider" class="ui-slider-handle"></div>
+		</form>
+		<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+	</div>
+	<div id="loading" class="middle center">
+		<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+	</div>
+	<img id="imgB" class="middle right" src="{% static 'user3.png' %}">
+	<p id='playerA' class="middle left">Player A</p>
+	<p id='playerB' class="middle right">Player B</p>
+	<p id="nameA" class="middle left"></p>
+	<p id="nameB" class="middle right"></p>
+	<a id="home" class="top left nows" href="{% url 'home' %}">Home</a>
+	<p id="flair" class="top center nows">Isn't This Fun!</p>
+	<a id="play-again" class="top right nows" href="{% url 'game' %}">Play Again</a>
+
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		//pass django variables to external javascript
+		let userRole = "{{game.userRole}}";
+		let capital = Number("{{game.capital}}");
+		let match = Number("{{game.match}}");
+		let userGives = "{{userGives}}"
+		let userKeeps = "{{userKeeps}}"
+		let userRewards = "{{userRewards}}"
+		let agentGives = "{{agentGives}}"
+		let agentKeeps = "{{agentKeeps}}"
+		let agentRewards = "{{agentRewards}}"
+	</script>
+	<script src="{% static 'game.js' %}"></script>
+{% endblock %}
