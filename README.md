@@ -8,18 +8,20 @@ Clone the git repository
 Install dependencies
 - ```pip install django numpy scipy matplotlib seaborn mpld3```
 
-# Create the database and an administrator
+# Create the database
 - ```python manage.py makemigrations```
 - ```python manage.py migrate```
-- ```python manage.py createsuperuser ```
 
 # Run the server
 - ```python manage.py runserver```
 - (user) navigate to http://127.0.0.1:8000/
+
+# To access the database:
+- ```python manage.py createsuperuser ```
 - (admin) navigate to http://127.0.0.1:8000/admin/
 
 
-# Production
+# Before production:
 In ```settings.py```
 - set ```DEBUG=False```
 - create a new ```SECRET_KEY``` by loading from an environment variable or reading from a server-only file
