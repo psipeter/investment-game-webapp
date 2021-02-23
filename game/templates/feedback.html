@@ -1,18 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "default.html" %}
+{% load static %}
 
-<head>
+{% block title %}
 	<title>Feedback</title>
-	{% load static %}
-	<link rel="stylesheet" href="{% static 'feedback.css' %}">
-	<meta charset="utf-8">
-</head>
+{% endblock %}
 
-<body>
-	<form method="POST">
+{% block css %}
+	<link rel="stylesheet" href="{% static 'feedback.css' %}">
+{% endblock %}
+
+{% block body %}
+	<h1>Feedback</h1>
+	<form method="post">
 		{% csrf_token %} 
 		{{form.feedback}}
-		<br>
-		<input type="submit" value ="Send Feedback"/> 
+		<input hidden id="submit" type="submit" />
 	</form>
-</body>
+	<div id="submit-wrapper">
+		<button id="submit-button"> <label for="submit">Submit</label></button>
+	</div>
+{% endblock %}

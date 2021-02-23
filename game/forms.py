@@ -6,15 +6,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from . import models
 import numpy as np
 
-class FeedbackForm(forms.Form):
-	feedback = forms.CharField(
-		max_length=4200,
-		label=None,
-		widget=forms.Textarea(attrs={
-			'rows': 4, 'cols': 40,
-			'placeholder': "Your feedback here...questions, comments, suggestions, etc.",
-			}))
-
 class LoginForm(forms.Form):
 	username = forms.CharField(label="MTurk ID")
 	password = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -45,6 +36,9 @@ class ResetForm(forms.Form):
 	username = forms.CharField(label="Mechanical Turk ID")
 	password1 = forms.CharField(label='New password', widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+	username.widget.attrs.update({'placeholder':'MTurk ID'})	
+	password1.widget.attrs.update({'placeholder':'Enter Password'})	
+	password2.widget.attrs.update({'placeholder':'Confirm Password'})	
 	password1.widget.attrs.update({'autocomplete':'password'})	
 	password2.widget.attrs.update({'autocomplete':'password'})	
 	def clean_username(self):
@@ -52,7 +46,7 @@ class ResetForm(forms.Form):
 		if models.User.objects.filter(username=username).exists():
 			return self.cleaned_data['username']
 		else:
-			raise ValidationError("MTurk ID does not exist in database")
+			raise ValidationError("MTurk ID not found")
 	def clean_password2(self):
 		password1 = self.cleaned_data['password1']
 		password2 = self.cleaned_data['password2']
@@ -114,3 +108,15 @@ class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = models.User
 		fields = ('age', 'gender', 'income', 'education', 'veteran', 'empathy', 'risk', 'altruism')
+
+class FeedbackForm(forms.Form):
+	feedback = forms.CharField(
+		max_length=4200,
+		label=None,
+		widget=forms.Textarea(attrs={
+			'rows': 4, 'cols': 40,
+			'placeholder': "Your feedback here...questions, comments, suggestions, etc.",
+			}))
+
+class CashForm(forms.Form):
+	bonusReward = forms.CharField(label=None)

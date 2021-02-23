@@ -1,6 +1,5 @@
 /*Overall Layout*/
 body {
-	font-size: normal;
 	display: grid;
 	grid-template-rows: 25% 20% 20% 25% 10%;
 }
@@ -24,7 +23,7 @@ body {
 }
 .image {
 	height: 100%;
-	width: 10%;
+	width: 15%;
 	margin: 0;
 	grid-row: 4;
 	grid-column: 1;
@@ -186,7 +185,7 @@ body {
 }
 
 #imgB {
-	margin-left: 90%;
+	margin-left: 85%;
 }
 #home {
 	grid-row: 3;

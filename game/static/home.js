@@ -57,6 +57,11 @@ $(function() {  //on page load
     }
     if (doneRequiredBool) {
         $('#required-text').text('Required Games [✔]');
+        $('#required-box').addClass('inactive');
+        $('#required-box').off('click');
+        $('#required-box').click(function(e) {
+            alert("You have already played the required games - try playing some bonus games!");
+        });
     }
     else {
         $('#stats-box').addClass('inactive');
@@ -78,11 +83,23 @@ $(function() {  //on page load
     }
     if (doneBonusBool) {
         $('#bonus-text').text('Bonus Games [✔]');
+        $('#bonus-box').addClass('inactive');
+        $('#bonus-box').off('click');
+        $('#bonus-box').click(function(e) {
+            alert("You have played the maximum number of bonus games");
+        });
     }
     else {
         if (doneRequiredBool) {
             $('#bonus-text').text(
                 "Bonus Games ["+nBonus+"/"+N_BONUS+"]");
+            if (doneCashBool) {
+                $('#bonus-box').addClass('inactive');
+                $('#bonus-box').off('click');
+                $('#bonus-box').click(function(e) {
+                    alert("You may not play games after cashing out");
+                });
+            }
         }
         else {
             $('#bonus-box').addClass('inactive');
@@ -97,14 +114,13 @@ $(function() {  //on page load
     }
     else {
         if (doneSurveyBool & doneTutorialBool & doneRequiredBool) {
-            // 
+            $('#cash-text').text('Cash Out ($'+fixedReward+".00 +$"+bonusReward+")");
         }
         else {
             $('#cash-box').addClass('inactive');
             $('#cash-box').off('click');
             $('#cash-box').click(function(e) {
-                alert("To cash out, first complete the required games,\
-                    then play bonus games to earn more rewards");
+                alert("To cash out, first complete the survey and required games, then play bonus games to earn more rewards");
             });
         }
     }

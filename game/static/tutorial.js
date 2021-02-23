@@ -1,5 +1,5 @@
 $(function() {  // on page load
-    let progress = 3;
+    let progress = 0;
     let maxProgress = 4;
     let fadeTime = 200;
     updateMain();  // Fade in first page

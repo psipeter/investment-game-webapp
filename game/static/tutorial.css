@@ -1,6 +1,5 @@
 /*Overall Layout*/
 body {
-	font-size: normal;
 	display: grid;
 	grid-template-rows: 20% 70% 10%;
 }
@@ -249,7 +248,7 @@ h3 {
 	background: var(--myGray);
 }
 #slider {
-	height: 150%;
+	height: 130%;
 	width: 10%;
 	/*margin-top: 0.7%;*/
 	margin-left: -5%;

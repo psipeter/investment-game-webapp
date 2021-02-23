@@ -25,7 +25,10 @@ SECRET_KEY = '!%s^i$-_ewv3#drfkk&kdizare)-d20%xytu!9uoikz^(o!)ho'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'www.investmentgame.org',
+]
 
 
 # Application definition

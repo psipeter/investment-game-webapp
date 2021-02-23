@@ -1,0 +1,22 @@
+p {
+	text-align: center;
+}
+
+.code {
+	/*width: 30%;*/
+	padding: 1%;
+	/*margin-left: 40%;*/
+	background-color: var(--myGray);
+	font-weight: bold;
+	text-align: center;
+}
+
+button {
+	width: 20%;
+	margin-left: 40%;
+	color: inherit;
+	font-size: inherit;
+	font-family: inherit;
+	/*background-color: var(--myYellow);*/
+	/*border: solid black;*/
+}

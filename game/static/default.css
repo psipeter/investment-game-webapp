@@ -7,6 +7,7 @@
 	--myGray: #a3a3a3;
 	--myRed: #990000;
 	--myWhite: #ffffff;
+	--myLightGray: #f0f0f0;
 }
 
 html {
@@ -20,7 +21,7 @@ body {
 	height: 100vh;
 	margin: 0;
 	padding: 0;
-	font-size: x-large;
+	font-size: 12pt;
 	font-family: 'Roboto', sans-serif;
 	background-color: var(--myBackground);
 	color: var(--myBlue);
@@ -29,7 +30,13 @@ body {
 h1 {
 	margin: 0;
 	font-family: 'Jaldi', sans-serif;
-	font-size: xxx-large;
+	font-size: 200%;
 	font-weight: bold;
 	text-align: center;
+}
+
+h2 {
+	margin: 0;
+	font-size: 125%;
+	font-weight: normal;
 }

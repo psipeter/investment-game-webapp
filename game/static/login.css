@@ -1,11 +1,10 @@
 #body-wrapper {
 	display: flex-box;
-	background: var(--myGray);
-	width: 70%;
+	background: var(--myWhite);
+	width: 60%;
 	margin-top: 5%;
-	margin-left: 15%;
+	margin-left: 20%;
 	border: solid black;
-	border-radius: 30px;
 }
 
 form {
@@ -18,16 +17,19 @@ input, button {
 	font-family: inherit;
 }
 
+input {
+	background: var(--myLightGray);
+	border: solid black;
+}
+
 .error {
 	font-family: 'Roboto', sans-serif;
-	font-size: small;
 	color: var(--myRed);
 	text-align: center;
 }
 
 .flair {
 	font-family: 'Roboto', sans-serif;
-	font-size: small;
 	color: var(--myBlue);
 	text-align: center;	
 }
@@ -42,6 +44,7 @@ input, button {
 #reset-register-wrapper {
 	width: 100%;
 	display: flex;
+	justify-content: space-around;
 	margin-bottom: 2%;
 }
 
@@ -53,24 +56,12 @@ input, button {
 	/*border-radius: 30px;*/
 }
 
-#reset, #register {
-	padding: 0.5%;
-	width: 20%;
-	margin-left: 15%;
-	margin-right: 15%;
-	text-align: center;
-	font-size: small;
-	background: var(--myWhite);
-	border: solid black;
-	border-radius: 10px;
-}
-
 #reset:visited, #reset:link {
 	text-decoration: none;
-	color: var(--myTeal);
+	color: var(--myBlue);
 }
 
 #register:visited, #register:link {
 	text-decoration: none;
-	color: var(--myPink);
+	color: var(--myBlue);
 }

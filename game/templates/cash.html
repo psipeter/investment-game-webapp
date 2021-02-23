@@ -1,0 +1,38 @@
+{% extends "default.html" %}
+{% load static %}
+
+{% block title %}
+	<title>Cash Out</title>
+{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'cash.css' %}">
+{% endblock %}
+
+{% block body %}
+	<h1>Cash Out</h1>
+	<p>Thanks for playing the Investment Game!</p>
+	{% if not user.doneCash %}
+		<p>Your HIT code is</p>
+		<p class="code">{{user.code}}</p>
+		<p>Please paste this code into the MTurk tab to earn the fixed reward (${{fixedReward}}) for completing the required games.</p>
+		<p>You may continue playing bonus games to earn high-paying bonus rewards. Each subsequent game will earn you a reward of ${{bonusRate}}, plus an additional ${{performanceRate}} bonus scoring above the threshold. Currently, you have earned</p>
+		<p class="code">${{bonusReward}}</p>
+		<p>To receive this payment, press the button below. Doing so will prevent you from earning any additional bonus.</p>
+		<form method="post">
+			{% csrf_token %} 
+			<input hidden id="submit" type="submit" />
+		</form>
+		<div id="submit-wrapper">
+			<button id="submit-button"> <label for="submit">Cash Out and Finish</label></button>
+		</div>
+	{% else %}
+		<p>Your HIT code was</p>
+		<p class="code">{{user.code}}</p>
+		<p>and you earned</p>
+		<p class="code">${{bonusReward}}</p>
+		<p>in bonus rewards</p>
+	{% endif %}
+
+	<p><a href="{% url 'home' %}">Home</a></p>
+{% endblock %}

@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.urls import reverse
 from .models import Game, User, Feedback
-from game.forms import LoginForm, CreateForm, ProfileForm, ResetForm, FeedbackForm
+from game.forms import LoginForm, CreateForm, ProfileForm, ResetForm, CashForm, FeedbackForm
 from datetime import datetime
 from .parameters import *
 
@@ -90,13 +90,10 @@ def survey(request):
 	if request.method == 'POST':
 		form = ProfileForm(request.POST, instance=request.user)
 		if form.is_valid():
-			print('valid')
 			form.save()
 			request.user.doneSurvey = datetime.now()
 			request.user.save()
 			return redirect('home')
-		else:
-			print('invalid')
 	else:
 		form = ProfileForm(instance=request.user)
 	return render(request, 'survey.html', {'form': form})
@@ -121,14 +118,34 @@ def stats(request):
 		return redirect('home')
 
 @login_required
-def cash_out(request):
-	if request.user.doneConsent and request.user.doneRequired:
-		request.user.doneCash = datetime.now()
-		request.user.save()
-		return render(request, "cash_out.html")
-	else:
+def cash(request):
+	if not (request.user.doneConsent and request.user.doneRequired):
 		error(request, 'You must complete the required games before cashing out')
 		return redirect('home')
+	else:
+		request.user.doneHIT = datetime.now()
+		request.user.save()
+		bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name="required")
+		performanceGames = 0
+		for game in bonusGames:
+			if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
+				performanceGames+= 1
+		bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
+		form = CashForm(request.POST)
+		form.bonusReward = bonusReward
+		context = {
+			'fixedReward': FIXED_REWARD,
+			'bonusReward': bonusReward,
+			'bonusRate': BONUS_RATE,
+			'performanceRate': PERFORMANCE_RATE,
+			'form': form,
+			}
+		if request.method == 'POST':
+			request.user.doneCash = datetime.now()
+			request.user.save()
+			return redirect('home')
+		else:
+			return render(request, "cash.html", context=context)
 
 @login_required
 def feedback(request):
@@ -136,7 +153,6 @@ def feedback(request):
 		form = FeedbackForm(request.POST)
 		if form.is_valid():
 			text = request.POST.get('feedback')
-			print(text)
 			feedback = Feedback.objects.create()
 			feedback.text = text
 			feedback.save()
@@ -148,6 +164,12 @@ def feedback(request):
 @login_required
 def home(request):
 	request.user.setProgress()
+	bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name="required")
+	performanceGames = 0
+	for game in bonusGames:
+		if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
+			performanceGames+= 1
+	bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
 	context = {
 		'username': request.user,
 		'path': request.path,
@@ -160,7 +182,10 @@ def home(request):
 		'doneTutorial': request.user.doneTutorial,
 		'doneRequired': request.user.doneRequired,
 		'doneBonus': request.user.doneBonus,
+		'doneHIT': request.user.doneCash,
 		'doneCash': request.user.doneCash,
+		'fixedReward': FIXED_REWARD,
+		'bonusReward': bonusReward,
 		}
 	return render(request, 'home.html', context)
 

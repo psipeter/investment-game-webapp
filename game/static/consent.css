@@ -1,24 +1,20 @@
 body {
 	text-align: justify;
-	font-size: small;
 }
 
 #form-disclaimer {
-	font-size: normal;
 	text-align: center;
 	color: var(--myRed);
 }
 
 #form-wrapper {
-	font-size: large;
 	font-family: inherit;
 	display: flex-box;
-	background: var(--myGray);
-	width: 70%;
+	background: var(--myWhite);
+	width: 60%;
 	margin-top: 5%;
-	margin-left: 15%;
+	margin-left: 20%;
 	border: solid black;
-	border-radius: 30px;
 }
 
 form {
@@ -31,8 +27,12 @@ input, button {
 	font-family: inherit;
 }
 
+input {
+	background: var(--myLightGray);
+	border: solid black;
+}
+
 .error {
-	font-size: small;
 	color: var(--myRed);
 	text-align: center;
 }
@@ -57,7 +57,8 @@ input, button {
 	padding: 1%;
 	width: 40%;
 	margin-left: 30%;
-	background: var(--myWhite);
+	background: var(--myLightGray);
+	border: solid black;
 }
 
 #link-wrapper {

@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import mpld3
 import json
+import pandas as pd
 
 from .RL.agents import *
 from .parameters import *
@@ -257,6 +258,7 @@ class User(AbstractUser):
 	doneTutorial = models.DateTimeField(null=True, blank=True)
 	doneRequired = models.DateTimeField(null=True, blank=True)
 	doneBonus = models.DateTimeField(null=True, blank=True)
+	doneHIT = models.DateTimeField(null=True, blank=True)
 	doneCash = models.DateTimeField(null=True, blank=True)
 	group = models.CharField(max_length=300, choices=(("1", "forgive"), ("2", "punish")), default=f)
 	code = models.CharField(max_length=300, default=get_random_string(length=32), help_text="MTurk Confirmation Code")
@@ -315,14 +317,14 @@ class User(AbstractUser):
 		fig, (ax, ax2) = plt.subplots(nrows=1, ncols=2, sharey=True, figsize=((8, 4)))
 		sns.histplot(data=df, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player')  
 		ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="Score")
-		ax.plot([BONUS_THR, BONUS_THR], [0,1], color='k', linestyle="--", label="Bonus Threshold")
+		ax.plot([PERFORMANCE_THR, PERFORMANCE_THR], [0,1], color='k', linestyle="--", label="Bonus Threshold")
 		ax.plot([meanScore, meanScore], [0,1], color='r' if meanScore < BONUS_THR else 'g', label="Current Score")
 		sns.histplot(data=df, x='generosity', ax=ax2, stat="probability", bins=binsG, element="step", hue='player')  
 		ax2.set(xlabel="Generosity", ylabel=None, xticks=((binsG)), title="Generosity")
 		leg = ax.legend(loc='upper right')
 		# leg2 = ax2.legend(loc='upper right')
 		fig.tight_layout()
-		fig.savefig('game/plots/userStats.pdf')
+		# fig.savefig('game/plots/userStats.pdf')
 		figure = mpld3.fig_to_html(fig)
 		plt.close()
 
