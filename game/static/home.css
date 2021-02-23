@@ -10,7 +10,6 @@ body {
 	justify-content: space-between;	
 	grid-row: 1;
 	grid-column: 1/4;
-	background: white;
 }
 #ID, #logout {
 	font-size: small;

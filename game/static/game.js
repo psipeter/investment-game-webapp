@@ -3,8 +3,8 @@ $(function() {  //on page load
     // Initialization and globals
     let maxUser;
     let maxAgent;
-    let agentTime = 2000;
-    let animateTime = 1000;
+    let agentTime = 200;
+    let animateTime = 100;
     let startTime = performance.now();
     let endTime = performance.now();
     let doneGames = false
@@ -29,19 +29,23 @@ $(function() {  //on page load
     if (userRole == "A") {
         maxUser = capital;
         maxAgent = 0;  // updated after user moves
-        $("#nameA").text("You");
-        $("#nameB").text("Them");
+        // $("#nameA").text("You");
+        // $("#nameB").text("Them");
+        $("#imgA").attr("src", userA);
+        $("#imgB").attr("src", lockedB);
         // $("#slider").css('background', $("#aNow").css('color'));
         $("#submit").prop('disabled', true);
         $("#loading").hide();
     }
     else {
-        $("#nameB").text("You");
-        $("#nameA").text("Them");
+        $("#imgA").attr("src", lockedA);
+        $("#imgB").attr("src", userB);
         // $("#slider").css('background', $("#bNow").css('color'));
         maxAgent = capital;
         maxUser = 0;  // updated after agent moves
-        $("#transfer").hide();
+        $("#cash").hide();
+        $("#form").hide();
+        $("#submit").hide();
         $("#loading").show();
         // $("#submit").css('visibility', 'hidden');
         // $("#loading").css('visibility', 'visible');
@@ -73,8 +77,11 @@ $(function() {  //on page load
 
     // Change view after the user or agent moves
     function switchToUser() {
+        if (complete) {gameOver(); return;}
         $("#loading").hide();
-        $("#transfer").show();
+        $("#cash").show();
+        $("#form").show();
+        $("#submit").show();
         $("#form").css('visibility', 'visible');
         $("#slider").css('visibility', 'visible');      
         $("#submit").css('visibility', 'visible');
@@ -103,8 +110,11 @@ $(function() {  //on page load
     }
 
     function switchToAgent() {
+        if (complete) {gameOver(); return;}
         $("#loading").hide();
-        $("#transfer").show();
+        $("#cash").show();
+        $("#form").show();
+        $("#submit").show();
         $("#sendA").css('visibility', 'visible');
         $("#sendB").css('visibility', 'visible');
         let agentRole = "A";
@@ -136,7 +146,9 @@ $(function() {  //on page load
 
     function switchToLoading() {
         $("#loading").show();
-        $("#transfer").hide();
+        $("#cash").hide();
+        $("#form").hide();
+        $("#submit").hide();
     }
 
     function getUserMove() {
@@ -287,8 +299,8 @@ $(function() {  //on page load
     function animateTotal() {
         let upA = $("#aNow").clone();
         let upB = $("#bNow").clone();
-        let mTotal = parseInt($("#aTotal").css('marginTop'));
-        let mNow = parseInt($("#aNow").css('marginTop'));
+        let mTotal = parseInt($("#aTotal").offset().top);
+        let mNow = parseInt($("#aNow").offset().top);
         let dY = mNow - mTotal;
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
@@ -325,18 +337,19 @@ $(function() {  //on page load
 
     function gameOver() {
         $("#loading").hide();
-        $("#transfer").hide();
+        $("#cash").hide();
+        // $("#form").hide();
+        $("#form").css('visibility', 'hidden');
+        $("#currently").hide();
         $("#sendA").hide();
         $("#sendB").hide();
         $("#submit").prop('disabled', true);
-        $("#submit").hide();
-        $("#slider").hide();
+        $("#submit").css('visibility', 'hidden');
+        // $("#submit").hide();
+        // $("#slider").hide();
         $("#aNow").hide();
         $("#bNow").hide();
         $("#current").hide();
-        $("#transfer").show();
-        $("#form").show();
-        $("#form").replaceWith("<p id='gameOver'>Game Over</p>");
         $("#total").text('Final Score');
         $("#home").show();
         $("#flair").show();

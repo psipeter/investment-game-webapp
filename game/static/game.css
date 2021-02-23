@@ -1,79 +1,112 @@
 /*Overall Layout*/
 body {
+	font-size: normal;
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-template-rows: 200px 200px 200px;
-	background: #f5ffff;
-	color: #314f9cff;
-	text-align: center;
-	align-content: space-between;
-}
-html {
-	margin-left: 10%;
-	margin-right: 10%;
+	grid-template-rows: 25% 20% 20% 25% 10%;
 }
 
 .top {
+	height: 100%;
 	grid-row: 1;
+	grid-column: 1;
 }
-.middle {
+.total {
+	height: 100%;
+	margin: 0;
 	grid-row: 2;
+	grid-column: 1;
+}
+.available {
+	height: 100%;
+	margin: 0;
+	grid-row: 3;
+	grid-column: 1;
+}
+.image {
+	height: 100%;
+	width: 10%;
+	margin: 0;
+	grid-row: 4;
+	grid-column: 1;
+}
+.player {
+	height: 100%;
+	margin: 0;
+	grid-row: 5;
+	grid-column: 1;
 }
 .bottom {
-	grid-row: 3;
-}
-.left {
+	height: 100%;
+	grid-row: 6;
 	grid-column: 1;
-	color: #66c3d2ff;
-}
-.center {
-	grid-column: 2;
-}
-.right {
-	grid-column: 3;
-	color: #d8388bff;
-}
-.totals {
-	height: 20%;
-	border-bottom: 1px solid black;
-}
-.nows {
-	height: 20%;
-	margin-top: 30%;
 }
 
-#imgA, #imgB {
-	margin: 25%;
-	width: 50%;
-	height: 50%;
+
+.left {
+	color: var(--myTeal);
+	text-align: left;
+	font-weight: bold;
+}
+.center {
+	text-align: center;
+}
+.right {
+	color: var(--myPink);
+	text-align: right;
+	font-weight: bold;
+}
+
+#transfer {
+	grid-column: 1;
+	grid-row: 4;	
+	height: 100%;
+	width: 50%
+	margin: 0;
+	margin-left: 25%;
+	margin-right: 25%;
 }
 #cash {
-	margin: 0 10%;
-	grid-row: 2;
-	grid-column: 2;
+	height: 30%;
+	margin-top: 0;
+	/*margin-bottom: 10%;*/
 	display: flex;
 	justify-content: space-between;
 }
-#sendA {
-	color: #66c3d2ff;
-}
-#sendB {
-	color: #d8388bff;
-}
+#sendA {margin: 0; color: var(--myTeal);}
+#sendB {margin: 0; color: var(--myPink);}
 #form {
-	margin-left: 10%;
-	width: 80%;
-	background: #a3a3a3;
+	display: block flex;
+	height: 30%;
+	width: 100%;
+	border: none;
+	border-radius: 30px;
+	background: var(--myGray);
+}
+#slider {
+	height: 100%;
+	grid-column: 1;
+	grid-row: 4;
+	height: 140%;
+	width: 5%;
+	/*margin-top: 0.7%;*/
+	margin-left: -2.5%;
+	border-radius: 30px;
+	background: var(--myYellow);
+	border: none;
 }
 #submit {
+	margin: 0;
+	padding: 0;
+	height: 30%;
+	margin-left: 40%;
+	margin-top: 3%;
+	width: 20%;
 	font-size: inherit;
 	font-family: inherit;
 	color: inherit;
-	background: #f0e200ff;
-	margin-top: 10%;
-	border: 1px solid black;
+	background: var(--myYellow);
+	border: solid black;
 	border-radius: 30px;
-	width: 30%;
 	box-shadow: 3px 3px rgba(0, 0, 0, 0.2);
 }
 #submit:hover {
@@ -81,61 +114,20 @@ html {
 	box-shadow: 3px 3px rgba(0, 0, 0, 0.6);
 }
 #submit:disabled {
-	background: white;
+	background: var(--myWhite);
 	box-shadow: 3px 3px rgba(0, 0, 0, 0.2);
 	cursor: auto;
-	color: #a3a3a3;
-}
-#form {
-	border: 0px solid black;
-	border-radius: 30px;
-}
-#slider {
-	margin-top: 0.7%;
-	margin-left: -5%;
-	width: 10%;
-	border-radius: 30px;
-	background: #f0e200ff;
-	border: none;
-}
-#gameOver {
-	margin: 0;
-	margin-top: 22%;
-	font-weight: bold;
-}
-#playerA, #playerB {
-	height: 20%;
-	margin-top: 60%;
-}
-#nameA, #nameB {
-	height: 20%;
-	margin-top: 70%;
-}
-#home {
-	width: 30%;
-	height: 20%;
-	margin-left: 35%;
-	color: #314f9cff;
-}
-#flair {
-	color: #a3a3a3;
-	font-family: 'Jaldi', sans-serif;
-}
-#play-again {
-	width: 40%;
-	height: 20%;
-	margin-left: 30%;
-	color: #314f9cff;
-}
-
-/* Animations */
-#animated {
-	width: min-content;
+	color: var(--myGray);
 }
 
 /* Loading Bar, from https://loading.io/css/ */
 #loading {
-	margin-top: 15%;
+	margin: 0;
+	grid-column: 1;
+	grid-row: 4;
+	height: 50%;
+	width: 50%;
+	margin-left: 25%;
 }
 .lds-ellipsis {
   display: inline-block;
@@ -149,7 +141,7 @@ html {
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #a3a3a3;
+  background: var(--myGray);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {
@@ -191,4 +183,39 @@ html {
   100% {
     transform: translate(24px, 0);
   }
+}
+
+#imgB {
+	margin-left: 90%;
+}
+#home {
+	grid-row: 3;
+	grid-column: 1;
+	width: 10%;
+}
+#flair {
+	grid-row: 3;
+	grid-column: 1;
+	width: 20%;
+	margin-left: 40%;
+	font-family: 'Jaldi', sans-serif;
+}
+#play-again {
+	grid-row: 3;
+	grid-column: 1;
+	width: 15%;
+	margin-left: 85%
+}
+#nameA, #nameB {
+	font-weight: normal;
+}
+
+#gameOver {
+	margin: 0;
+	margin-top: 10%;
+	width: 100%;
+	grid-row: 4;
+	grid-column: 1;
+	text-align: center;
+	font-weight: bold;
 }

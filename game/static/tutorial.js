@@ -1,5 +1,5 @@
 $(function() {  // on page load
-    let progress = 0;
+    let progress = 3;
     let maxProgress = 4;
     let fadeTime = 200;
     updateMain();  // Fade in first page
@@ -65,7 +65,9 @@ $(function() {  // on page load
         $('#m2').show();
         $('#t2').fadeIn(0);
         $('#m2a').fadeIn(fadeTime);
-        $('.game').fadeIn(0);
+        $('.total').fadeIn(0);
+        $('.available').fadeIn(0);
+        $('.player').fadeIn(0);
         animateCapital(2*fadeTime, "m2",capital);
         setTimeout(function(){$("#m2b1").fadeIn(fadeTime);}, fadeTime);
         animateAToBTutor(4*fadeTime, "m2", giveA, keepA);
@@ -93,7 +95,9 @@ $(function() {  // on page load
         $('#m3').show();
         $('#t3').fadeIn(0);
         $('#m3a').fadeIn(fadeTime);
-        $('.game').fadeIn(0);
+        $('.total').fadeIn(0);
+        $('.available').fadeIn(0);
+        $('.player').fadeIn(0);
         setTimeout(function(){$("#m3c").fadeIn(fadeTime);}, 1*fadeTime);
         animateCapital(2*fadeTime, "m3", capital);
         animateAToB(3*fadeTime, "m3", giveA, keepA);
@@ -124,7 +128,9 @@ $(function() {  // on page load
         $('#m4').show();
         $('#t4').fadeIn(0);
         $('#m4a').fadeIn(fadeTime);
-        $('.game').fadeIn(0);
+        $('.total').fadeIn(0);
+        $('.available').fadeIn(0);
+        $('.player').fadeIn(0);
         $("#form").slider({
             slide: function(event, ui) {
                 $("#submit").prop('disabled', false);
@@ -142,7 +148,9 @@ $(function() {  // on page load
         $("#sendB").css('visibility', 'hidden');
         animateCapital(fadeTime, "m4", capital);
         setTimeout(function(){
-            $("#transfer").fadeIn(fadeTime);
+            $("#cash").fadeIn(fadeTime);
+            $("#form").fadeIn(fadeTime);
+            $("#submit").fadeIn(fadeTime);
             $("#form").slider({"disabled": false});
             $("#submit").css('visibility', 'visible');
             $("#submit").prop('disabled', true);
@@ -160,12 +168,19 @@ $(function() {  // on page load
             $("#submit").css('visibility', 'hidden');
             $("#sendA").css('visibility', 'hidden');
             $("#sendB").css('visibility', 'hidden');
+            $("#cash").fadeOut(fadeTime/2);
+            $("#form").fadeOut(fadeTime/2);
+            $("#submit").fadeOut(fadeTime/2);
             $("#loading").fadeIn(fadeTime);
-            $("#transfer").fadeOut(fadeTime/2);
+            // $("#transfer").fadeOut(fadeTime/2);
             animateAToB(0, "m4", giveA, keepA);
             setTimeout(function() {
                 $("#loading").fadeOut(fadeTime/2);
-                $("#transfer").fadeIn(fadeTime);
+                $("#form").slider({"disabled": true});
+                // $("#transfer").fadeIn(fadeTime);
+                $("#cash").fadeIn(fadeTime);
+                $("#form").fadeIn(fadeTime);
+                $("#submit").fadeIn(fadeTime);
                 $("#sendA").css('visibility', 'visible');
                 $("#sendB").css('visibility', 'visible');
                 $("#sendA").text(giveB);
@@ -183,7 +198,10 @@ $(function() {  // on page load
             setTimeout(function() {$("#m4e").fadeIn(fadeTime);}, 2*fadeTime);
             setTimeout(function() {$("#m4e").fadeOut(fadeTime/2);}, 4*fadeTime);
             setTimeout(function() {$("#m4f").fadeIn(fadeTime);}, 4*fadeTime);
-            setTimeout(function() {$("#transfer").fadeOut(fadeTime/2);}, 4*fadeTime);
+            // setTimeout(function() {$("#transfer").fadeOut(fadeTime/2);}, 4*fadeTime);
+            setTimeout(function() {$("#cash").fadeOut(fadeTime/2);}, 4*fadeTime);
+            setTimeout(function() {$("#form").fadeOut(fadeTime/2);}, 4*fadeTime);
+            setTimeout(function() {$("#submit").fadeOut(fadeTime/2);}, 4*fadeTime);
             enableNavigation(5*fadeTime, 4);
         });
 
@@ -286,10 +304,9 @@ $(function() {  // on page load
             $("#bTotal"+addTo).text("$"+keepB);
             let upA = $("#aNow"+addTo).clone();
             let upB = $("#bNow"+addTo).clone();
-            let mTotal = parseInt($("#aTotal"+addTo).css('marginTop'));
-            let mNow = parseInt($("#aNow"+addTo).css('marginTop'));
+            let mTotal = parseInt($("#aTotal"+addTo).offset().top);
+            let mNow = parseInt($("#aNow"+addTo).offset().top);
             let dY = mNow - mTotal;
-            console.log(dY)
             $("#aNow"+addTo).text("$0");
             $("#bNow"+addTo).text("$0");
             upA.attr("id", "upA");

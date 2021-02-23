@@ -12,10 +12,10 @@
 {% block body %}
 	<div id="top-bar">
 		<h1>TUTORIAL</h1>		
-		<h3 id="t1" class="title">Introduction</h3>		
-		<h3 id="t2" class="title">Rules</h3>		
-		<h3 id="t3" class="title">Strategy</h3>		
-		<h3 id="t4" class="title">Interface</h3>		
+		<!-- <h3 id="t1" class="title">Introduction</h3>		 -->
+		<!-- <h3 id="t2" class="title">Rules</h3>		 -->
+		<!-- <h3 id="t3" class="title">Strategy</h3>		 -->
+		<!-- <h3 id="t4" class="title">Interface</h3>		 -->
 	</div>
 
 	<div id="m1" class="main">
@@ -41,63 +41,62 @@
 	</div>
 
 	<div id="m2" class="main">
-		<p id="m2a">Each round of the game has <strong>four</strong> steps</p>
-		<p id="aTotalm2" class="top left totals game">$0</p>
-		<p class="top center totals game">Total</p>
-		<p id="bTotalm2" class="top right totals game">$0</p>
-		<p id="aNowm2" class="middle left nows game">$0</p>
-		<p class="middle center nows game">Currently Available</p>
-		<p id="bNowm2" class="middle right nows game">$0</p>
-		<p class="bottom left game">Player A</p>
-		<p class="bottom right game">Player B</p>
+		<p id="m2a" class="top-text">Each round of the game has <strong>four</strong> steps</p>
+		<p id="aTotalm2" class="total left">$0</p>
+		<p class="total center">Total</p>
+		<p id="bTotalm2" class="total right">$0</p>
+		<p id="aNowm2" class="available left">$0</p>
+		<p class="available center">Currently Available</p>
+		<p id="bNowm2" class="available right">$0</p>
+		<p class="player left">Player A</p>
+		<p class="player right">Player B</p>
 		<p id="m2b1" class="bubble">1. A receives capital</p>
 		<p id="m2b2" class="bubble">2. A sends some money to B</p>
 		<p id="m2b3" class="bubble">3. B receives 3X this amount</p>
 		<p id="m2b4" class="bubble">4. B sends some money back to A</p>
 		<p id="m2b5" class="bubble">Update score</p>
-		<p id="m2c">Each game has <strong>five</strong> rounds</p>
+		<p id="m2c" class="bottom-text">Each game has <strong>five</strong> rounds</p>
 	</div>
 
 	<div id="m3" class="main">
-		<p id="m3a">There is a tradeoff between <strong>immediate reward</strong> and <strong>long-term reputation</strong></p>
-		<p id="aTotalm3" class="top left totals game">$0</p>
-		<p class="top center totals game">Total</p>
-		<p id="bTotalm3" class="top right totals game">$0</p>
-		<p id="aNowm3" class="middle left nows game">$0</p>
-		<p class="middle center nows game">Currently Available</p>
-		<p id="bNowm3" class="middle right nows game">$0</p>
-		<p class="bottom left game">Player A</p>
-		<p class="bottom right game">Player B</p>
-		<p id="m3c">If A and B are both <strong>generous</strong>,<br> each will earn a moderate sum</p>
-		<p id="m3d">If one player is <strong>greedy</strong>,<br> they will earn a large sum immediately,<br>but the other player will earn nothing</p>
-		<p id="m3e">There is no optimal strategy —<br>you must learn through <strong>trial and error</strong>!</p>
+		<p id="m3a" class="top-text">There is a tradeoff between <strong>immediate reward</strong> and <strong>long-term reputation</strong></p>
+		<p id="aTotalm3" class="total left">$0</p>
+		<p class="total center">Total</p>
+		<p id="bTotalm3" class="total right">$0</p>
+		<p id="aNowm3" class="available left">$0</p>
+		<p class="available center">Currently Available</p>
+		<p id="bNowm3" class="available right">$0</p>
+		<p class="player left">Player A</p>
+		<p class="player right">Player B</p>
+		<p id="m3c" class="bottom-text">If A and B are both <strong>generous</strong>, each will score moderately</p>
+		<p id="m3d" class="bottom-text">If one player is <strong>greedy</strong>, they will score big at the expense of the other</p>
+		<p id="m3e" class="bottom-text">There is no optimal strategy — you must learn through <strong>trial and error</strong>!</p>
 	</div>
 
 	<div id="m4" class="main">
-		<p id="m4a">You will be randomly assigned to player A or B</p>
-		<p id="m4c">Use the <strong>slider</strong> to choose an amount, then press <strong>send</strong> to submit</p>
-		<p id="m4d"><strong>Wait</strong> while the other player makes a choice</p>
-		<p id="m4e">A grayed out slider indicates <strong>their move</strong></p>
-		<p id="m4f">The website will <strong>record</strong> both players' moves</p>
-		<p id="aTotalm4" class="top left totals game">$0</p>
-		<p class="top center totals game">Total</p>
-		<p id="bTotalm4" class="top right totals game">$0</p>
-		<p id="aNowm4" class="middle left nows game">$0</p>
-		<p class="middle center nows game">Currently Available</p>
-		<p id="bNowm4" class="middle right nows game">$0</p>
-		<p class="bottom left game">You</p>
-		<p class="bottom right game">Computer</p>
-		<div id="transfer">
-			<div id="cash">
-				<p id="sendA">$0</p>
-				<p id="sendB">$0</p>
-			</div>
-			<form id="form">{% csrf_token %}
-				<div id="slider" class="ui-slider-handle"></div>
-			</form>
-			<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+		<p id="m4a"class="top-text">You will be randomly assigned to player A or B</p>
+		<p id="m4c"class="top-text">Use the <strong>slider</strong> to choose an amount, then press <strong>send</strong> to submit</p>
+		<p id="m4d"class="top-text"><strong>Wait</strong> while the other player makes a choice</p>
+		<p id="m4e"class="top-text">A grayed out slider indicates <strong>their move</strong></p>
+		<p id="m4f"class="top-text">The website will <strong>record</strong> both players' moves</p>
+		<p id="aTotalm4" class="total left">$0</p>
+		<p class="total center">Total</p>
+		<p id="bTotalm4" class="total right">$0</p>
+		<p id="aNowm4" class="available left">$0</p>
+		<p class="available center">Currently Available</p>
+		<p id="bNowm4" class="available right">$0</p>
+		<p class="player left">You</p>
+		<p class="player right">Them</p>
+		<div id="cash">
+			<p id="sendA">$0</p>
+			<p id="sendB">$0</p>
 		</div>
-		<div id="loading" class="middle center">
+		<form id="form">
+			{% csrf_token %}
+			<div id="slider" class="ui-slider-handle"></div>
+		</form>
+		<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+		<div id="loading" class="center">
 			<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
 		</div>
 	</div>
