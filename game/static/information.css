@@ -2,15 +2,20 @@ body {
 	text-align: justify;
 }
 
+.main {
+	padding: 2%;
+	height: 60%;
+	border: solid black;
+	overflow: auto;
+}
+
 .red {
-	color: var(--myRed);
 	text-align: center;
 }
 
 .question {
-	color: var(--myRed);
 	text-align: center;
-	background: var(--myWhite);
+	/*background: var(--myWhite);*/
 }
 
 .link {

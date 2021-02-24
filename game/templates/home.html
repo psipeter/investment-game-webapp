@@ -15,46 +15,41 @@
 		<h1 id="home">THE INVESTMENT GAME</h1>
 		<p id="logout"><a id="logout-link" href="{% url 'logout' %}">Logout</a></p>
 	</div>
-	<div id="error-box">
-		{% for message in messages %}
-		    <p class='error'>{{ message }}</p>
-		{% endfor %}				
-	</div>
 	<div id="information-box" class="box" href="{% url 'information' %}">
 		<img id="information-img" class="image" src="{% static 'information.png' %}" alt="information icon">
-		<p id="information-text" class="text">Information</p>
+		<h2 id="information-text" class="text">Information</h2>
 	</div>
 	<div id="consent-box" class="box" href="{% url 'consent' %}">
 		<img id="consent-img" class="image" src="{% static 'hat-comp.png' %}" alt="consent icon">
-		<p id="consent-text" class="text">Consent</p>
+		<h2 id="consent-text" class="text">Consent</h2>
 	</div>
 	<div id="survey-box" class="box" href="{% url 'survey' %}">
 		<img id="survey-img" class="image" src="{% static 'pie-chart.png' %}" alt="survey icon">
-		<p id="survey-text" class="text">Survey</p>
+		<h2 id="survey-text" class="text">Survey</h2>
 	</div>
 	<div id="tutorial-box" class="box" href="{% url 'tutorial' %}">
 		<img id="tutorial-img" class="image" src="{% static 'tutorial.png' %}" alt="tutorial icon">
-		<p id="tutorial-text" class="text">Tutorial</p>
+		<h2 id="tutorial-text" class="text">Tutorial</h2>
 	</div>
 	<div id="required-box" class="box" href="{% url 'game' %}">
 		<img id="required-img" class="image" src="{% static 'required.png' %}" alt="required icon">
-		<p id="required-text" class="text">Required Games</p>
+		<h2 id="required-text" class="text">Required Games</h2>
 	</div>
 	<div id="bonus-box" class="box" href="{% url 'game' %}">
 		<img id="bonus-img" class="image" src="{% static 'bonus.png' %}" alt="bonus icon">
-		<p id="bonus-text" class="text">Bonus Games</p>
+		<h2 id="bonus-text" class="text">Bonus Games</h2>
 	</div>
 	<div id="stats-box" class="box" href="{% url 'stats' %}">
 		<img id="stats-img" class="image" src="{% static 'stats.png' %}" alt="stats icon">
-		<p id="stats-text" class="text">Game Stats</p>		
+		<h2 id="stats-text" class="text">Game Stats</h2>		
 	</div>
 	<div id="cash-box" class="box" href="{% url 'cash' %}">
 		<img id="cash-img" class="image" src="{% static 'cash.png' %}" alt="cash icon">
-		<p id="cash-text" class="text">Cash Out</p>		
+		<h2 id="cash-text" class="text">Cash Out</h2>		
 	</div>
 	<div id="feedback-box" class="box" href="{% url 'feedback' %}">
 		<img id="feedback-img" class="image" src="{% static 'feedback.png' %}" alt="feedback icon">
-		<p id="feedback-text" class="text">Feedback</p>		
+		<h2 id="feedback-text" class="text">Feedback</h2>		
 	</div>
 {% endblock %}
 
