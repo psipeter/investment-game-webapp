@@ -1,5 +1,5 @@
 $(function() {  // on page load
-    let progress = 0;
+    let progress = 3;
     let maxProgress = 4;
     let fadeTime = 200;
     updateMain();  // Fade in first page
@@ -202,7 +202,8 @@ $(function() {  // on page load
             setTimeout(function() {$("#cash").fadeOut(fadeTime/2);}, 4*fadeTime);
             setTimeout(function() {$("#form").fadeOut(fadeTime/2);}, 4*fadeTime);
             setTimeout(function() {$("#submit").fadeOut(fadeTime/2);}, 4*fadeTime);
-            enableNavigation(5*fadeTime, 4);
+            setTimeout(function() {$("#m4g").fadeIn(fadeTime);}, 5*fadeTime);
+            enableNavigation(6*fadeTime, 4);
         });
 
 
