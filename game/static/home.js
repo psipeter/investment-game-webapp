@@ -93,6 +93,13 @@ $(function() {  //on page load
         if (doneRequiredBool) {
             $('#bonus-text').text(
                 "Bonus Games ["+nBonus+"/"+N_BONUS+"]");
+            if (nBonus<=2) {            
+                $('#stats-box').addClass('inactive');
+                $('#stats-box').off('click');
+                $('#stats-box').click(function(e) {
+                    alert("To view game statistics, first play more bonus games");
+                });
+            }
             if (doneCashBool) {
                 $('#bonus-box').addClass('inactive');
                 $('#bonus-box').off('click');
@@ -114,7 +121,7 @@ $(function() {  //on page load
     }
     else {
         if (doneSurveyBool & doneTutorialBool & doneRequiredBool) {
-            $('#cash-text').text('Cash Out ($'+fixedReward+".00 +$"+bonusReward+")");
+            $('#cash-text').text('Cash Out ($'+(Number(fixedReward)+Number(bonusReward))+")");
         }
         else {
             $('#cash-box').addClass('inactive');

@@ -102,7 +102,6 @@ $(function() {  //on page load
 
     // Change view after the user or agent moves
     function switchToUser() {
-        if (complete) {gameOver(); return;}
         $("#loading").hide();
         $("#cash").show();
         $("#form").show();
@@ -118,6 +117,7 @@ $(function() {  //on page load
             $("#submit").prop('disabled', true);
             $("#sendA").css('visibility', 'hidden');
             $("#sendB").css('visibility', 'hidden');
+            $("#slider").prop('min', 0);
             $("#slider").prop('max', maxUser);
             $("#slider").prop('value', maxUser/2);
         }
@@ -125,17 +125,16 @@ $(function() {  //on page load
             $("#submit").prop('disabled', false);
             $("#sendA").css('visibility', 'visible');
             $("#sendB").css('visibility', 'visible');
-            $("#sendA").text("$0");
-            $("#sendB").text("$0");
-            $("#slider").css('max', 0);
-            $("#slider").css('value', 0);  
-            $("#slider").css('visibility', 'hidden');      
+            $("#sendA").text(sendAUserText+"0");
+            $("#sendB").text(sendBUserText+"0");
+            $("#slider").prop('min', 0);
+            $("#slider").prop('max', 0);
+            $("#slider").prop('value', 0);  
         }
         startTime = performance.now()  // track user response time
     }
 
     function switchToAgent() {
-        if (complete) {gameOver(); return;}
         $("#loading").hide();
         $("#cash").show();
         $("#form").show();
@@ -163,10 +162,8 @@ $(function() {  //on page load
         $("#submit").css('visibility', 'hidden');
         animateAvailable(agentRole, agentGive, agentKeep)
         // switch to user after animation time
-        setTimeout(function() {
-            if (complete & userRole=="A") {gameOver();}
-            switchToUser();
-        }, animateTime);
+        let wait = (userRole=="A") ? 2*animateTime : animateTime;
+        setTimeout(function() {switchToUser();}, wait);
     }
 
     function switchToLoading() {
@@ -243,9 +240,6 @@ $(function() {  //on page load
                 message = returnData.message;
                 let wait = (userRole=="A") ? animateTime+agentTime : 2*animateTime+agentTime;
                 setTimeout(function () {switchToAgent();}, wait);
-                if (complete & userRole=="B") {
-                    setTimeout(function () {gameOver();}, animateTime);
-                }
             }
         });
         return false;
@@ -300,6 +294,7 @@ $(function() {  //on page load
                 function() {matchB.remove();});
         }
         if (move=="B") {
+            console.log('move B');
             let width = $("#bNow").width();
             $("#aNow").text("$"+(lastKeep+give)+" — Available A");
             let toA = $("#bNow").clone();
@@ -316,8 +311,10 @@ $(function() {  //on page load
                 function() {
                     toA.remove();
                     animateTotal((lastKeep+give), keep);
-                    setTimeout(function() {
-                        animateAvailable('capital');}, animateTime);
+                    if (complete) {setTimeout(function() {
+                        gameOver();}, animateTime);}
+                    else {setTimeout(function() {
+                        animateAvailable('capital');}, animateTime);}
                 });
         }
     }
@@ -331,12 +328,12 @@ $(function() {  //on page load
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
          if (userRole == "A") {
-            $("#aTotal").text("$"+userScore);
-            $("#bTotal").text("$"+agentScore);
+            $("#aTotal").text("$"+userScore+" — Available A");
+            $("#bTotal").text("Available B — $"+agentScore);
         }
         else {
-            $("#aTotal").text("$"+agentScore);
-            $("#bTotal").text("$"+userScore);
+            $("#aTotal").text("$"+agentScore+" — Available A");
+            $("#bTotal").text("Available B — $"+userScore);
         }
         $("#aNow").text("$0 — Available A");
         $("#bNow").text("Available B — $0");
@@ -364,24 +361,19 @@ $(function() {  //on page load
     // Final page after game is complete
 
     function gameOver() {
-        $("#loading").hide();
-        $("#cash").hide();
-        // $("#form").hide();
-        $("#form").css('visibility', 'hidden');
+        $("#loading").remove();
+        $("#cash").remove();
+        $("#form").remove();
         $("#currently").hide();
-        $("#sendA").hide();
-        $("#sendB").hide();
-        $("#submit").prop('disabled', true);
-        $("#submit").css('visibility', 'hidden');
-        // $("#submit").hide();
-        // $("#slider").hide();
-        $("#aNow").hide();
-        $("#bNow").hide();
-        $("#current").hide();
+        $("#sendA").remove();
+        $("#sendB").remove();
+        $("#submit").remove();
+        $("#slider").remove();
+        $("#aNow").remove();
+        $("#bNow").remove();
         $("#total").text('Final Score');
         $("#home").show();
         $("#flair").show();
         $("#play-again").show();
-        window.stop();  // less hacky solution?
     }
 });  // document load end

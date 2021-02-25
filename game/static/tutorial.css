@@ -330,3 +330,22 @@ h3 {
     transform: translate(24px, 0);
   }
 }
+
+#m5, #m6, #m7, #m8, #m9, #m10 {
+	display: grid;
+	grid-template-rows: 20% 40% 20% 20%;
+	text-align: center;
+}
+#img5, #img6, #img7, #img8, #img9 {
+	height: 40%;
+	width: 30%;
+	margin-left: 35%;
+	grid-row: 2;
+	grid-column: 1;
+}
+
+.HIT {
+	padding: 1%;
+	background-color: var(--myGray);
+	font-weight: bold;
+}

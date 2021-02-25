@@ -292,7 +292,7 @@ class User(AbstractUser):
 		gamesA = Game.objects.filter(user=self, userRole="A", complete=True).exclude(agent__name="required")
 		gamesB = Game.objects.filter(user=self, userRole="B", complete=True).exclude(agent__name="required")
 		if gamesA.count() <= 1 or gamesB.count() <= 1:
-			return {'skip': True, 'figScoreA': None, 'figScoreB': None, 'figGenA': None, 'figGenB': None}
+			return {'figScoreA': None, 'figScoreB': None, 'figGenA': None, 'figGenB': None}
 		dfs = []
 		columns = ('player', 'turn', 'score', 'generosity')
 		for game in gamesA:
@@ -328,4 +328,4 @@ class User(AbstractUser):
 		figure = mpld3.fig_to_html(fig)
 		plt.close()
 
-		return {'skip': False, 'figure': figure}
+		return {'figure': figure}

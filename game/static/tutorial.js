@@ -1,18 +1,19 @@
 $(function() {  // on page load
-    let progress = 3;
-    let maxProgress = 4;
+    let progress = 0;
+    let maxProgress = 9;
     let fadeTime = 1000;
+    updateProgress();
     updateMain();  // Fade in first page
 
     // Redirect on click
     $('#next').click(function(e) {
-        updateProgress();
         updateMain();
+        updateProgress();
     });
     $('#back').click(function(e) {
         progress = Math.max(0, progress-1);
-        updateProgress();
         updateMain();
+        updateProgress();
     });
 
     // update progress bar
@@ -22,19 +23,25 @@ $(function() {  // on page load
     }
 
     // load new minipage
-    function updateMain(e) {
-        $('#t1').fadeOut(0)        
-        $('#t2').fadeOut(0)        
-        $('#t3').fadeOut(0)        
-        $('#t4').fadeOut(0)        
+    function updateMain(e) {    
         $('#m1').hide();
         $('#m2').hide();
         $('#m3').hide();
         $('#m4').hide();
+        $('#m5').hide();
+        $('#m6').hide();
+        $('#m7').hide();
+        $('#m8').hide();
+        $('#m9').hide();
         $('#m1').children().fadeOut(0);
         $('#m2').children().fadeOut(0);
         $('#m3').children().fadeOut(0);
         $('#m4').children().fadeOut(0);
+        $('#m5').children().fadeOut(0);
+        $('#m6').children().fadeOut(0);
+        $('#m7').children().fadeOut(0);
+        $('#m8').children().fadeOut(0);
+        $('#m9').children().fadeOut(0);
         resetVals("m2");
         resetVals("m3");
         resetVals("m4");
@@ -44,12 +51,16 @@ $(function() {  // on page load
         if (progress==1) {main2();}
         if (progress==2) {main3();}
         if (progress==3) {main4();}
+        if (progress==4) {main5();}
+        if (progress==5) {main6();}
+        if (progress==6) {main7();}
+        if (progress==7) {main8();}
+        if (progress==8) {main9();}
     }
 
     // display and timing of main content
     function main1(e) {
         $('#m1').show();
-        $('#t1').fadeIn(0)        
         $('#m1a').fadeIn(fadeTime);
         setTimeout(function(){$('#m1b').fadeIn(fadeTime);}, fadeTime);
         setTimeout(function(){$('#m1c').fadeIn(fadeTime);}, 2*fadeTime);
@@ -63,7 +74,6 @@ $(function() {  // on page load
         let giveB = 10;
         let keepB = 20;
         $('#m2').show();
-        $('#t2').fadeIn(0);
         $('#m2a').fadeIn(fadeTime);
         $('.center').fadeIn(0);        
         $('.center').children().fadeOut(0);
@@ -95,7 +105,6 @@ $(function() {  // on page load
         let giveB2 = 0;
         let keepB2 = 30;
         $('#m3').show();
-        $('#t3').fadeIn(0);
         $('#m3a').fadeIn(fadeTime);
         $('.center').fadeIn(0);        
         $('.center').children().fadeOut(0);
@@ -130,7 +139,6 @@ $(function() {  // on page load
 
     function main4(e) {
         $('#m4').show();
-        $('#t4').fadeIn(0);
         $('#m4a').fadeIn(fadeTime);
         $('.total').fadeIn(0);
         $('.available').fadeIn(0);
@@ -222,10 +230,59 @@ $(function() {  // on page load
             setTimeout(function() {$("#m4g").fadeIn(fadeTime);}, 5*fadeTime);
             enableNavigation(6*fadeTime, 4);
         });
-
-
     }
 
+
+    function main5(e) {
+        $('#m5').show();
+        $('#m5a').fadeIn(fadeTime);
+        $('#img5').fadeIn(fadeTime);
+        setTimeout(function(){$('#m5b').fadeIn(fadeTime);}, fadeTime);
+        setTimeout(function(){$('#m5c').fadeIn(fadeTime);}, 2*fadeTime);
+        setTimeout(function(){$('#m5d').fadeIn(fadeTime);}, 2*fadeTime);
+        enableNavigation(3*fadeTime, 5);
+    }
+
+    function main6(e) {
+        $('#m6').show();
+        $('#m6a').fadeIn(fadeTime);
+        $('#img6').fadeIn(fadeTime);
+        setTimeout(function(){$('#m6b').fadeIn(fadeTime);}, fadeTime);
+        setTimeout(function(){$('#m6c').fadeIn(fadeTime);}, 2*fadeTime);
+        setTimeout(function(){$('#m6d').fadeIn(fadeTime);}, 2*fadeTime);
+        enableNavigation(3*fadeTime, 6);
+    }
+
+    function main7(e) {
+        $('#m7').show();
+        $('#m7a').fadeIn(fadeTime);
+        $('#img7').fadeIn(fadeTime);
+        setTimeout(function(){$('#m7b').fadeIn(fadeTime);}, fadeTime);
+        setTimeout(function(){$('#m7c').fadeIn(fadeTime);}, 2*fadeTime);
+        setTimeout(function(){$('#m7d').fadeIn(fadeTime);}, 2*fadeTime);
+        enableNavigation(3*fadeTime, 7);
+    }
+
+    function main8(e) {
+        $('#m8').show();
+        $('#m8a').fadeIn(fadeTime);
+        $('#img8').fadeIn(fadeTime);
+        setTimeout(function(){$('#m8b').fadeIn(fadeTime);}, fadeTime);
+        setTimeout(function(){$('#m8c').fadeIn(fadeTime);}, 2*fadeTime);
+        setTimeout(function(){$('#m8d').fadeIn(fadeTime);}, 2*fadeTime);
+        enableNavigation(3*fadeTime, 8);
+    }
+
+    function main9(e) {
+        $('#m9').show();
+        $('#m9a').fadeIn(fadeTime);
+        $('#img9').fadeIn(fadeTime);
+        setTimeout(function(){$('#m9b').fadeIn(fadeTime);}, fadeTime);
+        setTimeout(function(){$('#m9c').fadeIn(fadeTime);}, 2*fadeTime);
+        enableNavigation(3*fadeTime, 9);
+    }
+
+    // Functions
 
     function animateCapital(timeout, addTo, capital) {
         setTimeout(function(){
@@ -359,7 +416,9 @@ $(function() {  // on page load
     function enableNavigation(timeout, prog) {
          setTimeout(function(){
             $("#back").prop("disabled", false);
-            $("#next").prop("disabled", false);
+            if (prog < 9) {
+                $("#next").prop("disabled", false);
+            }
             progress = prog;
         }, timeout);
     }

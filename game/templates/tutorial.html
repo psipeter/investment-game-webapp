@@ -98,6 +98,43 @@
 		<h2 id="m4g" class="bottom-text">Leaving an incomplete game will result in a score of <strong>0</strong></h2>
 	</div>
 
+	<div id="m5" class="main">
+		<h2 id="m5a">After finishing the Tutorial, you will play <strong>5 Required Games</strong></h2>
+		<img id="img5" src="{% static 'required.png' %}">
+		<h2 id="m5b">These games are for practice — you will play against <strong>computers</strong> and your scores will <strong>not</strong> count</h2>
+		<h2 id="m5c">After the Required Games, you may select Cash Out to receive your <strong>HIT code for ${{FIXED_REWARD}}</strong>
+	</div>
+
+	<div id="m6" class="main">
+		<h2 id="m6a">You may also continue playing Bonus Games for <strong>additional high-paying rewards</strong></h2>
+		<img id="img6" src="{% static 'bonus.png' %}">
+		<h2 id="m6b">You will earn ${{BONUS_RATE}} per bonus game, plus ${{PERFORMANCE_RATE}} if you score higher than {{PERFORMANCE_THR}} points</h2>
+		<h2 id="m6c">If you play quickly, that's almost minimum wage :O</h2>
+	</div>
+
+	<div id="m7" class="main">
+		<h2 id="m7a">Check our how you're doing on the <strong>Game Stats</strong> page</h2>
+		<img id="img7" src="{% static 'stats.png' %}">
+		<h2 id="m7b">You can compare your scores to other players on the site</h2>
+		<h2 id="m7c">Nice.</h2>
+	</div>
+
+	<div id="m8" class="main">
+		<h2 id="m8a">When you're ready, select <strong>Cash Out</strong> to receive your HIT code or request your bonus</h2>
+		<img id="img8" src="{% static 'cash.png' %}">
+		<h2 id="m8b">Paste your <span class="HIT">HIT Code</span> into your MTurk Browser Tab to complete the task</h2>
+		<h2 id="m8c">Afterwards, play more bonus games, then click <strong>Cash Out and Finish</strong> to receive bonus payment</h2>
+	</div>
+
+	<div id="m9" class="main">
+		<h2 id="m9a">If you have questions, concerns, or suggestions for improving the website, please leave an anonymous comment on the <strong>Feedback</strong> page</h2>
+		<img id="img9" src="{% static 'feedback.png' %}">
+		<h2 id="m9b">That's it! Click the button below to finish the tutorial and start playing games</h2>
+		<form id="m9c" method="POST">
+			{% csrf_token %}
+			 <input id="finish-btn" type="submit" name="btn" value="Finish Tutorial">
+		</form>
+	</div>
 
 	<div id="bottom-bar">
 		<div id="back-next">

@@ -122,3 +122,6 @@ class FeedbackForm(forms.Form):
 
 class CashForm(forms.Form):
 	bonusReward = forms.CharField(label=None)
+
+class TutorialForm(forms.Form):
+	btn = forms.CharField(label=None)

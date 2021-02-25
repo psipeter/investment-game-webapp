@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.urls import reverse
 from .models import Game, User, Feedback
-from game.forms import LoginForm, CreateForm, ProfileForm, ResetForm, CashForm, FeedbackForm
+from game.forms import LoginForm, CreateForm, ProfileForm, ResetForm, CashForm, FeedbackForm, TutorialForm
 from datetime import datetime
 from .parameters import *
 
@@ -101,9 +101,22 @@ def survey(request):
 @login_required
 def tutorial(request):
 	if request.user.doneConsent:
-		request.user.doneTutorial = datetime.now()
-		request.user.save()
-		return render(request, "tutorial.html")
+		if request.method == 'POST':
+			form = TutorialForm(request.POST)
+			if form.is_valid():
+				request.user.doneTutorial = datetime.now()
+				request.user.save()
+				return redirect('home')
+		else:
+			form = TutorialForm()			
+		context = {
+			'form': form,
+			'FIXED_REWARD': str(FIXED_REWARD),
+			'BONUS_RATE': str(BONUS_RATE),
+			'PERFORMANCE_RATE': str(PERFORMANCE_RATE),
+			'PERFORMANCE_THR': str(PERFORMANCE_THR),
+		}
+		return render(request, "tutorial.html", context=context)
 	else:
 		error(request, 'You must sign the consent form before taking the tutorial')
 		return redirect('home')
