@@ -2,17 +2,12 @@ body {
 	text-align: justify;
 }
 
-h2 {
-	margin-top: 2%;
-	margin-bottom: 2%;
+h3 {
+	margin: 2% 0;
 }
 
-.f1 {width: 20%;}
-.f2 {width: 80%; padding-left: 2%;}
-
-.c1 {width: 15%; padding-bottom: 2%;}
-.c2 {width: 45%; padding-bottom: 2%; padding-left: 2%;}
-.c3 {width: 40%; padding-bottom: 2%; padding-left: 2%;}
+.f1 {width: 60%; padding: 0 0 1% 0;}
+.f2 {width: 20%; padding: 0 0 1% 5%;}
 
 input, select {
 	width: 100%;
@@ -45,4 +40,15 @@ table {
 	/*background: var(--myWhite);*/
 	/*border-radius: 30px;*/
 
+}
+
+.link {
+	margin: 2% 0;
+	display: flex;
+	justify-content: center;
+}
+
+.link:visited, .link:link {
+	color: var(--myBlue);
+	/*text-decoration: none;*/
 }

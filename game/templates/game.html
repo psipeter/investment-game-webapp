@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-	<title>Game</title>
+	<title>Investment Game - Game</title>
 {% endblock %}
 
 {% block css %}
@@ -10,33 +10,32 @@
 {% endblock %}
 
 {% block body %}
-	<h1 class="top">Game</h1>
-	<p id="aTotal" class="total left">$0</p>
-	<p id="total" class="total center">Total</p>
-	<p id="bTotal" class="total right">$0</p>
-	<p id="aNow" class="available left">$0</p>
-	<p id="currently" class="available center">Currently Available</p>
-	<p id="bNow" class="available right">$0</p>
-	<!-- <p id="nameA" class="player left">You</p> -->
-	<!-- <p id="nameB" class="player right">Them</p> -->
-	<img id="imgA" class="image left" src="{% static 'user1.png' %}">
-	<img id="imgB" class="image right" src="{% static 'user3.png' %}">
-	<div id="transfer">
-		<div id="cash">
-			<p id="sendA">$0</p>
-			<p id="sendB">$0</p>
-		</div>
-		<form id="form">
-			{% csrf_token %}
-			<div id="slider" class="ui-slider-handle"></div>
-		</form>
-		<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+	<h1>Game</h1>
+	<h2 id="aTotal" class="total left">$0 — Total A</h2>
+	<h2 id="bTotal" class="total right">Total B — $0</h2>
+	<h2 id="aNow" class="available left">$0 — Available A</h2>
+	<h2 id="bNow" class="available right">Available B — $0</h2>
+	<h2 id="nameA" class="player left">A</h2>
+	<h2 id="nameB" class="player right">B</h2>
+	<div id="cash">
+		<h2 id="sendA">$0</h2>
+		<h2 id="sendB">$0</h2>
 	</div>
-	<div id="loading" class="center">
+	<form id="form">
+		{% csrf_token %}
+		<input type="range" min="0" max="10" value="5" step="1" id="slider">
+	</form>
+	<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+	<div id="loading">
 		<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-	</div>	
+	</div>
+
+<!-- 	<div class='center'>
+		Log
+	</div>
+ -->
 	<a id="home" class="available left" href="{% url 'home' %}">Home</a>
-	<p id="flair" class="available center">Isn't This Fun!</p>
+	<p id="flair" class="available cen font2">Isn't This Fun!</p>
 	<a id="play-again" class="available right" href="{% url 'game' %}">Play Again</a>
 
 {% endblock %}
@@ -47,16 +46,16 @@
 		let userRole = "{{game.userRole}}";
 		let capital = Number("{{game.capital}}");
 		let match = Number("{{game.match}}");
-		let userGives = "{{userGives}}"
-		let userKeeps = "{{userKeeps}}"
-		let userRewards = "{{userRewards}}"
-		let agentGives = "{{agentGives}}"
-		let agentKeeps = "{{agentKeeps}}"
-		let agentRewards = "{{agentRewards}}"
-		let userA = "{% static 'userA.png' %}"
-		let userB = "{% static 'userB.png' %}"
-		let lockedA = "{% static 'lockedA.png' %}"
-		let lockedB = "{% static 'lockedB.png' %}"
+		let userGives = "{{userGives}}";
+		let userKeeps = "{{userKeeps}}";
+		let userRewards = "{{userRewards}}";
+		let agentGives = "{{agentGives}}";
+		let agentKeeps = "{{agentKeeps}}";
+		let agentRewards = "{{agentRewards}}";
+		let userA = "{% static 'userA.png' %}";
+		let userB = "{% static 'userB.png' %}";
+		let lockedA = "{% static 'lockedA.png' %}";
+		let lockedB = "{% static 'lockedB.png' %}";
 	</script>
 	<script src="{% static 'game.js' %}"></script>
 {% endblock %}

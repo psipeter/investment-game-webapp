@@ -11,54 +11,54 @@
 
 {% block body %}
 	<h1>Survey</h1>
-	<h2>Please complete the survey. All responses are optional</h2>
+	<h3>Please complete the survey. All responses are optional</h3>
 	<form method="POST">
 		{% csrf_token %}
 		<table>
 			<tr>
-				<td class="f1">{{ form.age }}</td>
-				<td class="f2">{{ form.age.label_tag }}</td>
+				<td class="f1">{{ form.age.label_tag }}</td>
+				<td class="f2">{{ form.age }}</td>
 			</tr>
 			<tr>
-				<td class="f1">{{ form.gender }}</td>
-				<td class="f2">{{ form.gender.label_tag }}</td>
+				<td class="f1">{{ form.gender.label_tag }}</td>
+				<td class="f2">{{ form.gender }}</td>
 			</tr>
 			<tr>
-				<td class="f1">{{ form.income }}</td>
-				<td class="f2">{{ form.income.label_tag }}</td>
+				<td class="f1">{{ form.income.label_tag }}</td>
+				<td class="f2">{{ form.income }}</td>
 			</tr>
 			<tr>
-				<td class="f1">{{ form.education }}</td>
-				<td class="f2">{{ form.education.label_tag }}</td>
+				<td class="f1">{{ form.education.label_tag }}</td>
+				<td class="f2">{{ form.education }}</td>
 			</tr>
 			<tr>
-				<td class="f1">{{ form.veteran }}</td>
-				<td class="f2">{{ form.veteran.label_tag }}</td>
+				<td class="f1">{{ form.veteran.label_tag }}</td>
+				<td class="f2">{{ form.veteran }}</td>
 			</tr>
 		</table>
 		<br>
 
-		<h2>For the next three questions, you will be asked to report a number between 1 and 10</h2>
+		<h3>Rate how strongly you agree or disagree with the following statement</h3>
 
 		<table>
 			<tr>
-				<td class="c1">{{ form.empathy }}</td>
-				<td class="c2">{{ form.empathy.label }}</td>
-				<td class="c3"><strong>1</strong> &nbsp - you struggle to understand others’ feelings <br><strong>10</strong> - you intuitively understand others’ feelings</td>
+				<td class="f1">{{ form.empathy.label_tag }}</td>
+				<td class="f2">{{ form.empathy }}</td>
 			</tr>
 			<tr>
-				<td class="c1">{{ form.risk }}</td>
-				<td class="c2">{{ form.risk.label }}</td>
-				<td class="c3"><strong>1</strong> &nbsp - you give them nothing <br><strong>10</strong> - you give them the full amount</td>
+				<td class="f1">{{ form.risk.label_tag }}</td>
+				<td class="f2">{{ form.risk }}</td>
 			</tr>
 			<tr>
-				<td class="c1">{{ form.altruism }}</td>
-				<td class="c2">{{ form.altruism.label }}</td>
-				<td class="c3"><strong>1</strong> &nbsp - you keep all your winnings <br><strong>10</strong> - you redistribute all your winnings</td>
+				<td class="f1">{{ form.altruism.label_tag }}</td>
+				<td class="f2">{{ form.altruism }}</td>
 			</tr>
 		</table>
 
 		<div id="submitWrapper"><input id="submitButton" type="submit" value ="Submit"/> </div>
+
+		<a class="link" href="{% url 'home' %}">Home</a>
+
 	</form>
 
 {% endblock %}

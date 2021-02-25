@@ -1,7 +1,7 @@
 $(function() {  // on page load
-    let progress = 0;
+    let progress = 3;
     let maxProgress = 4;
-    let fadeTime = 2000;
+    let fadeTime = 1000;
     updateMain();  // Fade in first page
 
     // Redirect on click
@@ -65,6 +65,8 @@ $(function() {  // on page load
         $('#m2').show();
         $('#t2').fadeIn(0);
         $('#m2a').fadeIn(fadeTime);
+        $('.center').fadeIn(0);        
+        $('.center').children().fadeOut(0);
         $('.total').fadeIn(0);
         $('.available').fadeIn(0);
         $('.player').fadeIn(0);
@@ -95,6 +97,8 @@ $(function() {  // on page load
         $('#m3').show();
         $('#t3').fadeIn(0);
         $('#m3a').fadeIn(fadeTime);
+        $('.center').fadeIn(0);        
+        $('.center').children().fadeOut(0);
         $('.total').fadeIn(0);
         $('.available').fadeIn(0);
         $('.player').fadeIn(0);
@@ -103,6 +107,7 @@ $(function() {  // on page load
         animateAToB(3*fadeTime, "m3", giveA, keepA);
         animateBToA(4*fadeTime, "m3", keepA, giveB, keepB);
         animateTotal(5*fadeTime, "m3", keepA, giveB, keepB)
+        setTimeout(function(){$("#m3c2").fadeIn(fadeTime);}, 5*fadeTime);
         setTimeout(function(){
             resetVals("m3");
             $("#m3c").css('color', 'gray');
@@ -111,6 +116,7 @@ $(function() {  // on page load
         animateCapital(7*fadeTime, "m3", capital);
         animateAToB(8*fadeTime, "m3", giveA2, keepA2);
         animateBToA(9*fadeTime, "m3", keepA2, giveB2, keepB2);
+        setTimeout(function(){$("#m3d2").fadeIn(fadeTime);}, 10*fadeTime);
         animateTotal(10*fadeTime, "m3", keepA2, giveB2, keepB2)
         setTimeout(function(){
             resetVals("m3");
@@ -123,26 +129,39 @@ $(function() {  // on page load
     }
 
     function main4(e) {
-        let capital = 10;
-        let maxUser = capital;
         $('#m4').show();
         $('#t4').fadeIn(0);
         $('#m4a').fadeIn(fadeTime);
         $('.total').fadeIn(0);
         $('.available').fadeIn(0);
         $('.player').fadeIn(0);
-        $("#form").slider({
-            slide: function(event, ui) {
-                $("#submit").prop('disabled', false);
-                $("#sendA").css('visibility', 'visible');
-                $("#sendB").css('visibility', 'visible');
-                $("#sendA").text("$"+(maxUser-ui.value));
-                $("#sendB").text("$"+ui.value);
-            }
+
+        let capital = 10;
+        let maxUser = capital;
+        $("#slider").attr('max', maxUser);
+        $("#slider").attr('value', maxUser/2);
+        $("#slider").prop("disabled", false);
+        $("#submit").prop('disabled', true);
+        $("#slider").on('change', function () {
+            // let preA = (userRole=="A") ? "Send $" : "Keep $";
+            // let preB = (userRole=="A") ? "Send $" : "Keep $";
+            let max = maxUser;
+            let val = $("#slider").val();
+            $("#submit").prop('disabled', false);
+            $("#sendA").css('visibility', 'visible');
+            $("#sendB").css('visibility', 'visible');
+            $("#sendA").text("Keep $"+(max-val));
+            $("#sendB").text("Send $"+val);
         });
-        $("#form").slider("option", 'max', maxUser);
-        $("#form").slider("option", 'value', maxUser/2);
-        $("#form").slider({"disabled": true});
+        $("#slider").on('input', function () {
+            let max = maxUser;
+            let val = $("#slider").val();
+            $("#submit").prop('disabled', false);
+            $("#sendA").css('visibility', 'visible');
+            $("#sendB").css('visibility', 'visible');
+            $("#sendA").text("Keep $"+(max-val));
+            $("#sendB").text("Send $"+val);
+        });
         $("#submit").css('visibility', 'hidden');
         $("#sendA").css('visibility', 'hidden');
         $("#sendB").css('visibility', 'hidden');
@@ -151,14 +170,13 @@ $(function() {  // on page load
             $("#cash").fadeIn(fadeTime);
             $("#form").fadeIn(fadeTime);
             $("#submit").fadeIn(fadeTime);
-            $("#form").slider({"disabled": false});
             $("#submit").css('visibility', 'visible');
             $("#submit").prop('disabled', true);
             $("#m4a").fadeOut(fadeTime/2);
             $("#m4c").fadeIn(fadeTime);},
         2*fadeTime);
         $("#submit").click(function () {
-            let giveA = $("#form").slider("option", "value");
+            let giveA = Number($("#slider").val());
             let keepA = maxUser - giveA;
             let giveB = 0;
             let keepB = 3*giveA;
@@ -166,6 +184,7 @@ $(function() {  // on page load
             $("#m4d").fadeIn(fadeTime);
             $("#submit").prop('disabled', true);
             $("#submit").css('visibility', 'hidden');
+            $("#slider").css('visibility', 'hidden');
             $("#sendA").css('visibility', 'hidden');
             $("#sendB").css('visibility', 'hidden');
             $("#cash").fadeOut(fadeTime/2);
@@ -176,8 +195,7 @@ $(function() {  // on page load
             animateAToB(0, "m4", giveA, keepA);
             setTimeout(function() {
                 $("#loading").fadeOut(fadeTime/2);
-                $("#form").slider({"disabled": true});
-                // $("#transfer").fadeIn(fadeTime);
+                $("#slider").prop("disabled", true);
                 $("#cash").fadeIn(fadeTime);
                 $("#form").fadeIn(fadeTime);
                 $("#submit").fadeIn(fadeTime);
@@ -185,9 +203,8 @@ $(function() {  // on page load
                 $("#sendB").css('visibility', 'visible');
                 $("#sendA").text(giveB);
                 $("#sendB").text(keepB);
-                $("#form").slider("option", 'value', keepB);
-                $("#form").slider("option", 'max', keepB);
-                $("#form").slider({"disabled": true});
+                $("#slider").prop('max', keepB);
+                $("#slider").prop('value', keepB);
                 $("#form").css('visibility', 'visible');            
                 $("#slider").css('visibility', 'visible');      
                 $("#submit").css('visibility', 'hidden');
@@ -210,19 +227,18 @@ $(function() {  // on page load
     }
 
 
-
-
     function animateCapital(timeout, addTo, capital) {
         setTimeout(function(){
-            $("#aNow"+addTo).text("$"+capital);
-            $("#bNow"+addTo).text("$0");
+            $("#aNow"+addTo).text("$"+capital+" — Available A");
+            $("#bNow"+addTo).text("Available B — $0");
             let cap = $("#aNow"+addTo).clone();
             cap.attr("id", "cap");
+            cap.text("$"+capital)
             cap.appendTo("#"+addTo);
             cap.css("position", "relative");
-            cap.css("left", "-=5%");
+            cap.css("left", "-=10%");
             cap.animate({
-                left : "+=5%",
+                left : "+=10%",
                 'opacity': 0,
                 }, fadeTime,
                 function() {cap.remove();});
@@ -230,8 +246,8 @@ $(function() {  // on page load
     }
     function animateAToBTutor(timeout, addTo, giveA, keepA) {
         setTimeout(function(){
-            $("#aNow"+addTo).text("$"+keepA);
-            $("#bNow"+addTo).text("$"+giveA);
+            $("#aNow"+addTo).text("$"+keepA+" — Available A");
+            $("#bNow"+addTo).text("Available B — $"+giveA);
             let toB = $("#aNow"+addTo).clone();
             let width = $("#bNow"+addTo).width();
             toB.attr("id", "toB");
@@ -253,8 +269,8 @@ $(function() {  // on page load
             let toB = $("#aNow"+addTo).clone();
             let width = $("#bNow"+addTo).width();
             let matchB = $("#bNow"+addTo).clone();
-            $("#aNow"+addTo).text("$"+keepA);
-            $("#bNow"+addTo).text("$"+3*giveA);
+            $("#aNow"+addTo).text("$"+keepA + " — Available A");
+            $("#bNow"+addTo).text("Available B — $"+3*giveA);
             toB.text("$"+giveA);
             toB.attr("id", "toB2");
             toB.css("position", "relative");
@@ -269,12 +285,12 @@ $(function() {  // on page load
                 function() {toB.remove()});
             matchB.attr("id", "matchB");
             matchB.css("position", "relative");
-            matchB.css("left", "+=5%");
+            matchB.css("left", "+=10%");
             // matchB.width("5%");
             matchB.text("$"+2*giveA);
             matchB.appendTo("#"+addTo);
             matchB.animate({
-                left: "-=5%",
+                left: "-=10%",
                 'opacity': 0,
                 }, fadeTime,
                 function() {matchB.remove();});
@@ -283,9 +299,9 @@ $(function() {  // on page load
     function animateBToA(timeout, addTo, keepA, giveB, keepB) {
         setTimeout(function(){
             let width = $("#bNow"+addTo).width();
-            $("#aNow"+addTo).text("$"+(keepA+giveB));
+            $("#aNow"+addTo).text("$"+(keepA+giveB)+" — Available A");
             let toA = $("#bNow"+addTo).clone();
-            $("#bNow"+addTo).text("$"+keepB);
+            $("#bNow"+addTo).text("Available B — $"+keepB);
             toA.attr("id", "toA2");
             toA.text("$"+giveB);
             toA.css("position", "relative");
@@ -301,15 +317,15 @@ $(function() {  // on page load
     }
     function animateTotal(timeout, addTo, keepA, giveB, keepB){
         setTimeout(function(){
-            $("#aTotal"+addTo).text("$"+(keepA+giveB));
-            $("#bTotal"+addTo).text("$"+keepB);
+            $("#aTotal"+addTo).text("$"+(keepA+giveB)+" — Total A");
+            $("#bTotal"+addTo).text("Total B — $"+keepB);
             let upA = $("#aNow"+addTo).clone();
             let upB = $("#bNow"+addTo).clone();
             let mTotal = parseInt($("#aTotal"+addTo).offset().top);
             let mNow = parseInt($("#aNow"+addTo).offset().top);
             let dY = mNow - mTotal;
-            $("#aNow"+addTo).text("$0");
-            $("#bNow"+addTo).text("$0");
+            $("#aNow"+addTo).text("$0 — Available A");
+            $("#bNow"+addTo).text("Available B — $0");
             upA.attr("id", "upA");
             upA.css("position", "relative");
             upA.text("$"+(keepA+giveB));
@@ -334,10 +350,10 @@ $(function() {  // on page load
 
 
     function resetVals(addTo) {
-        $("#aNow"+addTo).text("$0");
-        $("#bNow"+addTo).text("$0");
-        $("#aTotal"+addTo).text("$0");
-        $("#bTotal"+addTo).text("$0");
+        $("#aNow"+addTo).text("$0 — Available A");
+        $("#bNow"+addTo).text("Available B — $0");
+        $("#aTotal"+addTo).text("$0 — Total A");
+        $("#bTotal"+addTo).text("Total B — $0");
     }
 
     function enableNavigation(timeout, prog) {

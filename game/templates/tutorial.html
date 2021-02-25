@@ -12,24 +12,20 @@
 {% block body %}
 	<div id="top-bar">
 		<h1>TUTORIAL</h1>		
-		<!-- <h3 id="t1" class="title">Introduction</h3>		 -->
-		<!-- <h3 id="t2" class="title">Rules</h3>		 -->
-		<!-- <h3 id="t3" class="title">Strategy</h3>		 -->
-		<!-- <h3 id="t4" class="title">Interface</h3>		 -->
 	</div>
 
 	<div id="m1" class="main">
 		<div id='m1a' class="row">
-			<p class="text">The investment game is a two player, turn based game</p>
+			<h2 class="text">The investment game is a two player, turn based game</h2>
 			<img id="img1a" src="{% static 'two-player.png' %}">
 		</div>
 		<div id='m1b' class="row">
 			<img id="img1b" src="{% static 'sending.png' %}">
-			<p class="text">Each turn, one player sends points to the other</p>
+			<h2 class="text">Each turn, one player sends points to the other</h2>
 		</div>
 		<div id='m1c' class="row">
 			<div>
-				<p class="text">This action represents doing something like</p>
+				<h2 class="text">This action represents doing something like</h2>
 				<ul id="m1c1">
 					<li>doing somebody a favor</li>
 					<li>investing in a startup</li>
@@ -41,65 +37,65 @@
 	</div>
 
 	<div id="m2" class="main">
-		<p id="m2a" class="top-text">Each round of the game has <strong>four</strong> steps</p>
-		<p id="aTotalm2" class="total left">$0</p>
-		<p class="total center">Total</p>
-		<p id="bTotalm2" class="total right">$0</p>
-		<p id="aNowm2" class="available left">$0</p>
-		<p class="available center">Currently Available</p>
-		<p id="bNowm2" class="available right">$0</p>
-		<p class="player left">Player A</p>
-		<p class="player right">Player B</p>
-		<p id="m2b1" class="bubble">1. A receives capital</p>
-		<p id="m2b2" class="bubble">2. A sends some money to B</p>
-		<p id="m2b3" class="bubble">3. B receives 3X this amount</p>
-		<p id="m2b4" class="bubble">4. B sends some money back to A</p>
-		<p id="m2b5" class="bubble">Update score</p>
-		<p id="m2c" class="bottom-text">Each game has <strong>five</strong> rounds</p>
+		<h2 id="m2a" class="top-text">Each round of the game has <strong>four</strong> steps</h2>
+		<h2 id="aTotalm2" class="total left">$0 — Total A</h2>
+		<h2 id="bTotalm2" class="total right">Total B — $0</h2>
+		<h2 id="aNowm2" class="available left">$0 — Available A</h2>
+		<h2 id="bNowm2" class="available right">Available B — $0</h2>
+		<h2 class="player left">A (Alfred)</h2>
+		<h2 class="player right">B (Bubba)</h2>
+		<h2 id="m2c" class="bottom-text">Each game has <strong>five</strong> rounds</h2>
+		<div class='center'>
+			<h3 id="m2b1" class="center-text">1. Alfred receives $10</h3>
+			<h3 id="m2b2" class="center-text">2. Alfred sends some money to Bubba</h3>
+			<h3 id="m2b3" class="center-text">3. Bubba receives 3X this amount</h3>
+			<h3 id="m2b4" class="center-text">4. Buba sends some money back to Alfred</h3>
+			<h3 id="m2b5" class="center-text">[5.] Update score and repeat</h3>
+		</div>
 	</div>
 
 	<div id="m3" class="main">
-		<p id="m3a" class="top-text">There is a tradeoff between <strong>immediate reward</strong> and <strong>long-term reputation</strong></p>
-		<p id="aTotalm3" class="total left">$0</p>
-		<p class="total center">Total</p>
-		<p id="bTotalm3" class="total right">$0</p>
-		<p id="aNowm3" class="available left">$0</p>
-		<p class="available center">Currently Available</p>
-		<p id="bNowm3" class="available right">$0</p>
-		<p class="player left">Player A</p>
-		<p class="player right">Player B</p>
-		<p id="m3c" class="bottom-text">If A and B are both <strong>generous</strong>, each will score moderately</p>
-		<p id="m3d" class="bottom-text">If one player is <strong>greedy</strong>, they will score big at the expense of the other</p>
-		<p id="m3e" class="bottom-text">There is no optimal strategy — you must learn through <strong>trial and error</strong>!</p>
+		<h2 id="m3a" class="top-text">There is a tradeoff between <strong>immediate reward</strong> and <strong>long-term reputation</strong></h2>
+		<h2 id="aTotalm3" class="total left">$0 — Total A</h2>
+		<h2 id="bTotalm3" class="total right">Total B — $0</h2>
+		<h2 id="aNowm3" class="available left">$0 — Available A</h2>
+		<h2 id="bNowm3" class="available right">Available B — $0</h2>
+		<h2 class="player left">A (Alfred)</h2>
+		<h2 class="player right">B (Bubba)</h2>
+		<div class='center'>
+			<h3 id="m3c2" class="center-text"><strong>Generous — </strong>Alfred $15, Bubba $15</h3>
+			<h3 id="m3d2" class="center-text"><strong>Greedy — </strong>Alfred $0, Bubba $30</h3>
+		</div>
+		<h2 id="m3c" class="bottom-text">If A and B are both <strong>generous</strong>, each will score moderately</h2>
+		<h2 id="m3d" class="bottom-text">If one player is <strong>greedy</strong>, they will score big at the expense of the other</h2>
+		<h2 id="m3e" class="bottom-text">There is no optimal strategy — you must learn through <strong>trial and error</strong>!</h2>
 	</div>
 
 	<div id="m4" class="main">
-		<p id="m4a"class="top-text">You will be randomly assigned to player A or B</p>
-		<p id="m4c"class="top-text">Use the <strong>slider</strong> to choose an amount, then press <strong>send</strong> to submit</p>
-		<p id="m4d"class="top-text"><strong>Wait</strong> while the other player makes a choice</p>
-		<p id="m4e"class="top-text">A grayed out slider indicates <strong>their move</strong></p>
-		<p id="m4f"class="top-text">The website will <strong>record</strong> both players' moves and final scores</p>
-		<p id="aTotalm4" class="total left">$0</p>
-		<p class="total center">Total</p>
-		<p id="bTotalm4" class="total right">$0</p>
-		<p id="aNowm4" class="available left">$0</p>
-		<p class="available center">Currently Available</p>
-		<p id="bNowm4" class="available right">$0</p>
-		<p class="player left">You</p>
-		<p class="player right">Them</p>
+		<h2 id="m4a"class="top-text">You will be randomly assigned to player A or B</h2>
+		<h2 id="m4c"class="top-text">Use the <strong>slider</strong> to choose an amount, then press <strong>send</strong> to submit</h2>
+		<h2 id="m4d"class="top-text"><strong>Wait</strong> while the other player makes a choice</h2>
+		<h2 id="m4e"class="top-text">A grayed out slider indicates <strong>their move</strong></h2>
+		<h2 id="m4f"class="top-text">The website will <strong>record</strong> both players' moves and final scores</h2>
+		<h2 id="aTotalm4" class="total left">$0 — Total A</h2>
+		<h2 id="bTotalm4" class="total right">Total B — $0</h2>
+		<h2 id="aNowm4" class="available left">$0 — Available A</h2>
+		<h2 id="bNowm4" class="available right">Available B — $0</h2>
+		<h2 class="player left">A (You)</h2>
+		<h2 class="player right">B (Computer)</h2>
 		<div id="cash">
-			<p id="sendA">$0</p>
-			<p id="sendB">$0</p>
+			<h2 id="sendA">$0</h2>
+			<h2 id="sendB">$0</h2>
 		</div>
 		<form id="form">
 			{% csrf_token %}
-			<div id="slider" class="ui-slider-handle"></div>
+			<input type="range" min="0" max="10" value="5" step="1" id="slider">
 		</form>
-		<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
-		<div id="loading" class="center">
+		<input type="submit" id="submit" value="send">
+		<div id="loading">
 			<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
 		</div>
-		<p id="m4g" class="bottom-text">Leaving an incomplete game will result in a score of <strong>0</strong></p>
+		<h2 id="m4g" class="bottom-text">Leaving an incomplete game will result in a score of <strong>0</strong></h2>
 	</div>
 
 
@@ -111,7 +107,7 @@
 		<div id="progress-bar-bg">
 			<div id="progress-bar-fg"></div>	
 		</div>
-		<p hidden><a href="{% url 'home' %}">Finish</a></p>
+		<h2 hidden><a href="{% url 'home' %}">Finish</a></h2>
 	</div>
 
 {% endblock %}

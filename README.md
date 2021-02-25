@@ -7,6 +7,7 @@ Clone the git repository
 - (Start a virtual environment, I use pipenv)
 Install dependencies
 - ```pip install django numpy scipy matplotlib seaborn mpld3```
+- Download JQuery (https://jquery.com/download/) and place ```.js``` file in ```/static```
 
 # Create the database
 - ```python manage.py makemigrations```

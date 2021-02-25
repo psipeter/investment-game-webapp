@@ -93,17 +93,19 @@ class ProfileForm(forms.ModelForm):
 		label="Have you ever played the Prisoner's Dilemma?",
 		choices=veteranChoices,
 		required=False)
-	empathyLabel = "How easily can you figure out what other people are thinking or feeling during a conversation?"
-	empathyHelpText = "1 indicates that you struggle to understand others’ motivations, and 10 indicates that you intuitively understand others’ mental processes."
-	riskLabel = "Imagine a coworker approaches you and asks for a $1000 loan, promising to return you the money, plus 20% interest, in a month. How likely are you to trust them and loan them the money?"
-	riskHelpText = "1 indicates you wouldn’t give them anything, and 10 indicates you’d given them the full amount."
-	altruismLabel = "Imagine you win a million dollars in the lottery. How much do you keep for yourself and how much do you give away to friends, family, and charity?"
-	altruismHelpText = "1 indicates you would keep all your winnings, and 10 indicates you would redistribute all your winnings."
-	rangeChoices = tuple([(str(n), str(n)) for n in np.arange(1, 11)])
-	rangeChoices = (('', '---'),) + rangeChoices
-	empathy = forms.ChoiceField(choices=rangeChoices, label=empathyLabel, help_text=empathyHelpText, required=False)
-	risk = forms.ChoiceField(choices=rangeChoices, label=riskLabel, help_text=riskHelpText, required=False)
-	altruism = forms.ChoiceField(choices=rangeChoices, label=altruismLabel, help_text=altruismHelpText, required=False)
+	empathyLabel = "I can easily figure out what other people are thinking or feeling during a conversation"
+	riskLabel = "A coworker approaches you and asks for a $1000 loan, promising to return you the money, plus 20% interest, in a month. I would trust them and loan them the money"
+	altruismLabel = "I win a million dollars in the lottery. I would keep the money for myself rather than giving it away to friends, family, or charity"
+	likertScale = (
+		('', '---'),
+		('1', 'Strongly Disagree'),
+		('2', 'Disagree'),
+		('3', 'Undecided'),
+		('4', 'Agree'),
+		('5', 'Strongly Agree'))
+	empathy = forms.ChoiceField(choices=likertScale, label=empathyLabel, required=False)
+	risk = forms.ChoiceField(choices=likertScale, label=riskLabel, required=False)
+	altruism = forms.ChoiceField(choices=likertScale, label=altruismLabel, required=False)
 
 	class Meta:
 		model = models.User
