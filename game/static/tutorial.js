@@ -259,9 +259,9 @@ $(function() {  // on page load
         $('#m7a').fadeIn(fadeTime);
         $('#img7').fadeIn(fadeTime);
         setTimeout(function(){$('#m7b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m7c').fadeIn(fadeTime);}, 2*fadeTime);
-        setTimeout(function(){$('#m7d').fadeIn(fadeTime);}, 2*fadeTime);
-        enableNavigation(3*fadeTime, 7);
+        // setTimeout(function(){$('#m7c').fadeIn(fadeTime);}, 2*fadeTime);
+        // setTimeout(function(){$('#m7d').fadeIn(fadeTime);}, 2*fadeTime);
+        enableNavigation(2*fadeTime, 7);
     }
 
     function main8(e) {

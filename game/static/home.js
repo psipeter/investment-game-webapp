@@ -1,12 +1,12 @@
 initialize("/game/api/status/", "GET", (status) => {
     "use strict";
 
-    let doneConsentBool = (doneConsent !== null);
-    let doneSurveyBool = (doneSurvey !== null);
-    let doneTutorialBool = (doneTutorial !== null);
-    let doneRequiredBool = (doneRequired !== null);
-    let doneBonusBool = (doneBonus !== null);
-    let doneCashBool = (doneCash !== null);
+    let doneConsentBool = (status.doneConsent !== null);
+    let doneSurveyBool = (status.doneSurvey !== null);
+    let doneTutorialBool = (status.doneTutorial !== null);
+    let doneRequiredBool = (status.doneRequired !== null);
+    let doneBonusBool = (status.doneBonus !== null);
+    let doneCashBool = (status.doneCash !== null);
 
     $("#ID").text(status.username);
 
