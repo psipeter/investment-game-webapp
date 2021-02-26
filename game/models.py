@@ -80,7 +80,6 @@ class Agent(models.Model):
 		self.obj.loadArchive(file=f"{name}{player}.npz")
 		self.obj.reset()
 		agentStates = game.historyToArray("agent", "state")
-		print(agentStates)
 		if len(agentStates) > 0:
 			self.obj.state = agentStates[-1]
 		self.blob.save()
@@ -186,7 +185,6 @@ class Game(models.Model):
 		self.agent.getObj(self)
 		agentGive, agentKeep = self.agent.obj.act(money, history)
 		agentState = self.agent.obj.state
-		print('goAgent', agentState)
 		self.agentGives += f"{agentGive:d},"
 		self.agentKeeps += f"{agentKeep:d},"
 		self.agentStates += f"{agentState:.2f},"
@@ -236,7 +234,6 @@ class Game(models.Model):
 			elif entry == "reward":
 				return np.array(self.agentRewards.split(',')[:-1]).astype(np.int)
 			elif entry == "state":
-				print('to array', self.agentStates)
 				return np.array(self.agentStates.split(',')[:-1]).astype(np.float)
 
 	def historyToDict(self):
