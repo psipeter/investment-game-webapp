@@ -1,4 +1,5 @@
-$(function() {  //on page load
+initialize("/game/api/startGame/", "POST", (game) => {
+    "use strict";
 
     // Initialization and globals
     let maxUser;
@@ -14,34 +15,26 @@ $(function() {  //on page load
     let sendBUserText = "";
     let sendAAgentText = "";
     let sendBAgentText = "";
-    let doneRequiredBool = (doneRequired != "None") ? true : false;
+    let doneRequiredBool = (game.doneRequired !== null);
     let turn = 1;
-    complete = false
-    // initial game conditions (if continued or agent moves first)
-    function strToNum(arr){
-        let numArr = [];
-        for (i=0; i<arr.length; i++) {
-            if (arr[i]=="") {continue;}
-            numArr.push(Number(arr[i]));
-        }
-        return numArr;
-    }
-    userGives = strToNum(userGives.slice(1, -1).split(", "));
-    userKeeps = strToNum(userKeeps.slice(1, -1).split(", "));
-    userRewards = strToNum(userRewards.slice(1, -1).split(", "));
-    agentGives = strToNum(agentGives.slice(1, -1).split(", "));
-    agentKeeps = strToNum(agentKeeps.slice(1, -1).split(", "));
-    agentRewards = strToNum(agentRewards.slice(1, -1).split(", "));
-    if (userRole == "A") {
-        maxUser = capital;
+    let complete = false
+
+    let userGives = game.userGives;
+    let userKeeps = game.userKeeps;
+    let userRewards = game.userRewards;
+    let agentGives = game.agentGives;
+    let agentKeeps = game.agentKeeps;
+    let agentRewards = game.agentRewards;
+    if (game.userRole == "A") {
+        maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
         if (doneRequiredBool) {
-            $("#nameA").text("A ("+userName+")");
+            $("#nameA").text("A ("+game.userName+")");
             $("#nameB").text("B [hidden]");
         }
         else {
-            $("#nameA").text("A ("+userName+")");
-            $("#nameB").text("B ("+agentName+")");            
+            $("#nameA").text("A ("+game.userName+")");
+            $("#nameB").text("B ("+game.agentName+")");
         }
         sendAUserText = "Keep $";
         sendBUserText = "Give $";
@@ -53,17 +46,17 @@ $(function() {  //on page load
     else {
         if (doneRequiredBool) {
             $("#nameA").text("A [hidden]");
-            $("#nameB").text("B ("+userName+")");
+            $("#nameB").text("B ("+game.userName+")");
         }
         else {
-            $("#nameA").text("A ("+agentName+")");
-            $("#nameB").text("B ("+userName+")");           
+            $("#nameA").text("A ("+game.agentName+")");
+            $("#nameB").text("B ("+game.userName+")");
         }
         sendAUserText = "Give $";
         sendBUserText = "Keep $";
         sendAAgentText = "Keep $";
         sendBAgentText = "Give $";
-        maxAgent = capital;
+        maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
         $("#cash").hide();
         $("#form").hide();
@@ -73,8 +66,8 @@ $(function() {  //on page load
         // $("#loading").css('visibility', 'visible');
     }
     $("#slider").on('change', function () {
-        // let preA = (userRole=="A") ? "Send $" : "Keep $";
-        // let preB = (userRole=="A") ? "Send $" : "Keep $";
+        // let preA = (game.userRole=="A") ? "Send $" : "Keep $";
+        // let preB = (game.userRole=="A") ? "Send $" : "Keep $";
         let max = maxUser;
         let val = $("#slider").val();
         $("#submit").prop('disabled', false);
@@ -100,12 +93,12 @@ $(function() {  //on page load
     $("#slider").prop("disabled", true);
     $("#sendA").css('visibility', 'hidden');
     $("#sendB").css('visibility', 'hidden');
-    $("#slider").prop('max', capital);
-    $("#slider").prop('value', capital/2);
+    $("#slider").prop('max', game.capital);
+    $("#slider").prop('value', game.capital/2);
     animateAvailable("capital");
     // switch after animation time
     setTimeout(function() {
-        if (userRole == "A") {switchToUser();}
+        if (game.userRole == "A") {switchToUser();}
         else {switchToAgent();}
     }, animateTime);
 
@@ -120,8 +113,8 @@ $(function() {  //on page load
         $("#slider").css('visibility', 'visible');      
         $("#submit").css('visibility', 'visible');
         $("#slider").prop("disabled", false);
-        if (userRole=="B"){
-            maxUser = match*agentGives[agentGives.length-1];
+        if (game.userRole=="B"){
+            maxUser = game.match*agentGives[agentGives.length-1];
         }
         if (maxUser>0) {
             $("#submit").prop('disabled', true);
@@ -154,7 +147,7 @@ $(function() {  //on page load
         let agentRole = "A";
         let agentGive = agentGives[agentGives.length-1];
         let agentKeep = agentKeeps[agentKeeps.length-1]
-        if (userRole == "A") {
+        if (game.userRole == "A") {
             $("#sendA").text(sendAAgentText+agentGive);
             $("#sendB").text(sendBAgentText+agentKeep);
             $("#slider").prop('value', agentKeeps[agentKeeps.length-1]);
@@ -172,7 +165,7 @@ $(function() {  //on page load
         $("#submit").css('visibility', 'hidden');
         animateAvailable(agentRole, agentGive, agentKeep)
         // switch to user after animation time
-        let wait = (userRole=="A") ? 2*animateTime : animateTime;
+        let wait = (game.userRole=="A") ? 2*animateTime : animateTime;
         setTimeout(function() {switchToUser();}, wait);
     }
 
@@ -187,10 +180,10 @@ $(function() {  //on page load
         let slideVal = $("#slider").val();
         let userGive;
         let userKeep;
-        if (userRole == "A") {
+        if (game.userRole == "A") {
             userGive = slideVal;
             userKeep = maxUser - userGive;
-            maxAgent = userGive * match // update global
+            maxAgent = userGive * game.match // update global
         }
         else {
             userGive = maxUser - slideVal;
@@ -213,15 +206,15 @@ $(function() {  //on page load
         let userGive = moves[0];
         let userKeep = moves[1];
         let userTime = (endTime-startTime);
-        if (userRole=="A") {
+        if (game.userRole=="A") {
             $("#aNow").text("$"+userKeep+" — Available A");
-            $("#bNow").text("Available B — $"+(match*userGive));    
+            $("#bNow").text("Available B — $"+(game.match*userGive));
         }
         else {
             $("#aNow").text("$"+(agentKeeps[agentKeeps.length-1]+userGive)+" — Available A");
             $("#bNow").text("Available B — $"+userKeep);
         }
-        animateAvailable(userRole, userGive, userKeep);
+        animateAvailable(game.userRole, userGive, userKeep);
         // switch immediately to loading
         switchToLoading();
         let form = $("#form");
@@ -234,22 +227,22 @@ $(function() {  //on page load
         let sendData = form.serialize();
         $.ajax({
             method: 'POST',
-            url: $("#submit").attr("updateURL"),
+            url: '/game/api/updateGame/',
             data: sendData,
             dataType: 'json',
             success: function (returnData) {
                 // update globals
-                userGives = strToNum(returnData.userGives.slice(1, -1).split(", "));
-                userKeeps = strToNum(returnData.userKeeps.slice(1, -1).split(", "));
-                userRewards = strToNum(returnData.userRewards.slice(1, -1).split(", "));
-                agentGives = strToNum(returnData.agentGives.slice(1, -1).split(", "));
-                agentKeeps = strToNum(returnData.agentKeeps.slice(1, -1).split(", "));
-                agentRewards = strToNum(returnData.agentRewards.slice(1, -1).split(", "));
+                userGives = returnData.userGives;
+                userKeeps = returnData.userKeeps;
+                userRewards = returnData.userRewards;
+                agentGives = returnData.agentGives;
+                agentKeeps = returnData.agentKeeps;
+                agentRewards = returnData.agentRewards;
                 complete = returnData.complete;
                 doneGames = returnData.doneGames;
                 message = returnData.message;
                 agentTime = 2000*Math.random();
-                let wait = (userRole=="A") ? animateTime+agentTime : 2*animateTime+agentTime;
+                let wait = (game.userRole=="A") ? animateTime+agentTime : 2*animateTime+agentTime;
                 setTimeout(function () {switchToAgent();}, wait);
             }
         });
@@ -260,11 +253,11 @@ $(function() {  //on page load
     // Animate numbers and images changing
     function animateAvailable(move, give=null, keep=null){
         if (move=="capital") {
-            $("#aNow").text("$"+capital+" — Available A");
+            $("#aNow").text("$"+game.capital+" — Available A");
             $("#bNow").text("Available B — $0");
             let cap = $("#aNow").clone();
             cap.attr("id", "cap");
-            cap.text("$"+capital)
+            cap.text("$"+game.capital)
             cap.appendTo("body");
             cap.css("position", "relative");
             cap.css("left", "-=10%");
@@ -280,7 +273,7 @@ $(function() {  //on page load
             let width = $("#bNow").width();
             let matchB = $("#bNow").clone();
             $("#aNow").text("$"+keep+" — Available A");
-            $("#bNow").text("Available B — $"+match*give);
+            $("#bNow").text("Available B — $"+game.match*give);
             toB.text("$"+give);
             toB.attr("id", "toB2");
             toB.css("position", "relative");
@@ -340,7 +333,7 @@ $(function() {  //on page load
         let dY = mNow - mTotal;
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
-         if (userRole == "A") {
+         if (game.userRole == "A") {
             $("#aTotal").text("$"+userScore+" — Total A");
             $("#bTotal").text("Total B — $"+agentScore);
         }
@@ -376,7 +369,7 @@ $(function() {  //on page load
     function gameOver() {
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
-         if (userRole == "A") {
+         if (game.userRole == "A") {
             $("#aTotal").text("$"+userScore);
             $("#bTotal").text("$"+agentScore);
         }
@@ -400,4 +393,4 @@ $(function() {  //on page load
         $("#flair").show();
         $("#play-again").show();
     }
-});  // document load end
+});

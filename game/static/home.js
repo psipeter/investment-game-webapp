@@ -1,14 +1,14 @@
-$(function() {  //on page load
-    N_REQUIRED = Number(N_REQUIRED)  // string to number
-    N_BONUS = Number(N_BONUS)
-    nRequired = Number(nRequired)
-    nBonus = Number(nBonus)
-    let doneConsentBool = (doneConsent != "None") ? true : false;  // convert string to bool
-    let doneSurveyBool = (doneSurvey != "None") ? true : false;
-    let doneTutorialBool = (doneTutorial != "None") ? true : false;
-    let doneRequiredBool = (doneRequired != "None") ? true : false;
-    let doneBonusBool = (doneBonus != "None") ? true : false;
-    let doneCashBool = (doneCash != "None") ? true : false;
+initialize("/game/api/status/", "GET", (status) => {
+    "use strict";
+
+    let doneConsentBool = (doneConsent !== null);
+    let doneSurveyBool = (doneSurvey !== null);
+    let doneTutorialBool = (doneTutorial !== null);
+    let doneRequiredBool = (doneRequired !== null);
+    let doneBonusBool = (doneBonus !== null);
+    let doneCashBool = (doneCash !== null);
+
+    $("#ID").text(status.username);
 
     // Redirect on click
     $('#information-box').click(function(e) {
@@ -71,7 +71,7 @@ $(function() {  //on page load
         });
         if (doneTutorialBool) {
             $('#required-text').text(
-                "Required Games ["+nRequired+"/"+N_REQUIRED+"]");
+                "Required Games ["+status.nRequired+"/"+status.N_REQUIRED+"]");
             }
         else {
             $('#required-box').addClass('inactive');
@@ -92,8 +92,8 @@ $(function() {  //on page load
     else {
         if (doneRequiredBool) {
             $('#bonus-text').text(
-                "Bonus Games ["+nBonus+"/"+N_BONUS+"]");
-            if (nBonus==0) {            
+                "Bonus Games ["+status.nBonus+"/"+status.N_BONUS+"]");
+            if (status.nBonus==0) {
                 $('#stats-box').addClass('inactive');
                 $('#stats-box').off('click');
                 $('#stats-box').click(function(e) {
@@ -131,5 +131,4 @@ $(function() {  //on page load
             });
         }
     }
-
-});  // document load end
+});

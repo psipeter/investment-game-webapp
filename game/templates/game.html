@@ -29,7 +29,7 @@
 		{% csrf_token %}
 		<input type="range" min="0" max="10" value="5" step="1" id="slider">
 	</form>
-	<input type="submit" id="submit" updateURL="{% url 'updateGame' %}" value="send">
+	<button id="submit">Send</button>
 	<div id="loading">
 		<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
 	</div>
@@ -47,24 +47,6 @@
 {% endblock %}
 
 {% block javascript %}
-	<script type="text/javascript">
-		//pass django variables to external javascript
-		let userRole = "{{game.userRole}}";
-		let capital = Number("{{game.capital}}");
-		let match = Number("{{game.match}}");
-		let doneRequired = "{{doneRequired}}";
-		let userName = "{{userName}}";
-		let agentName = "{{agentName}}";
-		let userGives = "{{userGives}}";
-		let userKeeps = "{{userKeeps}}";
-		let userRewards = "{{userRewards}}";
-		let agentGives = "{{agentGives}}";
-		let agentKeeps = "{{agentKeeps}}";
-		let agentRewards = "{{agentRewards}}";
-		// let userA = "{% static 'userA.png' %}";
-		// let userB = "{% static 'userB.png' %}";
-		// let lockedA = "{% static 'lockedA.png' %}";
-		// let lockedB = "{% static 'lockedB.png' %}";
-	</script>
+	<script src="{% static 'common.js' %}"></script>
 	<script src="{% static 'game.js' %}"></script>
 {% endblock %}

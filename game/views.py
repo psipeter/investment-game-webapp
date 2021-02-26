@@ -171,90 +171,15 @@ def feedback(request):
 
 @login_required
 def home(request):
-	request.user.setProgress()
-	bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-	performanceGames = 0
-	for game in bonusGames:
-		if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
-			performanceGames+= 1
-	bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
-	context = {
-		'username': request.user,
-		'path': request.path,
-		'N_REQUIRED': N_REQUIRED,
-		'N_BONUS': N_BONUS,
-		'nRequired': request.user.nRequired,
-		'nBonus': request.user.nBonus,
-		'doneConsent': request.user.doneConsent,
-		'doneSurvey': request.user.doneSurvey,
-		'doneTutorial': request.user.doneTutorial,
-		'doneRequired': request.user.doneRequired,
-		'doneBonus': request.user.doneBonus,
-		'doneHIT': request.user.doneCash,
-		'doneCash': request.user.doneCash,
-		'fixedReward': FIXED_REWARD,
-		'bonusReward': bonusReward,
-		}
-	return render(request, 'home.html', context)
-
+	return render(request, 'home.html')
 
 # Game Links
 
 @login_required
 def startGame(request):
 	if request.user.doneConsent and request.user.doneTutorial:
-		game = Game.objects.create()
-		game.start(request.user)
-		context = {
-			'game': game,
-			'userName': game.user,
-			'agentName': game.agent.name,
-			'doneRequired': request.user.doneRequired,
-			'userGives': list(game.historyToArray("user", "give")),
-			'userKeeps': list(game.historyToArray("user", "keep")),
-			'userRewards': list(game.historyToArray("user", "reward")),
-			'agentGives': list(game.historyToArray("agent", "give")),
-			'agentKeeps': list(game.historyToArray("agent", "keep")),
-			'agentRewards': list(game.historyToArray("agent", "reward")),
-		}
-		return render(request, "game.html", context=context)
+		return render(request, "game.html")
 	else:
 		error(request, 'You must complete the tutorial before playing the required games')
 		return redirect('home')
 
-@login_required
-def updateGame(request):
-	userGive = int(request.POST.get('userGive'))
-	userKeep = int(request.POST.get('userKeep'))
-	userTime = float(request.POST.get('userTime'))/1000
-	game = request.user.currentGame
-	game.step(userGive, userKeep, userTime)
-	data = {
-		'userGives': str(list(game.historyToArray("user", "give"))),
-		'userKeeps': str(list(game.historyToArray("user", "keep"))),
-		'userRewards': str(list(game.historyToArray("user", "reward"))),
-		'agentGives': str(list(game.historyToArray("agent", "give"))),
-		'agentKeeps': str(list(game.historyToArray("agent", "keep"))),
-		'agentRewards': str(list(game.historyToArray("agent", "reward"))),
-	}
-	if game.complete:
-		request.user.currentGame = None
-		request.user.save()
-		data['complete'] = True
-		request.user.setProgress()
-	else:		
-		data['complete'] = False
-	# update message to user if they finished the last game in a batch
-	if game.agent.name == "tutorial" and request.user.doneTutorial:
-		data['doneGames'] = True
-		data['message'] = "Tutorial Games Complete!"
-	elif game.agent.name == "required" and request.user.doneRequired:
-		data['doneGames'] = True
-		data['message'] = "Required Games Complete!"
-	elif request.user.doneTutorial and request.user.doneRequired and request.user.doneBonus:
-		data['doneGames'] = True
-		data['message'] = "Bonus Games Complete!"
-	else:
-		data['doneGames'] = False
-		data['message'] = None		
-	return JsonResponse(data)
