@@ -3,8 +3,8 @@ $(function() {  //on page load
     // Initialization and globals
     let maxUser;
     let maxAgent;
-    let agentTime = 1000;
-    let animateTime = 1000;
+    let agentTime = 2000*Math.random();
+    let animateTime = 1500;
     let startTime = performance.now();
     let endTime = performance.now();
     let doneGames = false
@@ -14,6 +14,8 @@ $(function() {  //on page load
     let sendBUserText = "";
     let sendAAgentText = "";
     let sendBAgentText = "";
+    let doneRequiredBool = (doneRequired != "None") ? true : false;
+    let turn = 1;
     complete = false
     // initial game conditions (if continued or agent moves first)
     function strToNum(arr){
@@ -33,28 +35,34 @@ $(function() {  //on page load
     if (userRole == "A") {
         maxUser = capital;
         maxAgent = 0;  // updated after user moves
-        $("#nameA").text("A (You)");
-        $("#nameB").text("B (Them)");
+        if (doneRequiredBool) {
+            $("#nameA").text("A ("+userName+")");
+            $("#nameB").text("B [hidden]");
+        }
+        else {
+            $("#nameA").text("A ("+userName+")");
+            $("#nameB").text("B ("+agentName+")");            
+        }
         sendAUserText = "Keep $";
         sendBUserText = "Give $";
         sendAAgentText = "Give $";
         sendBAgentText = "Keep $";
-        // $("#imgA").attr("src", userA);
-        // $("#imgB").attr("src", lockedB);
-        // $("#slider").css('background', $("#aNow").css('color'));
         $("#submit").prop('disabled', true);
         $("#loading").hide();
     }
     else {
-        $("#nameA").text("A (Them)");
-        $("#nameB").text("B (You)");
+        if (doneRequiredBool) {
+            $("#nameA").text("A [hidden]");
+            $("#nameB").text("B ("+userName+")");
+        }
+        else {
+            $("#nameA").text("A ("+agentName+")");
+            $("#nameB").text("B ("+userName+")");           
+        }
         sendAUserText = "Give $";
         sendBUserText = "Keep $";
         sendAAgentText = "Keep $";
         sendBAgentText = "Give $";
-        // $("#imgA").attr("src", lockedA);
-        // $("#imgB").attr("src", userB);
-        // $("#slider").css('background', $("#bNow").css('color'));
         maxAgent = capital;
         maxUser = 0;  // updated after agent moves
         $("#cash").hide();
@@ -84,6 +92,8 @@ $(function() {  //on page load
         $("#sendA").text(sendAUserText+(max-val));
         $("#sendB").text(sendBUserText+val);
     });
+    $("#gameOver").hide();
+    $("#finalScore").hide();
     $("#home").hide();
     $("#flair").hide();
     $("#play-again").hide();
@@ -145,14 +155,14 @@ $(function() {  //on page load
         let agentGive = agentGives[agentGives.length-1];
         let agentKeep = agentKeeps[agentKeeps.length-1]
         if (userRole == "A") {
-            $("#sendA").text(agentGive);
-            $("#sendB").text(agentKeep);
+            $("#sendA").text(sendAAgentText+agentGive);
+            $("#sendB").text(sendBAgentText+agentKeep);
             $("#slider").prop('value', agentKeeps[agentKeeps.length-1]);
             agentRole = "B";
         }
         else {
-            $("#sendA").text(agentKeep);
-            $("#sendB").text(agentGive);
+            $("#sendA").text(sendAAgentText+agentKeep);
+            $("#sendB").text(sendBAgentText+agentGive);
             $("#slider").css('value', agentGives[agentGives.length-1]);
         }
         $("#slider").css('max', maxAgent);
@@ -238,6 +248,7 @@ $(function() {  //on page load
                 complete = returnData.complete;
                 doneGames = returnData.doneGames;
                 message = returnData.message;
+                agentTime = 2000*Math.random();
                 let wait = (userRole=="A") ? animateTime+agentTime : 2*animateTime+agentTime;
                 setTimeout(function () {switchToAgent();}, wait);
             }
@@ -314,6 +325,8 @@ $(function() {  //on page load
                     if (complete) {setTimeout(function() {
                         gameOver();}, animateTime);}
                     else {setTimeout(function() {
+                        turn += 1;
+                        $("#turn").text("Turn "+turn+"/5");
                         animateAvailable('capital');}, animateTime);}
                 });
         }
@@ -328,12 +341,12 @@ $(function() {  //on page load
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
          if (userRole == "A") {
-            $("#aTotal").text("$"+userScore+" — Available A");
-            $("#bTotal").text("Available B — $"+agentScore);
+            $("#aTotal").text("$"+userScore+" — Total A");
+            $("#bTotal").text("Total B — $"+agentScore);
         }
         else {
-            $("#aTotal").text("$"+agentScore+" — Available A");
-            $("#bTotal").text("Available B — $"+userScore);
+            $("#aTotal").text("$"+agentScore+" — Total A");
+            $("#bTotal").text("Total B — $"+userScore);
         }
         $("#aNow").text("$0 — Available A");
         $("#bNow").text("Available B — $0");
@@ -361,6 +374,16 @@ $(function() {  //on page load
     // Final page after game is complete
 
     function gameOver() {
+        let userScore = userRewards.reduce((a, b) => a + b, 0);
+        let agentScore = agentRewards.reduce((a, b) => a + b, 0);
+         if (userRole == "A") {
+            $("#aTotal").text("$"+userScore);
+            $("#bTotal").text("$"+agentScore);
+        }
+        else {
+            $("#aTotal").text("$"+agentScore);
+            $("#bTotal").text("$"+userScore);
+        }
         $("#loading").remove();
         $("#cash").remove();
         $("#form").remove();
@@ -371,7 +394,8 @@ $(function() {  //on page load
         $("#slider").remove();
         $("#aNow").remove();
         $("#bNow").remove();
-        $("#total").text('Final Score');
+        $("#gameOver").show();
+        $("#finalScore").show();
         $("#home").show();
         $("#flair").show();
         $("#play-again").show();

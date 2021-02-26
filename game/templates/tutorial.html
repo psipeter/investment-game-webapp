@@ -10,10 +10,7 @@
 {% endblock %}
 
 {% block body %}
-	<div id="top-bar">
-		<h1>TUTORIAL</h1>		
-	</div>
-
+	<h1 class="title">TUTORIAL</h1>
 	<div id="m1" class="main">
 		<div id='m1a' class="row">
 			<h2 class="text">The investment game is a two player, turn based game</h2>
@@ -25,12 +22,7 @@
 		</div>
 		<div id='m1c' class="row">
 			<div>
-				<h2 class="text">This action represents doing something like</h2>
-				<ul id="m1c1">
-					<li>doing somebody a favor</li>
-					<li>investing in a startup</li>
-					<li>lending money to a friend</li>
-				</ul>
+				<h2 class="text">Sending points represents doing somebody a favor,<br> &nbsp &nbsp &nbsp investing in a startup, or lending money to a friend</h2>
 			</div>
 			<img id="img1c" src="{% static 'dollar-coin.png' %}">
 		</div>
@@ -66,8 +58,8 @@
 			<h3 id="m3c2" class="center-text"><strong>Generous — </strong>Alfred $15, Bubba $15</h3>
 			<h3 id="m3d2" class="center-text"><strong>Greedy — </strong>Alfred $0, Bubba $30</h3>
 		</div>
-		<h2 id="m3c" class="bottom-text">If A and B are both <strong>generous</strong>, each will score moderately</h2>
-		<h2 id="m3d" class="bottom-text">If one player is <strong>greedy</strong>, they will score big at the expense of the other</h2>
+		<h3 id="m3c" class="bottom-text">If A and B are both <strong>generous</strong>, each will score moderately</h3>
+		<h3 id="m3d" class="bottom-text">If one player is <strong>greedy</strong>, they will score big at the expense of the other</h3>
 		<h2 id="m3e" class="bottom-text">There is no optimal strategy — you must learn through <strong>trial and error</strong>!</h2>
 	</div>
 
@@ -87,10 +79,7 @@
 			<h2 id="sendA">$0</h2>
 			<h2 id="sendB">$0</h2>
 		</div>
-		<form id="form">
-			{% csrf_token %}
-			<input type="range" min="0" max="10" value="5" step="1" id="slider">
-		</form>
+		<input type="range" min="0" max="10" value="5" step="1" id="slider">
 		<input type="submit" id="submit" value="send">
 		<div id="loading">
 			<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
@@ -101,50 +90,51 @@
 	<div id="m5" class="main">
 		<h2 id="m5a">After finishing the Tutorial, you will play <strong>5 Required Games</strong></h2>
 		<img id="img5" src="{% static 'required.png' %}">
-		<h2 id="m5b">These games are for practice — you will play against <strong>computers</strong> and your scores will <strong>not</strong> count</h2>
-		<h2 id="m5c">After the Required Games, you may select Cash Out to receive your <strong>HIT code for ${{FIXED_REWARD}}</strong>
+		<h3 id="m5b" class="extra-text">These games are for practice — you will play against <strong>computers</strong> and your scores will <strong>not</strong> count</h3>
+		<h3 id="m5c" class="extra-text">After the Required Games, you may select Cash Out to receive your <strong>HIT code for ${{FIXED_REWARD}}</strong></h3>
 	</div>
 
 	<div id="m6" class="main">
 		<h2 id="m6a">You may also continue playing Bonus Games for <strong>additional high-paying rewards</strong></h2>
 		<img id="img6" src="{% static 'bonus.png' %}">
-		<h2 id="m6b">You will earn ${{BONUS_RATE}} per bonus game, plus ${{PERFORMANCE_RATE}} if you score higher than {{PERFORMANCE_THR}} points</h2>
-		<h2 id="m6c">If you play quickly, that's almost minimum wage :O</h2>
+		<h3 id="m6b" class="extra-text">You will earn ${{BONUS_RATE}} per bonus game, plus ${{PERFORMANCE_RATE}} if you score higher than {{PERFORMANCE_THR}} points</h3>
+		<h3 id="m6c" class="extra-text">If you play quickly, that's almost minimum wage :O</h3>
 	</div>
 
 	<div id="m7" class="main">
-		<h2 id="m7a">Check our how you're doing on the <strong>Game Stats</strong> page</h2>
+		<h2 id="m7a">Check out how you're doing on the <strong>Game Stats</strong> page</h2>
 		<img id="img7" src="{% static 'stats.png' %}">
-		<h2 id="m7b">You can compare your scores to other players on the site</h2>
-		<h2 id="m7c">Nice.</h2>
+		<h3 id="m7b" class="extra-text">You can compare your scores to other players on the site</h3>
+		<!-- <h3 id="m7c" class="extra-text">Nice.</h3> -->
 	</div>
 
 	<div id="m8" class="main">
 		<h2 id="m8a">When you're ready, select <strong>Cash Out</strong> to receive your HIT code or request your bonus</h2>
 		<img id="img8" src="{% static 'cash.png' %}">
-		<h2 id="m8b">Paste your <span class="HIT">HIT Code</span> into your MTurk Browser Tab to complete the task</h2>
-		<h2 id="m8c">Afterwards, play more bonus games, then click <strong>Cash Out and Finish</strong> to receive bonus payment</h2>
+		<h3 id="m8b" class="extra-text">Paste your <span class="HIT">HIT Code</span> into your MTurk Browser Tab to complete the task</h3>
+		<h3 id="m8c" class="extra-text">Afterwards, play more bonus games, then click <strong>Cash Out and Finish</strong> to receive bonus payment</h3>
 	</div>
 
 	<div id="m9" class="main">
-		<h2 id="m9a">If you have questions, concerns, or suggestions for improving the website, please leave an anonymous comment on the <strong>Feedback</strong> page</h2>
+		<h3 id="m9a">If you have questions, concerns, or suggestions, please leave a comment on the <strong>Feedback</strong> page</h3>
 		<img id="img9" src="{% static 'feedback.png' %}">
-		<h2 id="m9b">That's it! Click the button below to finish the tutorial and start playing games</h2>
+		<h3 id="m9b">That's it! Click the button below to finish the tutorial and start playing games</h3>
 		<form id="m9c" method="POST">
 			{% csrf_token %}
-			 <input id="finish-btn" type="submit" name="btn" value="Finish Tutorial">
+			<input hidden id="finish-btn" type="submit"/>
 		</form>
 	</div>
 
 	<div id="bottom-bar">
-		<div id="back-next">
+		<div class="navigation-wrapper">
 			<button type="button" disabled id="back">Back</button>
+			<button id="finish-link" class="button"> <label for="finish-btn">Finish Tutorial</label></button>
+			<a id="home-link" class="link" href="{% url 'home' %}">Home</a>
 			<button type="button" id="next">Next</button>
 		</div>
 		<div id="progress-bar-bg">
 			<div id="progress-bar-fg"></div>	
 		</div>
-		<h2 hidden><a href="{% url 'home' %}">Finish</a></h2>
 	</div>
 
 {% endblock %}

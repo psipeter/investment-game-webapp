@@ -33,13 +33,15 @@
 		<p class="flair">*Insert inspirational quote here*</p>
 	{% endif %}
 
-	<div id="login-wrapper">
-		<button id="login-button"> <label for="submit" tabindex="0">Login</label></button>
+	<div class="button-wrapper">
+		<button class="button"> <label for="submit">Login</label></button>
 	</div>
 
-	<div id="reset-register-wrapper">
-		<a id="reset" href="{% url 'reset' %}">Forgot Password?</a>
-		<a id="register" href="{% url 'information' %}">Sign Up</a>
+	<div class='link-wrapper'>
+		<a class="link" href="{% url 'reset' %}">Forgot Password?</a>
+	</div>
+	<div class='link-wrapper'>
+		<a class="link" href="{% url 'information' %}">Sign Up</a>
 	</div>
 
 {% endblock %}

@@ -20,7 +20,9 @@
 			<p id="form-disclaimer">Signed and dated</p>
 			<p id="username">{{ user.username }}</p>
 			<p id="doneConsent">{{ user.doneConsent }}</p>
-			<div id="link-wrapper"><a id="link" href="{% url 'home' %}">Home</a></div>
+			<div class="link-wrapper">
+				<a class="link" href="{% url 'home' %}">Home</a>
+			</div>
 		</div>
 	{% else %}
 		<div id="form-wrapper">
@@ -44,8 +46,8 @@
 					<p class="error">{{ error|escape }}</p>
 				{% endfor %}
 			{% endif %}
-			<div id="submit-wrapper">
-				<button id=submit-button> <label for="submit" tabindex="0">Sign and Register</label></button>
+			<div class="button-wrapper">
+				<button class=button> <label for="submit">Sign and Register</label></button>
 			</div>
 		</div>
 	{% endif %}

@@ -11,8 +11,19 @@
 
 {% block body %}
 	<h1>Game Statistics</h1>
-	<p id="home" class="center"><a href="{% url 'home' %}">Home</a></p>
-	<div id="figure">{{figure|safe}}</div>
-	<p id="score" class="center"><strong>Score</strong> is calculated by averaging rewards for each turn</p>
-	<p class="center"><strong>Generosity</strong> is calculated by averaging the ratio of money sent to money available for each turn</p>
+	<p id="score" class="center"><strong>Score</strong> is calculated by averaging point earned on each turn</p>
+	<div class="images">
+		<img id="figScoreUser" src="{% static figScoreUser %}">
+		<img id="figScoreAll" src="{% static figScoreAll %}">
+	</div>
+	<p id="gen" class="center"><strong>Generosity</strong> is calculated by averaging the ratio of points sent to points available for each turn</p>
+	<div class="images">
+		<img id="figGenUser" src="{% static figGenUser %}">
+		<img id="figGenAll" src="{% static figGenAll %}">
+	</div>
+	<div class="link-wrapper">
+		<a class="link" href="{% url 'home' %}">Home</a>
+	</div>
+
+
 {% endblock %}

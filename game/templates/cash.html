@@ -23,8 +23,8 @@
 			{% csrf_token %} 
 			<input hidden id="submit" type="submit" />
 		</form>
-		<div id="submit-wrapper">
-			<button id="submit-button"> <label for="submit">Cash Out and Finish</label></button>
+		<div class="button-wrapper">
+			<button class="button"> <label for="submit">Cash Out and Finish</label></button>
 		</div>
 	{% else %}
 		<p>Your HIT code was</p>
@@ -34,5 +34,7 @@
 		<p>in bonus rewards</p>
 	{% endif %}
 
-	<p><a href="{% url 'home' %}">Home</a></p>
+	<div class="link-wrapper">
+		<a class="link" href="{% url 'home' %}">Home</a>
+	</div>
 {% endblock %}

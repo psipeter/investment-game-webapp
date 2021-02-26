@@ -37,22 +37,6 @@ input {
 	text-align: center;
 }
 
-#submit-wrapper {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 2%;
-}
-
-#submit-button {
-	margin-top: 2%;
-	font: inherit;
-	color: var(--myBlue);
-	/*border: solid black;*/
-	/*background: var(--myYellow);*/
-	/*border-radius: 30px;*/
-}
-
 #username, #doneConsent {
 	padding: 1%;
 	width: 40%;
@@ -60,24 +44,3 @@ input {
 	background: var(--myLightGray);
 	border: solid black;
 }
-
-#link-wrapper {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 2%;
-}
-
-#link {
-	width: 10%;
-	text-align: center;
-	padding: 1%;
-	background: white;
-	border: solid black;
-	border-radius: 10px;
-}
-
-#link:visited, #link:link {
-	color: var(--myBlue);
-}
-

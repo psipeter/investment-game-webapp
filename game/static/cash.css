@@ -10,13 +10,3 @@ p {
 	font-weight: bold;
 	text-align: center;
 }
-
-button {
-	width: 20%;
-	margin-left: 40%;
-	color: inherit;
-	font-size: inherit;
-	font-family: inherit;
-	/*background-color: var(--myYellow);*/
-	/*border: solid black;*/
-}

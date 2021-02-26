@@ -11,12 +11,16 @@
 
 {% block body %}
 	<h1>Feedback</h1>
-	<form method="post">
+	<h3 class="center">You may also email <a href="mailto:pduggins@uwaterloo.ca?subject=Question%20regarding%20Investment%20Game%20Experiment">pduggins@uwaterloo.ca</a></h3>
+	<form id="textbox" method="post">
 		{% csrf_token %} 
 		{{form.feedback}}
 		<input hidden id="submit" type="submit" />
 	</form>
-	<div id="submit-wrapper">
-		<button id="submit-button"> <label for="submit">Submit</label></button>
+	<div class="button-wrapper">
+		<button class="button"> <label for="submit">Submit</label></button>
+	</div>
+	<div class="link-wrapper">
+		<a class="link" href="{% url 'home' %}">Home</a>
 	</div>
 {% endblock %}

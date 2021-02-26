@@ -23,32 +23,3 @@ table {
 	padding: 1%;
 	border-radius: 10px
 }
-
-#submitWrapper {
-	margin-top: 2%;
-	width: 100%;
-}
-
-#submitButton {
-	margin-top: 1%;
-	margin-bottom: 1%;
-	width: 10%;
-	margin-left: 45%;
-	text-align: center;
-	color: inherit;
-	/*border: solid black;*/
-	/*background: var(--myWhite);*/
-	/*border-radius: 30px;*/
-
-}
-
-.link {
-	margin: 2% 0;
-	display: flex;
-	justify-content: center;
-}
-
-.link:visited, .link:link {
-	color: var(--myBlue);
-	/*text-decoration: none;*/
-}

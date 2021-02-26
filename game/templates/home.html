@@ -11,9 +11,9 @@
 
 {% block body %}
 	<div id="top-box">
-		<p id="ID">ID: {{username}}</p>
+		<h3 id="ID">{{username}}</h3>
 		<h1 id="home">THE INVESTMENT GAME</h1>
-		<p id="logout"><a id="logout-link" href="{% url 'logout' %}">Logout</a></p>
+		<h3 id="logout"><a id="logout-link" href="{% url 'logout' %}">Logout</a></h3>
 	</div>
 	<div id="information-box" class="box" href="{% url 'information' %}">
 		<img id="information-img" class="image" src="{% static 'information.png' %}" alt="information icon">

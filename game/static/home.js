@@ -93,11 +93,11 @@ $(function() {  //on page load
         if (doneRequiredBool) {
             $('#bonus-text').text(
                 "Bonus Games ["+nBonus+"/"+N_BONUS+"]");
-            if (nBonus<=2) {            
+            if (nBonus==0) {            
                 $('#stats-box').addClass('inactive');
                 $('#stats-box').off('click');
                 $('#stats-box').click(function(e) {
-                    alert("To view game statistics, first play more bonus games");
+                    alert("To view game statistics, first play at least one bonus game");
                 });
             }
             if (doneCashBool) {

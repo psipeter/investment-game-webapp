@@ -103,10 +103,9 @@ def tutorial(request):
 	if request.user.doneConsent:
 		if request.method == 'POST':
 			form = TutorialForm(request.POST)
-			if form.is_valid():
-				request.user.doneTutorial = datetime.now()
-				request.user.save()
-				return redirect('home')
+			request.user.doneTutorial = datetime.now()
+			request.user.save()
+			return redirect('home')
 		else:
 			form = TutorialForm()			
 		context = {
@@ -123,12 +122,8 @@ def tutorial(request):
 
 @login_required
 def stats(request):
-	if request.user.nBonus >= 2:
-		figures = request.user.makeFigs()
-		return render(request, "stats.html", context=figures)
-	else:
-		error(request, 'Play more bonus games before viewing game statistics')
-		return redirect('home')
+	context = request.user.makeFigs()
+	return render(request, "stats.html", context=context)
 
 @login_required
 def cash(request):
@@ -138,7 +133,7 @@ def cash(request):
 	else:
 		request.user.doneHIT = datetime.now()
 		request.user.save()
-		bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name="required")
+		bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
 		performanceGames = 0
 		for game in bonusGames:
 			if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
@@ -177,7 +172,7 @@ def feedback(request):
 @login_required
 def home(request):
 	request.user.setProgress()
-	bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name="required")
+	bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
 	performanceGames = 0
 	for game in bonusGames:
 		if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
@@ -212,8 +207,9 @@ def startGame(request):
 		game.start(request.user)
 		context = {
 			'game': game,
-			'A': game.user if game.userRole == "A" else game.agent.name,
-			'B': game.user if game.userRole == "B" else game.agent.name,
+			'userName': game.user,
+			'agentName': game.agent.name,
+			'doneRequired': request.user.doneRequired,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),

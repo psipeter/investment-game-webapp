@@ -10,7 +10,11 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Game</h1>
+	<h1 class="top">Game</h1>
+	<h3 id="turn" class="top">Turn 1/5</h3>
+	<div id="home-link-wrapper" class="top">
+		<a class="link" href="{% url 'home' %}">Home</a>
+	</div>
 	<h2 id="aTotal" class="total left">$0 — Total A</h2>
 	<h2 id="bTotal" class="total right">Total B — $0</h2>
 	<h2 id="aNow" class="available left">$0 — Available A</h2>
@@ -34,8 +38,10 @@
 		Log
 	</div>
  -->
+	<h2 id="finalScore">Final Score</h2>
+	<h2 id="gameOver">Game Over</h2>
 	<a id="home" class="available left" href="{% url 'home' %}">Home</a>
-	<p id="flair" class="available cen font2">Isn't This Fun!</p>
+	<h3 id="flair" class="available cen">Isn't This Fun!</h3>
 	<a id="play-again" class="available right" href="{% url 'game' %}">Play Again</a>
 
 {% endblock %}
@@ -46,16 +52,19 @@
 		let userRole = "{{game.userRole}}";
 		let capital = Number("{{game.capital}}");
 		let match = Number("{{game.match}}");
+		let doneRequired = "{{doneRequired}}";
+		let userName = "{{userName}}";
+		let agentName = "{{agentName}}";
 		let userGives = "{{userGives}}";
 		let userKeeps = "{{userKeeps}}";
 		let userRewards = "{{userRewards}}";
 		let agentGives = "{{agentGives}}";
 		let agentKeeps = "{{agentKeeps}}";
 		let agentRewards = "{{agentRewards}}";
-		let userA = "{% static 'userA.png' %}";
-		let userB = "{% static 'userB.png' %}";
-		let lockedA = "{% static 'lockedA.png' %}";
-		let lockedB = "{% static 'lockedB.png' %}";
+		// let userA = "{% static 'userA.png' %}";
+		// let userB = "{% static 'userB.png' %}";
+		// let lockedA = "{% static 'lockedA.png' %}";
+		// let lockedB = "{% static 'lockedB.png' %}";
 	</script>
 	<script src="{% static 'game.js' %}"></script>
 {% endblock %}

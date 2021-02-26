@@ -1,7 +1,7 @@
 $(function() {  // on page load
     let progress = 0;
-    let maxProgress = 9;
-    let fadeTime = 1000;
+    let maxProgress = 8;
+    let fadeTime = 2000;
     updateProgress();
     updateMain();  // Fade in first page
 
@@ -24,6 +24,7 @@ $(function() {  // on page load
 
     // load new minipage
     function updateMain(e) {    
+        $('#finish-link').hide();
         $('#m1').hide();
         $('#m2').hide();
         $('#m3').hide();
@@ -176,7 +177,7 @@ $(function() {  // on page load
         animateCapital(fadeTime, "m4", capital);
         setTimeout(function(){
             $("#cash").fadeIn(fadeTime);
-            $("#form").fadeIn(fadeTime);
+            $("#slider").fadeIn(fadeTime);
             $("#submit").fadeIn(fadeTime);
             $("#submit").css('visibility', 'visible');
             $("#submit").prop('disabled', true);
@@ -196,7 +197,7 @@ $(function() {  // on page load
             $("#sendA").css('visibility', 'hidden');
             $("#sendB").css('visibility', 'hidden');
             $("#cash").fadeOut(fadeTime/2);
-            $("#form").fadeOut(fadeTime/2);
+            $("#slider").fadeOut(fadeTime/2);
             $("#submit").fadeOut(fadeTime/2);
             $("#loading").fadeIn(fadeTime);
             // $("#transfer").fadeOut(fadeTime/2);
@@ -205,7 +206,7 @@ $(function() {  // on page load
                 $("#loading").fadeOut(fadeTime/2);
                 $("#slider").prop("disabled", true);
                 $("#cash").fadeIn(fadeTime);
-                $("#form").fadeIn(fadeTime);
+                $("#slider").fadeIn(fadeTime);
                 $("#submit").fadeIn(fadeTime);
                 $("#sendA").css('visibility', 'visible');
                 $("#sendB").css('visibility', 'visible');
@@ -213,7 +214,7 @@ $(function() {  // on page load
                 $("#sendB").text(keepB);
                 $("#slider").prop('max', keepB);
                 $("#slider").prop('value', keepB);
-                $("#form").css('visibility', 'visible');            
+                $("#slider").css('visibility', 'visible');            
                 $("#slider").css('visibility', 'visible');      
                 $("#submit").css('visibility', 'hidden');
                 }, 2*fadeTime); 
@@ -225,7 +226,7 @@ $(function() {  // on page load
             setTimeout(function() {$("#m4f").fadeIn(fadeTime);}, 4*fadeTime);
             // setTimeout(function() {$("#transfer").fadeOut(fadeTime/2);}, 4*fadeTime);
             setTimeout(function() {$("#cash").fadeOut(fadeTime/2);}, 4*fadeTime);
-            setTimeout(function() {$("#form").fadeOut(fadeTime/2);}, 4*fadeTime);
+            setTimeout(function() {$("#slider").fadeOut(fadeTime/2);}, 4*fadeTime);
             setTimeout(function() {$("#submit").fadeOut(fadeTime/2);}, 4*fadeTime);
             setTimeout(function() {$("#m4g").fadeIn(fadeTime);}, 5*fadeTime);
             enableNavigation(6*fadeTime, 4);
@@ -278,7 +279,9 @@ $(function() {  // on page load
         $('#m9a').fadeIn(fadeTime);
         $('#img9').fadeIn(fadeTime);
         setTimeout(function(){$('#m9b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m9c').fadeIn(fadeTime);}, 2*fadeTime);
+        setTimeout(function(){$('#m9c').show();}, 2*fadeTime);
+        setTimeout(function(){$('#home-link').hide();}, 2*fadeTime);
+        setTimeout(function(){$('#finish-link').show();}, 2*fadeTime);
         enableNavigation(3*fadeTime, 9);
     }
 

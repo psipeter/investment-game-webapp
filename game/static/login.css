@@ -33,35 +33,3 @@ input {
 	color: var(--myBlue);
 	text-align: center;	
 }
-
-#login-wrapper {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 2%;
-}
-
-#reset-register-wrapper {
-	width: 100%;
-	display: flex;
-	justify-content: space-around;
-	margin-bottom: 2%;
-}
-
-#login-button {
-	font: inherit;
-	color: inherit;
-	/*border: solid black;*/
-	/*background: var(--myYellow);*/
-	/*border-radius: 30px;*/
-}
-
-#reset:visited, #reset:link {
-	text-decoration: none;
-	color: var(--myBlue);
-}
-
-#register:visited, #register:link {
-	text-decoration: none;
-	color: var(--myBlue);
-}

@@ -5,6 +5,9 @@ game/RL/plots
 #SQLite database
 .sqlite3
 
+# plots
+*.svg
+
 # pipenv
 Pipfile.lock
 Pipfile

@@ -1,6 +1,4 @@
 /*Overall Layout*/
-@use "@material/slider/styles";
-
 body {
 	display: grid;
 	grid-template-rows: 20% 70% 10%;
@@ -9,17 +7,21 @@ body {
 h3 {
 	margin: 0;
 	text-align: center;
-	background: white;
-}
-#top-bar {
-	grid-row: 1;
-	display: block;
+	/*background: white;*/
 }
 .title {
-	text-decoration: underline;
+	grid-row: 1;
+	grid-column: 1;
+}
+.home-wrapper {
+	margin: 2%;
+	grid-row: 1;
+	grid-column: 1;
+	text-align: right;
 }
 .main {
 	grid-row: 2;
+	height: 70vh;
 	display: block;
 }
 .row {
@@ -36,25 +38,14 @@ h3 {
 }
 
 /*Back and Next Buttons*/
-#back-next {
+.navigation-wrapper {
+	width: 60%;
+	margin-left: 20%;
 	display: flex;
-	justify-content: center;
-}
-#back, #next {
-	font-size: 125%;
-	font-family: inherit;
-	color: inherit;
-	background: inherit;
-	border: none;
-}
-#back:hover, #next:hover {
-	cursor: pointer;
-	font-weight: bold;
+	justify-content: space-between;
 }
 #back:disabled, #next:disabled {
-	font-weight: normal;
-	cursor: auto;
-	color: gray;
+	color: var(--myGray);
 }
 
 /*Progress Bar*/
@@ -64,7 +55,6 @@ h3 {
 	width: 60%;
 	height: 20%;
 	background: var(--myGray);
-	border-radius: 30px;
 }
 #progress-bar-fg {
 	margin-top: 1%;
@@ -73,7 +63,6 @@ h3 {
 	width: 0%;
 	height: 100%;
 	background: var(--myBlue);
-	border-radius: 30px;
 }
 
 /*Page 1*/
@@ -137,7 +126,7 @@ h3 {
 }
 .bottom-text {
 	height: 100%;
-	margin: 0;
+	margin: -2% 0 0 0;
 	text-align: center;
 	grid-row: 5;
 	grid-column: 1;
@@ -204,19 +193,15 @@ h3 {
 }
 #sendA {color: var(--myTeal);}
 #sendB {color: var(--myPink);}
-#form {
-	grid-column: 1;
-	grid-row: 4;
-	height: 100%;
-	width: 30%;
-	margin-left: 35%;
-}
 /* The slider itself */
 #slider {
 	-webkit-appearance: none;  /* Override default CSS styles */
 	appearance: none;
-	width: 100%;
+	grid-column: 1;
+	grid-row: 4;
+	width: 30%;
 	height: 25px;
+	margin-left: 35%;
 	background: var(--myGray);
 	outline: none;
 	border-radius: 25px;
@@ -246,7 +231,7 @@ h3 {
 	margin: 0;
 	font-size: 150%;
 	font-weight: normal;
-	height: 40%;
+	height: 50%;
 	margin-left: 35%;
 	width: 30%;
 	grid-column: 1;
@@ -337,11 +322,15 @@ h3 {
 	text-align: center;
 }
 #img5, #img6, #img7, #img8, #img9 {
-	height: 40%;
+	height: 90%;
 	width: 30%;
-	margin-left: 35%;
+	margin: -3% 35%;
 	grid-row: 2;
 	grid-column: 1;
+}
+
+.extra-text{
+	margin-top: -2%;
 }
 
 .HIT {

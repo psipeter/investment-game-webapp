@@ -32,7 +32,7 @@
 
 html {
 	margin: 3% 10%;
-	height: 100vh;
+	/*height: 100vh;*/
 }
 
 body {
@@ -56,18 +56,14 @@ h1 {
 
 h2 {
 	margin: 0;
-	font-size: 150%;
+	font-size: 140%;
 	font-weight: normal;
 }
 
 h3 {
 	margin: 0;
-	font-size: 125%;
+	font-size: 110%;
 	font-weight: normal;
-}
-
-li {
-	font-size: 125%;
 }
 
 input, button, form {
@@ -78,4 +74,15 @@ input, button, form {
 
 .font2 {
 	font-family: 'Jaldi', sans-serif;	
+}
+
+.link-wrapper, .button-wrapper {
+	margin: 2% 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.link, .link:visited, .link:link {
+	color: var(--myBlue);
 }

@@ -1,37 +1,17 @@
+
 body {
 	text-align: justify;
 }
 
 .main {
 	padding: 2%;
-	height: 50%;
+	margin-bottom: 2%;
+	height: 50vh;
 	border: solid black;
 	overflow: auto;
 }
 
-.red {
-	text-align: center;
-}
-
-.question {
+.center {
 	text-align: center;
 	/*background: var(--myWhite);*/
-}
-
-.link {
-	padding: 1%;
-	display: flex;
-	justify-content: center;
-	background: var(--myWhite);
-	width: 30%;
-	margin-left: 35%;
-	margin-top: 2%;
-	margin-bottom: 2%;
-	border: solid black;
-	border-radius: 10px;
-}
-
-.link:visited, .link:link {
-	color: var(--myBlue);
-	/*text-decoration: none;*/
 }
