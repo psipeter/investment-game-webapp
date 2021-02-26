@@ -20,9 +20,6 @@ from .RL.agents import *
 from .parameters import *
 
 
-popA = ['T4T']
-popB = ['T4T']
-
 class Feedback(models.Model):
 	text = models.CharField(max_length=4200, blank=True, null=True, default=str)
 
@@ -156,12 +153,13 @@ class Game(models.Model):
 			idx = self.user.nRequired
 			self.userRole = REQUIRED_ROLES[idx][0]
 			self.agentRole = REQUIRED_ROLES[idx][1]
-		if np.random.rand() > 0.5:
+		elif np.random.rand() > 0.5:
 			self.userRole = "A"
 			self.agentRole = "B"
 		else:
 			self.userRole = "B"
 			self.agentRole = "A"
+		self.save()
 		self.setAgent()
 		if self.agentRole == "A":
 			self.goAgent(self.capital)
