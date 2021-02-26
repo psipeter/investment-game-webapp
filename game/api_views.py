@@ -71,7 +71,7 @@ def startGame(request):
 			'match': game.match,
 			'userName': game.user.username,
 			'agentName': game.agent.name,
-			'doneRequired': str(request.user.doneRequired),
+			'doneRequired': request.user.doneRequired,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),

@@ -156,7 +156,6 @@ class Game(models.Model):
 		if not self.user.doneRequired:
 			idx = self.user.nRequired
 			self.userRole = REQUIRED_ROLES[idx][0]
-			print(self.userRole)
 			self.agentRole = REQUIRED_ROLES[idx][1]
 		if np.random.rand() > 0.5:
 			self.userRole = "A"
@@ -189,8 +188,6 @@ class Game(models.Model):
 	def goAgent(self, money):
 		history = self.historyToDict()
 		self.agent.getObj(self)
-		# print(self.agent.obj.Q)
-		# print(self.agent.obj.pi)
 		agentGive, agentKeep = self.agent.obj.act(money, history)
 		agentState = self.agent.obj.state
 		self.agentGives += f"{agentGive:d},"
