@@ -59,11 +59,9 @@ class Agent(models.Model):
 			elif name=="T4T-E":
 				self.obj = T4T(player, F=1, P=1)
 			elif name=="T4T-F":
-				# self.obj = T4T(player, F=1.5, P=1)
 				self.obj = T4T(player, F=1, P=0.5)
 			elif name=="T4T-P":
 				self.obj = T4T(player, F=0.5, P=1)
-				# self.obj = T4T(player, F=1, P=1.5)
 			elif name=="Bandit":
 				self.obj = Bandit(player, nA)
 			elif name=="QLearn":
@@ -82,6 +80,7 @@ class Agent(models.Model):
 		self.obj.loadArchive(file=f"{name}{player}.npz")
 		self.obj.reset()
 		agentStates = game.historyToArray("agent", "state")
+		print(agentStates)
 		if len(agentStates) > 0:
 			self.obj.state = agentStates[-1]
 		self.blob.save()
@@ -187,9 +186,10 @@ class Game(models.Model):
 		self.agent.getObj(self)
 		agentGive, agentKeep = self.agent.obj.act(money, history)
 		agentState = self.agent.obj.state
+		print('goAgent', agentState)
 		self.agentGives += f"{agentGive:d},"
 		self.agentKeeps += f"{agentKeep:d},"
-		self.agentStates += f"{agentState:.1f}"
+		self.agentStates += f"{agentState:.2f},"
 		self.checkComplete()
 
 	def checkComplete(self):
@@ -227,7 +227,7 @@ class Game(models.Model):
 			elif entry == "reward":
 				return np.array(self.userRewards.split(',')[:-1]).astype(np.int)
 			elif entry == "state":
-				return np.zeros_like(self.agentStates.split(',')[:-1])
+				return np.array([])
 		else:
 			if entry == "give":
 				return np.array(self.agentGives.split(',')[:-1]).astype(np.int)
@@ -236,7 +236,8 @@ class Game(models.Model):
 			elif entry == "reward":
 				return np.array(self.agentRewards.split(',')[:-1]).astype(np.int)
 			elif entry == "state":
-				return np.array(self.agentStates.split(',')[:-1])
+				print('to array', self.agentStates)
+				return np.array(self.agentStates.split(',')[:-1]).astype(np.float)
 
 	def historyToDict(self):
 		A = "user" if self.userRole=="A" else "agent"
