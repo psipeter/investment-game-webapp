@@ -13,7 +13,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
-import mpld3
 import json
 import pandas as pd
 
