@@ -75,8 +75,8 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-#jQuery stuff
-*.min.js
+# external files
+/extern
 
 # Flask stuff:
 instance/

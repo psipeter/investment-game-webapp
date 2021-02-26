@@ -6,7 +6,7 @@ Clone the git repository
 - ```git clone https://github.com/psipeter/investment-game-webapp.git```
 - (Start a virtual environment, I use pipenv)
 Install dependencies
-- ```pip install django numpy scipy matplotlib seaborn mpld3```
+- ```pip install django numpy scipy matplotlib seaborn```
 - Download JQuery (https://jquery.com/download/) and place ```.js``` file in ```/static```
 
 # Create the database
