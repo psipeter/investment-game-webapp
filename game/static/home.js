@@ -121,7 +121,7 @@ initialize("/game/api/status/", "GET", (status) => {
     }
     else {
         if (doneSurveyBool & doneTutorialBool & doneRequiredBool) {
-            $('#cash-text').text('Cash Out ($'+(Number(fixedReward)+Number(bonusReward))+")");
+            $('#cash-text').text('Cash Out ($'+status.winnings+")");
         }
         else {
             $('#cash-box').addClass('inactive');

@@ -4,17 +4,14 @@
 {% block title %}
 	<title>Home</title>
 {% endblock %}
+{% block title2 %}Home{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'home.css' %}">
 {% endblock %}
 
+
 {% block body %}
-	<div id="top-box">
-		<h3 id="ID"></h3>
-		<h1 id="home">THE INVESTMENT GAME</h1>
-		<h3 id="logout"><a id="logout-link" href="{% url 'logout' %}">Logout</a></h3>
-	</div>
 	<div id="information-box" class="box" href="{% url 'information' %}">
 		<img id="information-img" class="image" src="{% static 'information.png' %}" alt="information icon">
 		<h2 id="information-text" class="text">Information</h2>

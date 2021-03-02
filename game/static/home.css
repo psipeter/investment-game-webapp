@@ -1,21 +1,8 @@
-body {
+.body {
 	display: grid;
-	grid-template-rows: 10% 30% 30% 30%;
+	grid-template-rows: 33% 33% 33%;
 	grid-template-columns: 1fr 1fr 1fr;
 	z-index: 1;
-}
-
-#top-box {
-	display: inline-flex;
-	justify-content: space-between;	
-	grid-row: 1;
-	grid-column: 1/4;
-}
-#ID {
-	margin: 2% 0 0 2%;
-}
-#logout {
-	margin: 2% 2% 0 0;
 }
 
 #logout-link:link, #logout-link:visited {
@@ -23,10 +10,6 @@ body {
 	color: var(--myBlue);
 }
 
-.error {
-	color: var(--myRed);
-	text-align: center;
-}
 
 .box {
 	width: 90%;
@@ -54,39 +37,39 @@ body {
 }
 
 #information-box {
-	grid-row: 2;
+	grid-row: 1;
 	grid-column: 1;	
 }
 #consent-box {
-	grid-row: 2;
+	grid-row: 1;
 	grid-column: 2;	
 }
 #survey-box {
-	grid-row: 2;
+	grid-row: 1;
 	grid-column: 3;	
 }
 #tutorial-box {
-	grid-row: 3;
+	grid-row: 2;
 	grid-column: 1;	
 }
 #required-box {
-	grid-row: 3;
+	grid-row: 2;
 	grid-column: 2;	
 }
 #bonus-box {
-	grid-row: 3;
+	grid-row: 2;
 	grid-column: 3;	
 }
 #stats-box {
-	grid-row: 4;
+	grid-row: 3;
 	grid-column: 1;	
 }
 #cash-box {
-	grid-row: 4;
+	grid-row: 3;
 	grid-column: 2;	
 }
 #feedback-box {
-	grid-row: 4;
+	grid-row: 3;
 	grid-column: 3;	
 }
 

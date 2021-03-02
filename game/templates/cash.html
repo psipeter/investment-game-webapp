@@ -1,16 +1,14 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}
-	<title>Cash Out</title>
-{% endblock %}
+{% block title %}<title>Cash Out</title>{% endblock %}
+{% block title2 %}Cash Out{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'cash.css' %}">
 {% endblock %}
 
 {% block body %}
-	<h1>Cash Out</h1>
 	<p>Thanks for playing the Investment Game!</p>
 	{% if not user.doneCash %}
 		<p>Your HIT code is</p>
@@ -37,4 +35,10 @@
 	<div class="link-wrapper">
 		<a class="link" href="{% url 'home' %}">Home</a>
 	</div>
+{% endblock %}
+
+
+{% block javascript %}
+	<script type="text/javascript" src="{% static 'common.js' %}"></script>
+	<script type="text/javascript" src="{% static 'cash.js' %}"></script>
 {% endblock %}

@@ -256,9 +256,11 @@ class User(AbstractUser):
 	# assign to unique group
 	def f():
 		return 1 if np.random.rand() < 0.5 else 2
-	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
+	def g():
+		return get_random_string(length=32)
 	nRequired = models.IntegerField(default=0)
 	nBonus = models.IntegerField(default=0)
+	winnings = models.IntegerField(default=0)
 	doneConsent = models.DateTimeField(null=True, blank=True)
 	doneSurvey = models.DateTimeField(null=True, blank=True)
 	doneTutorial = models.DateTimeField(null=True, blank=True)
@@ -267,7 +269,7 @@ class User(AbstractUser):
 	doneHIT = models.DateTimeField(null=True, blank=True)
 	doneCash = models.DateTimeField(null=True, blank=True)
 	group = models.CharField(max_length=300, choices=(("1", "forgive"), ("2", "punish")), default=f)
-	code = models.CharField(max_length=300, default=get_random_string(length=32), help_text="MTurk Confirmation Code")
+	code = models.CharField(max_length=300, help_text="MTurk Confirmation Code", default=g)
 	age = models.CharField(max_length=300, null=True, blank=True)
 	gender = models.CharField(max_length=300, null=True, blank=True)
 	income = models.CharField(max_length=300, null=True, blank=True)
@@ -292,6 +294,14 @@ class User(AbstractUser):
 			self.doneRequired = datetime.now()
 		if self.doneBonus == None and self.nBonus >= N_BONUS:
 			self.doneBonus = datetime.now()
+		self.save()
+		bonusGames = Game.objects.filter(user=self, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
+		performanceGames = 0
+		for game in bonusGames:
+			if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
+				performanceGames+= 1
+		bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
+		self.winnings = FIXED_REWARD + bonusReward
 		self.save()
 
 	def makeFigs(self):

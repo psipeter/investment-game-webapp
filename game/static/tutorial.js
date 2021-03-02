@@ -1,4 +1,5 @@
-$(function() {  // on page load
+initialize("/game/api/status/", "GET", (status) => {
+    "use strict";
     let progress = 0;
     let maxProgress = 8;
     let fadeTime = 2000;

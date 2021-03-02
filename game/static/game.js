@@ -29,12 +29,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
         if (doneRequiredBool) {
-            $("#nameA").text("A ("+game.userName+")");
+            $("#nameA").text("A ("+game.username+")");
             $("#nameB").text("B [hidden]");
         }
         else {
-            $("#nameA").text("A ("+game.userName+")");
-            $("#nameB").text("B ("+game.agentName+")");
+            $("#nameA").text("A ("+game.username+")");
+            $("#nameB").text("B ("+game.agentname+")");
         }
         sendAUserText = "Keep $";
         sendBUserText = "Give $";
@@ -46,11 +46,11 @@ initialize("/game/api/startGame/", "POST", (game) => {
     else {
         if (doneRequiredBool) {
             $("#nameA").text("A [hidden]");
-            $("#nameB").text("B ("+game.userName+")");
+            $("#nameB").text("B ("+game.username+")");
         }
         else {
-            $("#nameA").text("A ("+game.agentName+")");
-            $("#nameB").text("B ("+game.userName+")");
+            $("#nameA").text("A ("+game.agentname+")");
+            $("#nameB").text("B ("+game.username+")");
         }
         sendAUserText = "Give $";
         sendBUserText = "Keep $";

@@ -1,16 +1,14 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}
-	<title>Tutorial</title>
-{% endblock %}
+{% block title %}<title>Tutorial</title>{% endblock %}
+{% block title2 %}Tutorial{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'tutorial.css' %}">
 {% endblock %}
 
 {% block body %}
-	<h1 class="title">TUTORIAL</h1>
 	<div id="m1" class="main">
 		<div id='m1a' class="row">
 			<h2 class="text">The investment game is a two player, turn based game</h2>
@@ -140,5 +138,6 @@
 {% endblock %}
 
 {% block javascript %}
+	<script type="text/javascript" src="{% static 'common.js' %}"></script>
 	<script src="{% static 'tutorial.js' %}"></script>
 {% endblock %}

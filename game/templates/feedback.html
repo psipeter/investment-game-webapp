@@ -1,16 +1,14 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}
-	<title>Feedback</title>
-{% endblock %}
+{% block title %}<title>Feedback</title>{% endblock %}
+{% block title2 %}Feedback{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'feedback.css' %}">
 {% endblock %}
 
 {% block body %}
-	<h1>Feedback</h1>
 	<h3 class="center">You may also email <a href="mailto:pduggins@uwaterloo.ca?subject=Question%20regarding%20Investment%20Game%20Experiment">pduggins@uwaterloo.ca</a></h3>
 	<form id="textbox" method="post">
 		{% csrf_token %} 
@@ -23,4 +21,10 @@
 	<div class="link-wrapper">
 		<a class="link" href="{% url 'home' %}">Home</a>
 	</div>
+{% endblock %}
+
+
+{% block javascript %}
+	<script type="text/javascript" src="{% static 'common.js' %}"></script>
+	<script type="text/javascript" src="{% static 'feedback.js' %}"></script>
 {% endblock %}

@@ -93,7 +93,7 @@ class ProfileForm(forms.ModelForm):
 		label="Have you ever played the Prisoner's Dilemma?",
 		choices=veteranChoices,
 		required=False)
-	empathyLabel = "I can easily figure out what other people are thinking or feeling during a conversation"
+	empathyLabel = "I am confident that I understand what others are thinking or feeling during conversation"
 	riskLabel = "A coworker approaches you and asks for a $1000 loan, promising to return you the money, plus 20% interest, in a month. I would trust them and loan them the money"
 	altruismLabel = "I win a million dollars in the lottery. I would keep the money for myself rather than giving it away to friends, family, or charity"
 	likertScale = (

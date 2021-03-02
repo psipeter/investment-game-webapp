@@ -1,0 +1,1 @@
+initialize("/game/api/status/", "GET", (status) => {});

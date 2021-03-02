@@ -48,6 +48,7 @@ body {
 
 h1 {
 	margin: 0;
+	font-family: 'Jaldi', sans-serif;
 	font-size: 250%;
 	font-weight: bold;
 	text-align: center;
@@ -71,6 +72,10 @@ input, button, form {
 	color: var(--myBlue);	
 }
 
+.font2 {
+	font-family: 'Jaldi', sans-serif;	
+}
+
 .link-wrapper, .button-wrapper {
 	margin: 2% 0;
 	width: 100%;
@@ -78,51 +83,6 @@ input, button, form {
 	justify-content: center;
 }
 
-a, a:visited, a:link {
+.link, .link:visited, .link:link {
 	color: var(--myBlue);
-}
-
-.header {
-	display: grid;
-	grid-template-rows: 33% 33% 33%;
-	grid-template-columns: 1fr 1fr 1fr;
-	height: 15vh;
-	margin: 0;
-	border-bottom: solid black;
-	background-color: var(--myLightGray);
-}
-
-.body {
-	height: 80vh;
-	margin: 0;
-	margin-top: 5vh;
-}
-
-.headerL {
-	grid-column: 1;
-	text-align: left;
-}
-
-.headerC {
-	/*font-family: 'Jaldi', sans-serif;*/
-	grid-column: 2;
-	grid-row: 1;
-	text-align: center;
-}
-
-.headerR {
-	grid-column: 3;
-	text-align: right;
-}
-
-.headerT {
-	grid-row: 1;
-}
-
-.headerM {
-	grid-row: 2;
-}
-
-.headerB {
-	grid-row: 3;
 }

@@ -1,16 +1,14 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}
-	<title>Survey</title>
-{% endblock %}
+{% block title %}<title>Survey</title>{% endblock %}
+{% block title2 %}Survey{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'survey.css' %}">
 {% endblock %}
 
 {% block body %}
-	<h1>Survey</h1>
 	<h3>Please complete the survey. All responses are optional</h3>
 	<form method="POST">
 		{% csrf_token %}
@@ -66,4 +64,9 @@
 
 	</form>
 
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript" src="{% static 'common.js' %}"></script>
+	<script type="text/javascript" src="{% static 'survey.js' %}"></script>
 {% endblock %}

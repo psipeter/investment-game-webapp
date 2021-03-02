@@ -25,14 +25,6 @@ class NpEncoder(DjangoJSONEncoder):
 @login_required
 def status(request):
 	request.user.setProgress()
-
-	bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-	performanceGames = 0
-	for game in bonusGames:
-		if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
-			performanceGames+= 1
-	bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
-
 	data = {
 		'username': request.user.username,
 		'path': request.path,
@@ -47,8 +39,7 @@ def status(request):
 		'doneBonus': request.user.doneBonus,
 		'doneHIT': request.user.doneCash,
 		'doneCash': request.user.doneCash,
-		'fixedReward': FIXED_REWARD,
-		'bonusReward': bonusReward,
+		'winnings': request.user.winnings,
 		}
 	return JsonResponse(data)
 
@@ -65,13 +56,16 @@ def startGame(request):
 		game = Game.objects.create()
 		game.start(request.user)
 		data = {
+			'username': game.user.username,
+			'agentname': game.agent.name,
+			'nRequired': game.user.nRequired,
+			'nBonus': game.user.nBonus,
+			'winnings': game.user.winnings,
 			'uuid': game.uuid,
 			'userRole': game.userRole,
 			'capital': game.capital,
 			'match': game.match,
-			'userName': game.user.username,
-			'agentName': game.agent.name,
-			'doneRequired': request.user.doneRequired,
+			'doneRequired': game.user.doneRequired,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),
@@ -92,7 +86,6 @@ def updateGame(request):
 	userGive = int(request.POST.get('userGive'))
 	userKeep = int(request.POST.get('userKeep'))
 	userTime = float(request.POST.get('userTime'))/1000
-	game = request.user.currentGame
 	game.step(userGive, userKeep, userTime)
 	data = {
 		'userGives': list(game.historyToArray("user", "give")),
@@ -103,8 +96,6 @@ def updateGame(request):
 		'agentRewards': list(game.historyToArray("agent", "reward")),
 	}
 	if game.complete:
-		request.user.currentGame = None
-		request.user.save()
 		data['complete'] = True
 		request.user.setProgress()
 	else:

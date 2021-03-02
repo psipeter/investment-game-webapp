@@ -9,6 +9,13 @@ function initialize(url, method, cback) {
     };
     function check_state_machine() {
         if (state.loaded && state.data) {
+            $("#headerU").text("Username: "+state.data.username);
+            $("#headerG").text("Games Played: "+(state.data.nRequired+state.data.nBonus));
+            $("#headerW").text("Winnings: $"+state.data.winnings);
+            if (state.data.doneRequired === null) {
+                $('#cash-link').css('color', 'var(--myGray');
+                $("#cash-link").removeAttr('href');
+            }
             cback(state.data);
         }
     }
@@ -33,6 +40,7 @@ function initialize(url, method, cback) {
 
     // Wait for the document to be ready
     $(function() {
+        // Populate header
         state.loaded = true;
         check_state_machine();
     });

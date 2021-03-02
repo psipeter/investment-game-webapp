@@ -1,16 +1,14 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}
-	<title>Stats</title>
-{% endblock %}
+{% block title %}<title>Stats</title>{% endblock %}
+{% block title2 %}Game Statistics{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'stats.css' %}">
 {% endblock %}
 
 {% block body %}
-	<h1>Game Statistics</h1>
 	<p id="score" class="center"><strong>Score</strong> is calculated by averaging point earned on each turn</p>
 	<div class="images">
 		<img id="figScoreUser" src="{% static figScoreUser %}">
@@ -24,6 +22,9 @@
 	<div class="link-wrapper">
 		<a class="link" href="{% url 'home' %}">Home</a>
 	</div>
+{% endblock %}
 
-
+{% block javascript %}
+	<script type="text/javascript" src="{% static 'common.js' %}"></script>
+	<script type="text/javascript" src="{% static 'stats.js' %}"></script>
 {% endblock %}

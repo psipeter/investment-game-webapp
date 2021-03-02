@@ -1,48 +1,63 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}
-	<title>Investment Game - Game</title>
-{% endblock %}
+{% block title %}<title>Game</title>{% endblock %}
+{% block title2 %}Game{% endblock %}
 
 {% block css %}
-	<link rel="stylesheet" href="{% static 'game.css' %}">
+	<link rel="stylesheet" href="{% static 'game2.css' %}">
 {% endblock %}
 
 {% block body %}
-	<h1 class="top">Game</h1>
-	<h3 id="turn" class="top">Turn 1/5</h3>
-	<div id="home-link-wrapper" class="top">
-		<a class="link" href="{% url 'home' %}">Home</a>
+
+	<div id="turn-wrapper" class="r1 c1 bg">
+		<div id="turn-box1" class="p1 blue"></div>
+		<div id="turn-box2" class="p2 gray"></div>
+		<div id="turn-box3" class="p3 gray"></div>
+		<div id="turn-box4" class="p4 gray"></div>
+		<div id="turn-box5" class="p5 gray"></div>
+		<p id="turn-text" class='r1 c1 white text'>Turn</p>
 	</div>
-	<h2 id="aTotal" class="total left">$0 — Total A</h2>
-	<h2 id="bTotal" class="total right">Total B — $0</h2>
-	<h2 id="aNow" class="available left">$0 — Available A</h2>
-	<h2 id="bNow" class="available right">Available B — $0</h2>
-	<h2 id="nameA" class="player left">A</h2>
-	<h2 id="nameB" class="player right">B</h2>
-	<div id="cash">
-		<h2 id="sendA">$0</h2>
-		<h2 id="sendB">$0</h2>
+	<div id="their-score-wrapper" class="r2 c1 bg">
+		<div id="tsfg" class='fg'></div>
+		<div class="text-wrapper">
+			<p id="tst" class='text white'>Their Score:</p>
+			<p id="tsn" class='number white'>0</p>
+		</div>
 	</div>
+	<div id="your-score-wrapper" class="r3 c1 bg">
+		<div id="ysfg" class='fg'></div>
+		<div class="text-wrapper">
+			<p id="yst" class='text white'>Your Score:</p>
+			<p id="ysn" class='number white'>0</p>
+		</div>
+	</div>
+	<!-- {% include 'game.svg' %} -->
+	<!-- <h3 id="turn" class="top">Turn 1/5</h3> -->
+	<!-- <h2 id="aTotal" class="total left">$0 — Total A</h2> -->
+	<!-- <h2 id="bTotal" class="total right">Total B — $0</h2> -->
+	<!-- <h2 id="aNow" class="available left">$0 — Available A</h2> -->
+	<!-- <h2 id="bNow" class="available right">Available B — $0</h2> -->
+	<!-- <h2 id="nameA" class="player left">A</h2> -->
+	<!-- <h2 id="nameB" class="player right">B</h2> -->
+	<!-- <div id="cash"> -->
+		<!-- <h2 id="sendA">$0</h2> -->
+		<!-- <h2 id="sendB">$0</h2> -->
+	<!-- </div> -->
 	<form id="form">
 		{% csrf_token %}
 		<input type="range" min="0" max="10" value="5" step="1" id="slider">
 	</form>
-	<button id="submit">Send</button>
-	<div id="loading">
-		<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-	</div>
+	<!-- <button id="submit">Send</button> -->
+	<!-- <div id="loading"> -->
+		<!-- <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> -->
+	<!-- </div> -->
 
-<!-- 	<div class='center'>
-		Log
-	</div>
- -->
-	<h2 id="finalScore">Final Score</h2>
-	<h2 id="gameOver">Game Over</h2>
-	<a id="home" class="available left" href="{% url 'home' %}">Home</a>
-	<h3 id="flair" class="available cen">Isn't This Fun!</h3>
-	<a id="play-again" class="available right" href="{% url 'game' %}">Play Again</a>
+	<!-- <h2 id="finalScore">Final Score</h2> -->
+	<!-- <h2 id="gameOver">Game Over</h2> -->
+	<!-- <a id="home" class="available left" href="{% url 'home' %}">Home</a> -->
+	<!-- <h3 id="flair" class="available cen">Isn't This Fun!</h3> -->
+	<!-- <a id="play-again" class="available right" href="{% url 'game' %}">Play Again</a> -->
 
 {% endblock %}
 
