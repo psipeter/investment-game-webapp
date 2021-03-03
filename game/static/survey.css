@@ -19,7 +19,7 @@ input, select {
 }
 
 table {
-	background-color: var(--myWhite);
+	background-color: var(--myForeground);
 	padding: 1%;
-	border-radius: 10px
+	border: 1pt solid black;
 }

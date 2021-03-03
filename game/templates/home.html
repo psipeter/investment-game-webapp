@@ -28,13 +28,9 @@
 		<img id="tutorial-img" class="image" src="{% static 'tutorial.svg' %}" alt="tutorial icon">
 		<h2 id="tutorial-text" class="text">Tutorial</h2>
 	</div>
-	<div id="required-box" class="box" href="{% url 'game' %}">
-		<img id="required-img" class="image" src="{% static 'required.png' %}" alt="required icon">
-		<h2 id="required-text" class="text">Required Games</h2>
-	</div>
-	<div id="bonus-box" class="box" href="{% url 'game' %}">
-		<img id="bonus-img" class="image" src="{% static 'bonus.png' %}" alt="bonus icon">
-		<h2 id="bonus-text" class="text">Bonus Games</h2>
+	<div id="game-box" class="box" href="{% url 'game' %}">
+		<img id="game-img" class="image" src="{% static 'game.png' %}" alt="game icon">
+		<h2 id="game-text" class="text">Game</h2>
 	</div>
 	<div id="stats-box" class="box" href="{% url 'stats' %}">
 		<img id="stats-img" class="image" src="{% static 'stats.png' %}" alt="stats icon">

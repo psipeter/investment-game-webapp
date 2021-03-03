@@ -119,7 +119,7 @@ class Game(models.Model):
 
 	def setAgent(self):
 		if not self.user.doneRequired:
-			idx = self.user.nRequired
+			idx = self.user.nGames
 			name = REQUIRED_AGENTS[idx]
 		elif self.user.group == "1":
 			# forgiving agents
@@ -148,7 +148,7 @@ class Game(models.Model):
 		self.seed = np.random.randint(1e6)
 		np.random.seed(self.seed)  # set random number seed
 		if not self.user.doneRequired:
-			idx = self.user.nRequired
+			idx = self.user.nGames
 			self.userRole = REQUIRED_ROLES[idx][0]
 			self.agentRole = REQUIRED_ROLES[idx][1]
 		elif np.random.rand() > 0.5:
@@ -258,14 +258,14 @@ class User(AbstractUser):
 		return 1 if np.random.rand() < 0.5 else 2
 	def g():
 		return get_random_string(length=32)
-	nRequired = models.IntegerField(default=0)
-	nBonus = models.IntegerField(default=0)
+	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
+	nGames = models.IntegerField(default=0)
 	winnings = models.IntegerField(default=0)
 	doneConsent = models.DateTimeField(null=True, blank=True)
 	doneSurvey = models.DateTimeField(null=True, blank=True)
 	doneTutorial = models.DateTimeField(null=True, blank=True)
 	doneRequired = models.DateTimeField(null=True, blank=True)
-	doneBonus = models.DateTimeField(null=True, blank=True)
+	doneMax = models.DateTimeField(null=True, blank=True)
 	doneHIT = models.DateTimeField(null=True, blank=True)
 	doneCash = models.DateTimeField(null=True, blank=True)
 	group = models.CharField(max_length=300, choices=(("1", "forgive"), ("2", "punish")), default=f)
@@ -280,35 +280,30 @@ class User(AbstractUser):
 	altruism = models.CharField(max_length=300, null=True, blank=True)
 
 	def setProgress(self):
-		nRequired = Game.objects.filter(user=self, complete=True, agent__name__in=REQUIRED_AGENTS).count()
-		nBonus = Game.objects.filter(user=self, complete=True).exclude(agent__name__in=REQUIRED_AGENTS).count()
-		self.nRequired = nRequired
-		self.nBonus = nBonus
+		self.nGames = Game.objects.filter(user=self, complete=True).count()
 		self.save()
-		if self.nRequired < N_REQUIRED:
-			self.doneRequired = None
-		if self.nBonus < N_BONUS:
-			self.doneBonus = None
-		self.save()
-		if self.doneRequired == None and self.nRequired >= N_REQUIRED:
+		if self.doneRequired == None and self.nGames >= REQUIRED:
 			self.doneRequired = datetime.now()
-		if self.doneBonus == None and self.nBonus >= N_BONUS:
-			self.doneBonus = datetime.now()
+		if self.doneMax == None and self.nGames >= MAX:
+			self.doneMax = datetime.now()
 		self.save()
-		bonusGames = Game.objects.filter(user=self, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-		performanceGames = 0
-		for game in bonusGames:
-			if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
-				performanceGames+= 1
-		bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
-		self.winnings = FIXED_REWARD + bonusReward
+
+		fixed = FIXED_REWARD if self.doneRequired else 0
+		bonus = 0
+		for game in Game.objects.filter(user=self, complete=True):
+			for thr in len(BONUS):
+				# loop backwards through list, add first bonus reward where score exceeded threshold
+				if sum(game.historyToArray("user", "reward")) >= BONUS[-thr][0]:
+					bonus += BONUS[-thr][1]
+					break
+		self.winnings = fixed + bonus
 		self.save()
 
 	def makeFigs(self):
-		gamesAAll = Game.objects.filter(userRole="A", complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-		gamesBAll = Game.objects.filter(userRole="B", complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-		gamesAUser = Game.objects.filter(user=self, userRole="A", complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-		gamesBUser = Game.objects.filter(user=self, userRole="B", complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
+		gamesAAll = Game.objects.filter(userRole="A", complete=True)
+		gamesBAll = Game.objects.filter(userRole="B", complete=True)
+		gamesAUser = Game.objects.filter(user=self, userRole="A", complete=True)
+		gamesBUser = Game.objects.filter(user=self, userRole="B", complete=True)
 
 		dfsAll = []
 		columns = ('player', 'turn', 'score', 'generosity')

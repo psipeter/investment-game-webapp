@@ -5,47 +5,20 @@ initialize("/game/api/status/", "GET", (status) => {
     let doneSurveyBool = (status.doneSurvey !== null);
     let doneTutorialBool = (status.doneTutorial !== null);
     let doneRequiredBool = (status.doneRequired !== null);
-    let doneBonusBool = (status.doneBonus !== null);
+    let doneMax = (status.doneMax !== null);
     let doneCashBool = (status.doneCash !== null);
 
     $("#ID").text(status.username);
 
     // Redirect on click
-    $('#information-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#consent-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#survey-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#tutorial-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#required-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#bonus-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#stats-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#cash-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
-
-    $('#feedback-box').click(function(e) {
-        window.location.href=$(this).attr("href");
-    });
+    $('#information-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#consent-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#survey-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#tutorial-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#game-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#stats-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#cash-box').click(function(e) {window.location.href=$(this).attr("href");});
+    $('#feedback-box').click(function(e) {window.location.href=$(this).attr("href");});
 
     $('#information-text').text('Information [✔]');
     $('#consent-text').text('Consent [✔]');
@@ -53,68 +26,23 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#survey-text').text('Survey [✔]');
     }
     if (doneTutorialBool) {
-        $('#tutorial-text').text('Tutorial [✔]');
-    }
-    if (doneRequiredBool) {
-        $('#required-text').text('Required Games [✔]');
-        $('#required-box').addClass('inactive');
-        $('#required-box').off('click');
-        $('#required-box').click(function(e) {
-            alert("You have already played the required games - try playing some bonus games!");
-        });
+        $('#tutorial-box').hide();
+        $('#game-box').show();
     }
     else {
+        $('#tutorial-box').show();
+        $('#game-box').hide();
         $('#stats-box').addClass('inactive');
         $('#stats-box').off('click');
-        $('#stats-box').click(function(e) {
-            alert("To view game statistics, first play more bonus games");
-        });
-        if (doneTutorialBool) {
-            $('#required-text').text(
-                "Required Games ["+status.nRequired+"/"+status.N_REQUIRED+"]");
-            }
-        else {
-            $('#required-box').addClass('inactive');
-            $('#required-box').off('click');
-            $('#required-box').click(function(e) {
-                alert("To play required games, first complete the tutorial");
-            });
-        }
+        $('#stats-box').click(function(e) {alert("To view game statistics, finish the tutorial and play games");});
     }
-    if (doneBonusBool) {
-        $('#bonus-text').text('Bonus Games [✔]');
-        $('#bonus-box').addClass('inactive');
-        $('#bonus-box').off('click');
-        $('#bonus-box').click(function(e) {
-            alert("You have played the maximum number of bonus games");
-        });
+    if (doneRequiredBool) {
+        $('#games-text').text('Games [✔]');
+        $('#games-box').addClass('inactive');
+        $('#games-box').off('click');
     }
-    else {
-        if (doneRequiredBool) {
-            $('#bonus-text').text(
-                "Bonus Games ["+status.nBonus+"/"+status.N_BONUS+"]");
-            if (status.nBonus==0) {
-                $('#stats-box').addClass('inactive');
-                $('#stats-box').off('click');
-                $('#stats-box').click(function(e) {
-                    alert("To view game statistics, first play at least one bonus game");
-                });
-            }
-            if (doneCashBool) {
-                $('#bonus-box').addClass('inactive');
-                $('#bonus-box').off('click');
-                $('#bonus-box').click(function(e) {
-                    alert("You may not play games after cashing out");
-                });
-            }
-        }
-        else {
-            $('#bonus-box').addClass('inactive');
-            $('#bonus-box').off('click');
-            $('#bonus-box').click(function(e) {
-                alert("To play bonus games, first complete required games");
-            });
-        }
+    else if (doneTutorialBool) {
+        $('#required-text').text("Required Games ["+status.nGames+"/"+status.required+"]");
     }
     if (doneCashBool) {
         $('#cash-text').text('Cash Out [✔]');
@@ -126,9 +54,7 @@ initialize("/game/api/status/", "GET", (status) => {
         else {
             $('#cash-box').addClass('inactive');
             $('#cash-box').off('click');
-            $('#cash-box').click(function(e) {
-                alert("To cash out, first complete the survey and required games, then play bonus games to earn more rewards");
-            });
+            $('#cash-box').click(function(e) {alert("To cash out, first complete the survey and required games");});
         }
     }
 });

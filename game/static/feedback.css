@@ -1,8 +1,8 @@
 #id_feedback {
-	background: var(--myWhite);
+	background: var(--myForeground);
 	width: 60%;
 	margin: 4% 20%;
-	border: solid black;
+	border: 1pt solid black;
 }
 
 .center {

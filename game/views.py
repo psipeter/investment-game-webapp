@@ -108,14 +108,7 @@ def tutorial(request):
 			return redirect('home')
 		else:
 			form = TutorialForm()			
-		context = {
-			'form': form,
-			'FIXED_REWARD': str(FIXED_REWARD),
-			'BONUS_RATE': str(BONUS_RATE),
-			'PERFORMANCE_RATE': str(PERFORMANCE_RATE),
-			'PERFORMANCE_THR': str(PERFORMANCE_THR),
-		}
-		return render(request, "tutorial.html", context=context)
+		return render(request, "tutorial.html")
 	else:
 		error(request, 'You must sign the consent form before taking the tutorial')
 		return redirect('home')

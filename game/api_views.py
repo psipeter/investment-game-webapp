@@ -28,15 +28,12 @@ def status(request):
 	data = {
 		'username': request.user.username,
 		'path': request.path,
-		'N_REQUIRED': N_REQUIRED,
-		'N_BONUS': N_BONUS,
-		'nRequired': request.user.nRequired,
-		'nBonus': request.user.nBonus,
+		'nGames': request.user.nGames,
 		'doneConsent': request.user.doneConsent,
 		'doneSurvey': request.user.doneSurvey,
 		'doneTutorial': request.user.doneTutorial,
 		'doneRequired': request.user.doneRequired,
-		'doneBonus': request.user.doneBonus,
+		'doneMax': request.user.doneMax,
 		'doneHIT': request.user.doneCash,
 		'doneCash': request.user.doneCash,
 		'winnings': request.user.winnings,
@@ -58,13 +55,14 @@ def startGame(request):
 		data = {
 			'username': game.user.username,
 			'agentname': game.agent.name,
-			'nRequired': game.user.nRequired,
-			'nBonus': game.user.nBonus,
+			'nGames': game.user.nGames,
 			'winnings': game.user.winnings,
 			'uuid': game.uuid,
 			'userRole': game.userRole,
+			'rounds': game.rounds,
 			'capital': game.capital,
 			'match': game.match,
+			'bonus': BONUS,
 			'doneRequired': game.user.doneRequired,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
@@ -86,6 +84,7 @@ def updateGame(request):
 	userGive = int(request.POST.get('userGive'))
 	userKeep = int(request.POST.get('userKeep'))
 	userTime = float(request.POST.get('userTime'))/1000
+	game = request.user.currentGame
 	game.step(userGive, userKeep, userTime)
 	data = {
 		'userGives': list(game.historyToArray("user", "give")),
@@ -97,6 +96,7 @@ def updateGame(request):
 	}
 	if game.complete:
 		data['complete'] = True
+		request.user.currentGame = None
 		request.user.setProgress()
 	else:
 		data['complete'] = False
@@ -108,7 +108,7 @@ def updateGame(request):
 	elif game.agent.name == "required" and request.user.doneRequired:
 		data['doneGames'] = True
 		data['message'] = "Required Games Complete!"
-	elif request.user.doneTutorial and request.user.doneRequired and request.user.doneBonus:
+	elif request.user.doneTutorial and request.user.doneRequired and request.user.doneMax:
 		data['doneGames'] = True
 		data['message'] = "Bonus Games Complete!"
 	else:

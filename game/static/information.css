@@ -7,8 +7,9 @@ body {
 	padding: 2%;
 	margin-bottom: 2%;
 	height: 50vh;
-	border: solid black;
+	border: 1pt solid black;
 	overflow: auto;
+	background-color: var(--myForeground);
 }
 
 .center {

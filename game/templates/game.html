@@ -10,29 +10,139 @@
 
 {% block body %}
 
-	<div id="turn-wrapper" class="r1 c1 bg">
-		<div id="turn-box1" class="p1 blue"></div>
-		<div id="turn-box2" class="p2 gray"></div>
-		<div id="turn-box3" class="p3 gray"></div>
-		<div id="turn-box4" class="p4 gray"></div>
-		<div id="turn-box5" class="p5 gray"></div>
-		<p id="turn-text" class='r1 c1 white text'>Turn</p>
+	<div id="turn-wrapper" class="r1 bar-wrapper">
+		<div class="text-box">
+			<h2 id="turn-text" class='text'>Turn</h2>
+		</div>
+		<div id="turn-progress" class="progress-box">
+			<h2 id="turn-num" class='num'>1/5</h2>
+		</div>
 	</div>
-	<div id="their-score-wrapper" class="r2 c1 bg">
-		<div id="tsfg" class='fg'></div>
-		<div class="text-wrapper">
-			<p id="tst" class='text white'>Their Score:</p>
-			<p id="tsn" class='number white'>0</p>
+
+	<div id="ts-wrapper" class="r2 bar-wrapper">
+		<div class="text-box">
+			<h2 id="ts-text" class='text'>Their Score</h2>
+		</div>
+		<div id="ts-progress" class="progress-box">
+			<h2 id="ts-num" class='num'>0</h2>
+		</div>
+	</div>
+
+	<div id="ys-wrapper" class="r3 bar-wrapper">
+		<div class="text-box">
+			<h2 id="ys-text" class='text'>Your Score</h2>
+		</div>
+		<div id="ys-progress" class="progress-box">
+			<h2 id="ys-num" class='num'>0</h2>
+		</div>
+	</div>
+
+	<div id="bonus-wrapper" class="r4 bar-wrapper">
+		<div class="text-box">
+			<h2 id="bonus-text" class='text'>Bonus</h2>
+		</div>
+		<div id="bonus-progress" class="progress-box">
+			<h2 id="bonus-num" class='num'>$0</h2>
+		</div>
+	</div>
+
+<!-- 	<div id="their-score-wrapper" class="r2 c1 bg">
+		<div id="tsw" class="text-wrapper">
+			<h2 id="tst" class='text'>Their Score:</h2>
+			<h2 id="tsn" class='number'>0</h2>
 		</div>
 	</div>
 	<div id="your-score-wrapper" class="r3 c1 bg">
-		<div id="ysfg" class='fg'></div>
-		<div class="text-wrapper">
-			<p id="yst" class='text white'>Your Score:</p>
-			<p id="ysn" class='number white'>0</p>
+		<div id="ysw" class="text-wrapper">
+			<h2 id="yst" class='text'>Your Score:</h2>
+			<h2 id="ysn" class='number'>0</h2>
 		</div>
+	</div> -->
+<!-- 	<div id="bonus-wrapper" class="r4 c1">
+		<div id="bonus-box1" class="b1 bg-yellow"></div>
+		<div id="bonus-box2" class="b2"></div>
+		<div id="bonus-box3" class="b3"></div>
+		<div id="bonus-box4" class="b4"></div>
+		<h2 id="bonus-text1" class='text'>Bonus</h2>
+		<h2 id="bonus-text2" class='text'>$0.00</h2>
+		<h2 id="bonus-text3" class='text'>$0.02</h2>
+		<h2 id="bonus-text4" class='text'>$0.04</h2>
+		<h2 id="bonus-text5" class='text'>$0.06</h2>
+	</div> -->
+	<div class="player-A-wrapper r5 c1">
+		<h1 id="headerA">Player A</h1>
+		<h1 id="nameA">Name A</h1>
+		<h2 id="receiveA"></h2>
+		<h2 id="sendA"></h2>
+		<img id="c1a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c2a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c3a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c4a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c5a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c6a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c7a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c8a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c9a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c10a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c11a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c12a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c13a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c14a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c15a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c16a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c17a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c18a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c19a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c20a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c21a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c22a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c23a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c24a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c25a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c26a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c27a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c28a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c29a" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c30a" class='coin' src="{% static 'coin.svg' %}">
 	</div>
-	<!-- {% include 'game.svg' %} -->
+	<div class="player-B-wrapper r5 c1">
+		<h1 id="nameB">Name B</h1>
+		<h1 id="headerB">Player B</h1>
+		<h2 id="sendB"></h2>
+		<img id="c1b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c2b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c3b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c4b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c5b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c6b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c7b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c8b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c9b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c10b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c11b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c12b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c13b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c14b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c15b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c16b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c17b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c18b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c19b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c20b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c21b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c22b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c23b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c24b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c25b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c26b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c27b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c28b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c29b" class='coin' src="{% static 'coin.svg' %}">
+		<img id="c30b" class='coin' src="{% static 'coin.svg' %}">
+	</div>
+	<div id="submit-wrapper" class="r5 c1">
+		<button id="submit">Send</button>
+	</div>
 	<!-- <h3 id="turn" class="top">Turn 1/5</h3> -->
 	<!-- <h2 id="aTotal" class="total left">$0 — Total A</h2> -->
 	<!-- <h2 id="bTotal" class="total right">Total B — $0</h2> -->
@@ -41,14 +151,35 @@
 	<!-- <h2 id="nameA" class="player left">A</h2> -->
 	<!-- <h2 id="nameB" class="player right">B</h2> -->
 	<!-- <div id="cash"> -->
-		<!-- <h2 id="sendA">$0</h2> -->
-		<!-- <h2 id="sendB">$0</h2> -->
 	<!-- </div> -->
-	<form id="form">
+	<div id="img-A-wrapper" class='r6 c1'>
+		<img id="imgA" src="{% static 'userA.svg' %}">
+	</div>
+	<div id="img-B-wrapper" class='r6 c1'>
+		<img id="imgB" src="{% static 'userB.svg' %}">
+	</div>
+	<form id="form" class="r6 c1">
 		{% csrf_token %}
 		<input type="range" min="0" max="10" value="5" step="1" id="slider">
 	</form>
-	<!-- <button id="submit">Send</button> -->
+	<div id="log-wrapper" class="r7 c1">
+		<div id="log-text1" class="l1">
+			<p class="log-text"><strong>Turn 1</strong></p>
+			<p class="log-text">You receive 10 coins</p>
+		</div>
+		<div id="log-text2" class="l2">
+			<p class="log-text"><strong>Turn 2</strong></p>
+		</div>
+		<div id="log-text3" class="l3">
+			<p class="log-text"><strong>Turn 3</strong></p>
+		</div>
+		<div id="log-text4" class="l4">
+			<p class="log-text"><strong>Turn 4</strong></p>
+		</div>
+		<div id="log-text5" class="l5">
+			<p class="log-text"><strong>Turn 5</strong></p>
+		</div>
+	</div>
 	<!-- <div id="loading"> -->
 		<!-- <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> -->
 	<!-- </div> -->

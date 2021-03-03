@@ -1,6 +1,7 @@
 :root {
 	--myBlue: #314f9cff;
-	--myBackground: #f5ffff;
+	--myBackground: white;
+	--myForeground: #f5ffff;
 	--myYellow: #f0e200ff;
 	--myTeal: #66c3d2ff;
 	--myPink: #d8388bff;

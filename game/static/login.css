@@ -4,7 +4,8 @@
 	width: 60%;
 	margin-top: 5%;
 	margin-left: 20%;
-	border: solid black;
+	border: 1pt solid black;
+	background-color: var(--myForeground);
 }
 
 form {
@@ -19,7 +20,7 @@ input, button {
 
 input {
 	background: var(--myLightGray);
-	border: solid black;
+	border: 1pt solid black;
 }
 
 .error {

@@ -1,13 +1,16 @@
 ROUNDS = 5
 CAPITAL = 10
 MATCH = 3
-N_REQUIRED = 5
-N_BONUS = 100
+REQUIRED = 10
+MAX = 40
+GAME_REWARD = 0.05
 FIXED_REWARD = 2
-BONUS_RATE = 0.06
-PERFORMANCE_RATE = 0.02
-PERFORMANCE_THR = 50
-
+BONUS = [
+	[60, 0.05],
+	[80, 0.10],
+	[100, 0.15],
+	[150, 0.15],
+]
 REQUIRED_ROLES = [
 	# ["userRole", "agentRole"],
 	["A", "B"],
@@ -23,19 +26,15 @@ REQUIRED_AGENTS = [
 	"T4T-E",
 	"T4T-E",
 ]
-
 BONUS_AGENTS_F_B = [
 	"T4T-F",
 ]
-
 BONUS_AGENTS_F_A = [
 	"T4T-F",
 ]
-
 BONUS_AGENTS_P_B = [
 	"T4T-P",
 ]
-
 BONUS_AGENTS_P_A = [
 	"T4T-P",
 ]
