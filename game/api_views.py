@@ -29,6 +29,7 @@ def status(request):
 		'username': request.user.username,
 		'path': request.path,
 		'nGames': request.user.nGames,
+		'required': REQUIRED,
 		'doneConsent': request.user.doneConsent,
 		'doneSurvey': request.user.doneSurvey,
 		'doneTutorial': request.user.doneTutorial,

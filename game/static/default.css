@@ -87,8 +87,9 @@ a, a:visited, a:link {
 	display: grid;
 	grid-template-rows: 33% 33% 33%;
 	grid-template-columns: 1fr 1fr 1fr;
-	height: 5vh;
-	width: 98vw;
+	height: 7vh;
+	width: 96vw;
+	padding: 0.5%;
 	margin: 0;
 	margin-left: -9vw;
 	border-bottom: 1pt solid black;
@@ -128,4 +129,8 @@ a, a:visited, a:link {
 
 .headerB {
 	grid-row: 3;
+}
+
+#cash-link {
+	color: var(-myGray);
 }

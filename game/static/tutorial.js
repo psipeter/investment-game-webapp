@@ -2,7 +2,7 @@ initialize("/game/api/status/", "GET", (status) => {
     "use strict";
     let progress = 0;
     let maxProgress = 8;
-    let fadeTime = 2000;
+    let fadeTime = 200;
     updateProgress();
     updateMain();  // Fade in first page
 

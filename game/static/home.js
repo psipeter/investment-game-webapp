@@ -54,7 +54,7 @@ initialize("/game/api/status/", "GET", (status) => {
         else {
             $('#cash-box').addClass('inactive');
             $('#cash-box').off('click');
-            $('#cash-box').click(function(e) {alert("To cash out, first complete the survey and required games");});
+            $('#cash-box').click(function(e) {alert("To cash out, first complete the survey and the "+status.required+" required games");});
         }
     }
 });

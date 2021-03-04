@@ -1,11 +1,11 @@
 initialize("/game/api/startGame/", "POST", (game) => {
-    "use strict";
 
     // Initialization and globals
+    "use strict";
     let maxUser;
     let maxAgent;
-    let agentTime = 1500;
-    let animateTime = 100;
+    let agentTime = 2000;
+    let animateTime = 1000;
     let waitTime = 1000;
     let startTime = performance.now();
     let endTime = performance.now();
@@ -13,11 +13,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let currentB = 0;
     let scoreA = 0;
     let scoreB = 0;
-    let receiveAText = "";
-    let sendAUserText = "";
-    let sendBUserText = "";
-    let sendAAgentText = "";
-    let sendBAgentText = "";
     // let doneRequiredBool = (game.doneRequired !== null);
     let turn = 1;
     let complete = false
@@ -27,7 +22,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let agentGives = game.agentGives;
     let agentKeeps = game.agentKeeps;
     let agentRewards = game.agentRewards;
-
     if (game.userRole == "A") {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
@@ -39,17 +33,10 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#nameA").text(game.username);
         $("#nameB").text(game.agentname);
         // }
-        receiveAText = "you get "+game.capital+" coins to start";
-        sendAUserText = "you keep ";
-        sendBUserText = "they get ";
-        sendAAgentText = "you get ";
-        sendBAgentText = "they keep ";
         $("#ts-progress").css('background-color', 'var(--myPink)');
         $("#ys-progress").css('background-color', 'var(--myTeal)');
-        $("#ts-num").css('color', 'var(--myPink)');
-        $("#ys-num").css('color', 'var(--myTeal)');
-        $("#submit").prop('disabled', true);
-        $("#loading").hide();
+        // $("#ts-num").css('color', 'var(--myPink)');
+        // $("#ys-num").css('color', 'var(--myTeal)');
     }
     else {
         // if (doneRequiredBool) {
@@ -60,90 +47,145 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#nameA").text(game.agentname);
         $("#nameB").text(game.username);
         // }
-        receiveAText = "they get "+game.capital+" coins to start";
-        sendAUserText = "you get ";
-        sendBUserText = "they keep ";
-        sendAAgentText = "they keep ";
-        sendBAgentText = "you get ";
         $("#ts-progress").css('background-color', 'var(--myTeal)');
         $("#ys-progress").css('background-color', 'var(--myPink)');
-        $("#ts-num").css('color', 'var(--myTeal)');
-        $("#ys-num").css('color', 'var(--myPink)');
+        // $("#ts-num").css('color', 'var(--myTeal)');
+        // $("#ys-num").css('color', 'var(--myPink)');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
-        $("#cash").hide();
-        $("#form").hide();
-        $("#submit").hide();
-        $("#loading").show();
-        // $("#submit").css('visibility', 'hidden');
-        // $("#loading").css('visibility', 'visible');
+        // $("#cash").hide();
+        // $("#loading").show();
+        // $("#submit").hide();
+        // $("#loading").show();
     }
+    // $("#gameOver").hide();
+    // $("#finalScore").hide();
+    // $("#home").hide();
+    // $("#flair").hide();
+    // $("#play-again").hide();
+    // $("#form").hide();
+    // $("#submit").hide();
+    // $("#slider").hide();
+    // $("#loading").hide();
+    // $("#submit").prop('disabled', true);
+    // $("#slider").prop("disabled", true);
+    // $("#sendA").hide();
+    // $("#sendB").hide();
+    // $("#slider").prop('max', game.capital);
+    // $("#slider").prop('value', 0);
+    executeMove("capital");
+    // switch after animation time
+    setTimeout(function() {
+        if (game.userRole == "A") {switchToUser();}
+        else {rotateSlider(); switchToAgent();}
+    }, animateTime);
+    $("#submit").click(callUpdate);
+
+
+
+    // Functions
     var slideFunction = function () {
-        var i;
         let max = maxUser;
-        let val = $("#slider").val();
-        let sendA = (max-val);
-        let sendB = (game.userRole=="A") ? val*game.match : val;
+        let slideVal = Number($("#slider").val());
         $("#submit").prop('disabled', false);
-        $("#receiveA").css('visibility', 'hidden');
-        $("#sendA").css('visibility', 'visible');
-        $("#sendB").css('visibility', 'visible');
-        $("#sendA").text(sendAUserText+sendA+" coins");
-        $("#sendB").text(sendBUserText+sendB+" coins");
-        for (i = 0; i <= game.capital*game.match; i++) {
-            if (i<=sendA) {$("#c"+i+"a").css('opacity', '1');}
-            else if (i<=max){$("#c"+i+"a").css('opacity', '0.5');}
-            else {$("#c"+i+"a").css('opacity', '0');}
-            if (i<=sendB) {$("#c"+i+"b").css('opacity', '0.5');}
-            else {$("#c"+i+"b").css('opacity', '0');}
+        $("#receiveA").hide();
+        // $("#sendA").show();
+        // $("#sendB").show();
+        if (game.userRole=="A"){
+            let sendA = max-slideVal;
+            let sendB = slideVal*game.match;
+            // $("#sendA").text("you keep "+sendA+" coins");
+            // $("#sendB").text("they get "+sendB+" coins");
+            for (let i = 0; i <= game.capital*game.match; i++) {
+                if (i<=sendA) {$("#c"+i+"a").css('opacity', '1');}
+                else if (i<=max){$("#c"+i+"a").css('opacity', '0.3');}
+                else {$("#c"+i+"a").css('opacity', '0');}
+                if (i<=sendB) {$("#c"+i+"b").css('opacity', '0.3');}
+                else {$("#c"+i+"b").css('opacity', '0');}
+            }            
+        }
+        else {
+            let sendA = slideVal;  // compensate for rotated slider
+            let sendB = max-slideVal;  // compensate for rotated slider
+            // $("#sendA").text("they get "+sendA+" coins");
+            // $("#sendB").text("you keep "+sendB+" coins");
+            for (let i = 0; i <= currentB; i++) {
+                if (i<=currentA) {$("#c"+i+"a").css('opacity', '1');}
+                else if (i<=(currentA+sendA)){$("#c"+i+"a").css('opacity', '0.3');}
+                else {$("#c"+i+"a").css('opacity', '0');}
+                if (i<sendA) {$("#c"+(currentB-i)+"b").css('opacity', '0.3');}
+                else if (i<=currentB){$("#c"+(currentB-i)+"b").css('opacity', '1');}
+                else {$("#c"+i+"b").css('opacity', '0');}
+            }            
         }
     }
     $("#slider").on('change', slideFunction);
     $("#slider").on('input', slideFunction);
-    $("#gameOver").hide();
-    $("#finalScore").hide();
-    $("#home").hide();
-    $("#flair").hide();
-    $("#play-again").hide();
-    $("#slider").prop("disabled", true);
-    $("#sendA").css('visibility', 'hidden');
-    $("#sendB").css('visibility', 'hidden');
-    $("#slider").prop('max', game.capital);
-    $("#slider").prop('value', game.capital/2);
-    animateCoins("capital");
-    // switch after animation time
-    setTimeout(function() {
-        if (game.userRole == "A") {switchToUser();}
-        else {switchToAgent();}
-    }, animateTime);
 
-    $("#submit").click(callUpdate()};
 
     // Change view after the user or agent moves
+    function switchToAgent() {
+        $("#loading-text").show();
+        $("#submit").hide();
+        // $("#form").hide();
+        $("#slider").hide();
+        setTimeout(function() {
+            $("#loading-text").hide();
+            // $("#cash").show();
+            // $("#submit").show();
+            // $("#receiveA").hide();
+            // $("#sendA").show();
+            // $("#sendB").show();
+            let agentRole = (game.userRole=="A") ? "B": "A";
+            let agentGive = agentGives[agentGives.length-1];
+            let agentKeep = agentKeeps[agentKeeps.length-1];
+            // if (game.userRole == "A") {
+                // $("#sendA").text("you get "+agentGive+" coins");
+                // $("#sendB").text("they keep "+agentKeep);
+                // $("#slider").prop('value', agentKeeps[agentKeeps.length-1]);
+            // }
+            // else {
+                // $("#sendA").text("they keep "+agentKeep+" coins");
+                // $("#sendB").text("you get " +agentGive+" coins");
+                // $("#slider").css('value', agentGives[agentGives.length-1]);
+            // }
+            // $("#slider").css('max', maxAgent);
+            // $("#slider").prop("disabled", true);
+            // $("#form").show();            
+            // $("#slider").show();      
+            executeMove(agentRole, agentGive, agentKeep)
+            // switch to user after animation time
+            let wait = (game.userRole=="A") ? 3*animateTime : animateTime;
+            setTimeout(function() {switchToUser();}, wait);
+        }, agentTime);
+    }
+
     function switchToUser() {
-        $("#loading").hide();
-        $("#cash").show();
-        $("#form").show();
+        $("#loading-text").hide();
+        // $("#cash").show();
+        // $("#form").show();
         $("#submit").show();
-        $("#form").css('visibility', 'visible');
-        $("#slider").css('visibility', 'visible');      
-        $("#submit").css('visibility', 'visible');
+        $("#slider").show();      
+        $("#submit").show();
         $("#slider").prop("disabled", false);
-        if (game.userRole=="B"){
+        if (game.userRole=="A"){
+            //pass
+        }
+        else {
             maxUser = game.match*agentGives[agentGives.length-1];
         }
         if (maxUser>0) {
             $("#submit").prop('disabled', true);
-            $("#sendA").css('visibility', 'hidden');
-            $("#sendB").css('visibility', 'hidden');
+            $("#sendA").hide();
+            $("#sendB").hide();
             $("#slider").prop('min', 0);
             $("#slider").prop('max', maxUser);
-            $("#slider").prop('value', maxUser/2);
+            $("#slider").prop('value', 0);
         }
         else {
             $("#submit").prop('disabled', false);
-            $("#sendA").css('visibility', 'visible');
-            $("#sendB").css('visibility', 'visible');
+            $("#sendA").show();
+            $("#sendB").show();
             $("#sendA").text(sendAUserText+"0 coins");
             $("#sendB").text(sendBUserText+"0 coins");
             $("#slider").prop('min', 0);
@@ -153,86 +195,29 @@ initialize("/game/api/startGame/", "POST", (game) => {
         startTime = performance.now()  // track user response time
     }
 
-    function switchToAgent() {
-        $("#loading").hide();
-        $("#cash").show();
-        $("#form").show();
-        $("#submit").show();
-        $("#sendA").css('visibility', 'visible');
-        $("#sendB").css('visibility', 'visible');
-        let agentRole = "A";
-        let agentGive = agentGives[agentGives.length-1];
-        let agentKeep = agentKeeps[agentKeeps.length-1]
-        if (game.userRole == "A") {
-            $("#sendA").text(sendAAgentText+agentGive+" coins");
-            $("#sendB").text(sendBAgentText+agentKeep);
-            $("#slider").prop('value', agentKeeps[agentKeeps.length-1]);
-            agentRole = "B";
-        }
-        else {
-            $("#sendA").text(sendAAgentText+agentKeep+" coins");
-            $("#sendB").text(sendBAgentText+agentGive+" coins");
-            $("#slider").css('value', agentGives[agentGives.length-1]);
-        }
-        $("#slider").css('max', maxAgent);
-        $("#slider").prop("disabled", true);
-        $("#form").css('visibility', 'visible');            
-        $("#slider").css('visibility', 'visible');      
-        $("#submit").css('visibility', 'hidden');
-        animateCoins(agentRole, agentGive, agentKeep)
-        // switch to user after animation time
-        let wait = (game.userRole=="A") ? 2*animateTime : animateTime;
-        setTimeout(function() {switchToUser();}, wait);
-    }
-
-    function switchToLoading() {
-        $("#loading").show();
-        $("#cash").hide();
-        $("#form").hide();
-        $("#submit").hide();
-    }
-
-    function getUserMove() {
-        let slideVal = $("#slider").val();
-        let userGive;
-        let userKeep;
-        if (game.userRole == "A") {
-            userGive = slideVal;
-            userKeep = maxUser - userGive;
-            maxAgent = userGive * game.match // update global
-        }
-        else {
-            userGive = maxUser - slideVal;
-            userKeep = maxUser - userGive;
-        }
-        userGives.push(userGive);
-        userKeeps.push(userKeep);
-        return [userGive, userKeep];
-    }
-
-
     // Communicate with the server through AJAX (views.updateGame())
     function callUpdate() {
         endTime = performance.now() // track user response time
-        let moves = getUserMove();
-        $("#submit").prop('disabled', true);
-        $("#submit").css('visibility', 'hidden');
-        $("#sendA").css('visibility', 'hidden');
-        $("#sendB").css('visibility', 'hidden');
-        let userGive = moves[0];
-        let userKeep = moves[1];
+        let userGive = Number($("#slider").val());
+        let userKeep = maxUser - userGive;
         let userTime = (endTime-startTime);
-        if (game.userRole=="A") {
-            $("#aNow").text("$"+userKeep+" — Available A");
-            $("#bNow").text("Available B — $"+(game.match*userGive));
-        }
-        else {
-            $("#aNow").text("$"+(agentKeeps[agentKeeps.length-1]+userGive)+" — Available A");
-            $("#bNow").text("Available B — $"+userKeep);
-        }
-        animateCoins(game.userRole, userGive, userKeep);
-        // switch immediately to loading
-        switchToLoading();
+        userGives.push(userGive);
+        userKeeps.push(userKeep);
+        if (game.userRole == "A") {maxAgent = userGive * game.match} // update global
+        $("#submit").prop('disabled', true);
+        $("#submit").hide();
+        $("#slider").hide();
+        // $("#sendA").hide();
+        // $("#sendB").hide();
+        // if (game.userRole=="A") {
+        //     $("#aNow").text("$"+userKeep+" — Available A");
+        //     $("#bNow").text("Available B — $"+(game.match*userGive));
+        // }
+        // else {
+        //     $("#aNow").text("$"+(agentKeeps[agentKeeps.length-1]+userGive)+" — Available A");
+        //     $("#bNow").text("Available B — $"+userKeep);
+        // }
+        executeMove(game.userRole, userGive, userKeep);
         let form = $("#form");
         let giveData = $('<input type="hidden" name="userGive"/>').val(userGive);
         let keepData = $('<input type="hidden" name="userKeep"/>').val(userKeep);
@@ -255,196 +240,234 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 agentKeeps = returnData.agentKeeps;
                 agentRewards = returnData.agentRewards;
                 complete = returnData.complete;
-                let wait = (game.userRole=="A") ? animateTime+agentTime : 2*animateTime+agentTime;
+                let wait = (game.userRole=="A") ? animateTime : 3*animateTime;
                 setTimeout(function () {switchToAgent();}, wait);
             }
         });
         return false;
     }
 
-    // Animations
-    function animateCapital(i) {
-        if (i>game.capital){return;} // base case
-        setTimeout(() => {
-            $("#c"+i+"a").css('opacity', '1');
-            animateCapital(i+1); // recursive call
-        }, animateTime/game.capital);   
-    }
-    function animateGiveA(i, AtoB) {
-        if (i>=AtoB){return;} // base case
-        setTimeout(() => {
-            $("#c"+(game.capital-i)+"a").css('opacity', '0');
-            animateGiveA(i+1, AtoB); // recursive call
-        }, animateTime/AtoB);   
-    }
-    function animateGetB(i, AtoB) {
-        if (i>AtoB*game.match){return;} // base case
-        setTimeout(() => {
-            $("#c"+i+"b").css('opacity', '1');
-            animateGetB(i+1, AtoB); // recursive call
-        }, animateTime/(3*AtoB);   
-    }
-    function animateGiveB(i, BtoA, bNow) {
-        console.log(bNow);
-        if (i>(BtoA-1)){return;} // base case
-        setTimeout(() => {
-            $("#c"+(bNow-i)+"b").css('opacity', '0');
-            animateGiveB(i+1, BtoA, bNow); // recursive call
-        }, animateTime/BtoA);   
-    }
-    function animateGetA(i, BtoA, aNow) {
-        if (i>BtoA){return;} // base case
-        setTimeout(() => {
-            $("#c"+(aNow+i)+"a").css('opacity', '1');
-            animateGetA(i+1, BtoA, aNow); // recursive call
-        }, animateTime/BtoA);   
-    }
-    function animateEmptyA(i, aOut) {
-        if (i>aOut){return;} // base case
-        setTimeout(() => {
-            $("#c"+(aOut-i)+"a").css('opacity', '0');
-            animateEmptyA(i+1, aOut); // recursive call
-        }, animateTime/aOut);
-    }
-    function animateEmptyB(i, bOut) {
-        if (i>bOut){return;} // base case
-        setTimeout(() => {
-            $("#c"+(bOut-i)+"b").css('opacity', '0');
-            animateEmptyB(i+1, bOut); // recursive call
-        }, animateTime/bOut);
-    }
-    function animateScoreA() {
-        if (scoreA==0){return;}
-        let widthA = (100-20)*scoreA/(5*game.capital*game.match)
-        let scoreBar = (game.userRole=="A") ? $("#ys-progress") : $("#ts-progress");
-        let scoreNum = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
-        scoreNum.css('color', 'var(--myWhite)');
-        scoreBar.animate({
-            'width': widthA+"%",
+    // Start new turn
+    function finishTurn() {
+        // if (game.userRole=="A"){
+        //     scoreA = userRewards.reduce((a, b) => a + b, 0);
+        //     scoreB = agentRewards.reduce((a, b) => a + b, 0);
+        // }
+        // else {
+        //     scoreA = agentRewards.reduce((a, b) => a + b, 0);
+        //     scoreB = userRewards.reduce((a, b) => a + b, 0);
+        // }
+        // todo: alignment check
+        scoreA += currentA;
+        scoreB += currentB;
+        if (complete) {finishGame();}
+        else {
+            setTimeout(()=> {
+                updateLog("score", scoreA, scoreB);
+                animateCoins(0, currentA, -currentA, 'out', 'a');
+                animateCoins(0, currentB, -currentB, 'out', 'b');
+                animateBar('scoreA');
+                animateBar('scoreB');
+                animateBar('turn');
+                animateBar('bonus');
             }, animateTime);
-        $({countNum: scoreNum.text()}).animate({
-            countNum: scoreA},
-            {
-                duration: animateTime,
-                easing: 'linear',
-                step: function () {
-                    scoreNum.text(Number(this.countNum).toFixed());
-                }
-            });        
+            setTimeout(()=> {
+                turn++;
+                currentA = 0;
+                currentB = 0;
+                executeMove('capital');
+            }, 2*animateTime);
+        }
     }
-    function animateScoreB() {
-        if (scoreA==0){return;}
-        let widthB = (100-20)*scoreB/(5*game.capital*game.match)
-        let scoreBar = (game.userRole=="A") ? $("#ts-progress") : $("#ys-progress");
-        let scoreNum = (game.userRole=="A") ? $("#ts-num") : $("#ys-num");
-        scoreNum.css('color', 'var(--myWhite)');
-        scoreBar.animate({
-            'width': widthB+"%",
-            }, animateTime);
-        $({countNum: scoreNum.text()}).animate({
-            countNum: scoreB},
-            {
-                duration: animateTime,
-                easing: 'linear',
-                step: function () {
-                    // scoreNum.text(Math.round(this.countNum));
-                    scoreNum.text(Number(this.countNum).toFixed());
-                }
-            });               
-    }
-    function animateCoins(move, give=null, keep=null){
+
+    // Animate coin appearing and disappearing
+    function animateCoins(i, start, delta, direction, player) {
+        // console.log(start+i, direction);
+        let di;
+        let opacity;
+        if (direction=="in"){
+            if (i>delta) {return;} // base case
+            di = 1; // count up
+            opacity = '1';  // become visible
+        }
+        else {
+            if (i<=delta) {return;} // base case            
+            di = -1;  // count down
+            opacity = '0';  // become invisible
+        }
+        setTimeout(() => {
+            $("#c"+(start+i)+player).css('opacity', opacity);
+            animateCoins(i+di, start, delta, direction, player); // recursive call
+        }, animateTime/Math.abs(delta));   
+    }    
+    function executeMove(move, give=null, keep=null){
         if (move=="capital") {
-            $("#receiveA").text(receiveAText);
-            animateCapital(1);
+            updateLog("capital", game.capital, 0);
+            animateCoins(0, 0, game.capital, 'in', 'a');
             currentA = game.capital;
         }
         if (move=="A"){
-            animateGiveA(0, give);
-            animateGetB(0, give);
+            updateLog("A", give, keep);
+            animateCoins(0, game.capital, -give, 'out', 'a');
+            animateCoins(0, 0, give*game.match, 'in', 'b');
             currentA = keep;
             currentB = game.match*give;
         }
         if (move=="B") {
-            animateGiveB(0, give, currentB);
-            animateGetA(1, give, currentA);
+            updateLog("B", give, keep);
+            animateCoins(0, currentB, -give, 'out', 'b');
+            animateCoins(0, currentA, give, 'in', 'a');
             currentA += give;
             currentB -= give;
             setTimeout(()=> {finishTurn(animateTime);}, animateTime);
         }
     }
 
-    function animateBonus() {
-        let score = (game.userRole=="A") ? scoreA : scoreB;
-        let width = 0;
-        let winnings = 0.0;
-        for (let thr=0; thr<game.bonus.length; thr++) {
-            if (score>=game.bonus[thr][0]) {
-                width=(100-20)*game.bonus[thr][0]/(game.rounds*game.capital*game.match);
-                winnings=game.bonus[thr][1];
-            }
-        }      
-        let bonusBar = $("#bonus-progress");
-        let bonusNum = $("#bonus-num");
-        bonusBar.animate({
-            'width': width+"%",
-            }, animateTime);
-        $({countNum: bonusNum.text()}).animate({
-            countNum: winnings},
-            {
-                duration: animateTime,
-                easing: 'linear',
-                step: function () {
-                    let num = (Math.round(100*Number(this.countNum))/100);
-                    bonusNum.text("$"+num);
-                }
-            });           
+    // Update game log
+    function updateLog(stage, give, keep) {
+        let pronoun1a = (game.userRole=="A") ? "You" : "They";
+        let pronoun1b = (game.userRole=="A") ? "They" : "You";
+        let pronoun2 = (game.userRole=="A") ? "them" : "them";
+        let currentUser = (game.userRole=="A") ? give : keep;
+        let currentAgent = (game.userRole=="A") ? keep : give;
+        if (stage=="capital") {
+            $("#log-wrapper").append(`<div id='l${turn}w1' class='lc${turn} lr1'></div>`);
+            $(`#l${turn}w1`).append(`<p id='l${turn}t' class='log-turn-text'></p>`);
+            $("#log-wrapper").append(`<div id='l${turn}w2' class='lc${turn} lr2'></div>`);
+            $(`#l${turn}w2`).append(`<p id='l${turn}a1' class='log-text'></p>`);
+            $(`#l${turn}w2`).append(`<p id='l${turn}a2' class='log-text'></p>`);
+            $(`#l${turn}w2`).append(`<p id='l${turn}a3' class='log-text'></p>`);
+            $(`#l${turn}t`).text("Turn "+turn);
+            $(`#l${turn}a1`).text(pronoun1a).append("&nbsp;");
+            $(`#l${turn}a2`).text("received "+give).append("&nbsp;");
+            $(`#l${turn}a2`).addClass("teal");
+            $(`#l${turn}a3`).text("coins to start");
+        }
+        else if (stage=="A") {
+            $("#log-wrapper").append(`<div id='l${turn}w3' class='lc${turn} lr3'></div>`);
+            $("#log-wrapper").append(`<div id='l${turn}w4' class='lc${turn} lr4'></div>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b1' class='log-text'></p>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b2' class='log-text'></p>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b3' class='log-text'></p>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b4' class='log-text'></p>`);
+            $(`#l${turn}w4`).append(`<p id='l${turn}c1' class='log-text'></p>`);
+            $(`#l${turn}w4`).append(`<p id='l${turn}c2' class='log-text'></p>`);
+            $(`#l${turn}w4`).append(`<p id='l${turn}c3' class='log-text'></p>`);
+            $(`#l${turn}b1`).text(pronoun1a).append("&nbsp;");
+            $(`#l${turn}b2`).text("gave "+give).append("&nbsp;");
+            $(`#l${turn}b2`).addClass("pink");
+            $(`#l${turn}b3`).text("coins and").append("&nbsp;");
+            $(`#l${turn}b4`).text("kept "+keep).append("&nbsp;");
+            $(`#l${turn}b4`).addClass("teal");
+            $(`#l${turn}c1`).text(pronoun1b).append("&nbsp;");
+            $(`#l${turn}c2`).text("received "+give*game.match).append("&nbsp;");
+            $(`#l${turn}c2`).addClass("pink");
+            $(`#l${turn}c3`).text("coins from").append("&nbsp;").append(pronoun2);
+        }
+        else if (stage=="B") {
+            $("#log-wrapper").append(`<div id='l${turn}w5' class='lc${turn} lr5'></div>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d1' class='log-text'></p>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d2' class='log-text'></p>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d3' class='log-text'></p>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d4' class='log-text'></p>`);
+            $(`#l${turn}d1`).text(pronoun1b).append("&nbsp;");
+            $(`#l${turn}d2`).text("gave "+give).append("&nbsp;");
+            $(`#l${turn}d2`).addClass("teal");
+            $(`#l${turn}d3`).text("coins and").append("&nbsp;");
+            $(`#l${turn}d4`).text("kept "+keep);
+            $(`#l${turn}d4`).addClass("pink");
+        }
+        else if (stage=="score") {
+            $("#log-wrapper").append(`<div id='l${turn}w6' class='lc${turn} lr6'></div>`);
+            $("#log-wrapper").append(`<div id='l${turn}w7' class='lc${turn} lr7'></div>`);
+            $(`#l${turn}w6`).append(`<p id='l${turn}e1' class='log-text'></p>`);
+            $(`#l${turn}w6`).append(`<p id='l${turn}e2' class='log-text'></p>`);
+            $(`#l${turn}w7`).append(`<p id='l${turn}f1' class='log-text'></p>`);
+            $(`#l${turn}w7`).append(`<p id='l${turn}f2' class='log-text'></p>`);
+            $(`#l${turn}e1`).text("Their score increased by").append("&nbsp;");
+            $(`#l${turn}e2`).text(currentAgent);
+            $(`#l${turn}e2`).addClass("pink");
+            $(`#l${turn}f1`).text("Your score increased by").append("&nbsp;");
+            $(`#l${turn}f2`).text(currentUser);
+            $(`#l${turn}f2`).addClass("teal");
+        }
     }
 
-    function animateTurn() {
-        let width = (100-20)*turn/game.rounds;
-        $("#turn-progress").animate({
-            'width': width+"%",
-            }, animateTime);
-        $({countNum: $("#turn-num").text()}).animate({
-            countNum: turn},
-            {
-                duration: animateTime,
-                easing: 'linear',
-                step: function () {
-                    let num = Math.max(turn-1, Math.round(Number(this.countNum)))
-                    $("#turn-num").text(num+"/"+game.rounds);
+    // Animate top bars increasing width and counting up
+    function animateBar(barName){
+        let bar;
+        let num;
+        let widthNow;
+        let player = barName.slice(-1);
+        let widthFrac = 0;
+        let widthNew = 0;
+        let widthText = parseInt($("#turn-text").css('width'));
+        let widthTotal = parseInt($("#turn-wrapper").css('width'));
+        let score = (player=="A") ? scoreA : scoreB;
+        let winnings = 0.0;
+        if (barName=="scoreA" || barName=="scoreB") {
+            bar = (game.userRole==player) ? $("#ys-progress") : $("#ts-progress");
+            num = (game.userRole==player) ? $("#ys-num") : $("#ts-num");
+            widthFrac = score/(game.rounds*game.capital*game.match);
+            widthNew = (widthTotal-widthText) * widthFrac;
+            widthNow = parseInt(bar.css('width'));
+            if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
+            $({count: num.text()}).animate(
+                {count: score},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    num.text(Number(this.count).toFixed());
+                }}
+            );            
+        }
+        else if (barName=="bonus") {
+            bar = $("#bonus-progress");
+            num = $("#bonus-num");
+            for (let i=0; i<game.bonus.length; i++) {
+                if (score>=game.bonus[i][0]) {
+                    widthFrac = game.bonus[i][0]/(game.rounds*game.capital*game.match);
+                    widthNew = (widthTotal-widthText) * widthFrac;
+                    winnings = game.bonus[i][1];
                 }
-            });           
+            }
+            if (winnings==0) {return;}
+            widthFrac = turn/game.rounds;
+            widthNow = parseInt(bar.css('width'));
+            if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
+            $({count: num.text()}).animate(
+                {count: winnings},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    num.text("$"+Math.round(100*Number(this.count))/100);
+                }}
+            );     
+
+        }
+        else if (barName=="turn") {
+            bar = $("#turn-progress");
+            num = $("#turn-num");
+            widthFrac = (turn+1)/game.rounds;
+            widthNew = (widthTotal-widthText) * widthFrac;
+            widthNow = parseInt(bar.css('width'));
+            if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
+            $({count: num.text()}).animate(
+                {count: turn},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    let newTurn = Math.max(turn, Math.round(Number(this.count)));
+                    // don't display NaN on first steps
+                    if (typeof newTurn==='number'){num.text(newTurn+"/"+game.rounds);}
+                }}
+            );              
+        }
     }
-    function finishTurn() {
-        turn++;
-        if (game.userRole=="A"){
-            scoreA = userRewards.reduce((a, b) => a + b, 0);
-            scoreB = agentRewards.reduce((a, b) => a + b, 0);
-        }
-        else {
-            scoreA = agentRewards.reduce((a, b) => a + b, 0);
-            scoreB = userRewards.reduce((a, b) => a + b, 0);
-        }
-        setTimeout(()=> {
-            console.log('current A finishTurn', currentA);
-            console.log('current B finishTurn', currentB);
-            animateEmptyA(0, currentA);
-            animateEmptyB(0, currentB);
-            animateScoreA();
-            animateScoreB();
-            animateBonus();
-            animateTurn();
-        }, animateTime);
-        setTimeout(()=> {
-            currentA = 0;
-            currentB = 0;
-            animateCoins('capital');
-        }, 2*animateTime+waitTime);
+
+    function rotateSlider() {
+        $("#slider").css({
+                "-webkit-transform": "rotate(180deg)",
+                "-moz-transform": "rotate(180deg)",
+                "transform": "rotate(180deg)" /* For modern browsers(CSS3)  */
+            });
     }
 
     // Final page after game is complete
-
     function finishGame() {
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
@@ -456,16 +479,16 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#aTotal").text("$"+agentScore);
             $("#bTotal").text("$"+userScore);
         }
-        $("#loading").remove();
-        $("#cash").remove();
-        $("#form").remove();
+        $("#loading-text").remove();
+        // $("#cash").remove();
+        // $("#form").remove();
         $("#currently").hide();
-        $("#sendA").remove();
-        $("#sendB").remove();
+        // $("#sendA").remove();
+        // $("#sendB").remove();
         $("#submit").remove();
         $("#slider").remove();
-        $("#aNow").remove();
-        $("#bNow").remove();
+        // $("#aNow").remove();
+        // $("#bNow").remove();
         $("#gameOver").show();
         $("#finalScore").show();
         $("#home").show();

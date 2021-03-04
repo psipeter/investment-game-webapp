@@ -7,9 +7,9 @@ from . import models
 import numpy as np
 
 class LoginForm(forms.Form):
-	username = forms.CharField(label="MTurk ID")
+	username = forms.CharField(label="Username")
 	password = forms.CharField(label='Password', widget=forms.PasswordInput)
-	username.widget.attrs.update({'placeholder':'MTurk ID'})	
+	username.widget.attrs.update({'placeholder':'Username'})	
 	password.widget.attrs.update({'placeholder':'Password'})	
 	username.widget.attrs.update({'autocomplete':'username'})	
 	password.widget.attrs.update({'autocomplete':'password'})	
@@ -18,10 +18,12 @@ class LoginForm(forms.Form):
 		fields = ('username', 'password')
 
 class CreateForm(UserCreationForm):
-	username = forms.CharField(label="MTurk ID")
+	username = forms.CharField(label="Username")
+	mturk = forms.CharField(label="Mechanical Turk ID")
 	password1 = forms.CharField(label='Enter password', widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
-	username.widget.attrs.update({'placeholder':'MTurk ID'})	
+	username.widget.attrs.update({'placeholder':'Username'})
+	mturk.widget.attrs.update({'placeholder':'Mechanical Turk ID'})
 	password1.widget.attrs.update({'placeholder':'Enter Password'})	
 	password2.widget.attrs.update({'placeholder':'Confirm Password'})	
 	password1.widget.attrs.update({'autocomplete':'password'})	
@@ -29,14 +31,14 @@ class CreateForm(UserCreationForm):
 	class Meta:
 		model = models.User
 		fields = ('username', 'password1', 'password2')
-		labels = {'username': 'MTurk ID', 'password1': "Enter Password", 'password2': 'Confirm Password'}
+		labels = {'username': 'Username', 'mturk': 'Mechanical Turk ID', 'password1': "Enter Password", 'password2': 'Confirm Password'}
 		help_texts = {'username': None, 'password1': None, 'password2': None}
 
 class ResetForm(forms.Form):
-	username = forms.CharField(label="Mechanical Turk ID")
+	username = forms.CharField(label="Username")
 	password1 = forms.CharField(label='New password', widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
-	username.widget.attrs.update({'placeholder':'MTurk ID'})	
+	username.widget.attrs.update({'placeholder':'Username'})	
 	password1.widget.attrs.update({'placeholder':'Enter Password'})	
 	password2.widget.attrs.update({'placeholder':'Confirm Password'})	
 	password1.widget.attrs.update({'autocomplete':'password'})	
@@ -46,7 +48,7 @@ class ResetForm(forms.Form):
 		if models.User.objects.filter(username=username).exists():
 			return self.cleaned_data['username']
 		else:
-			raise ValidationError("MTurk ID not found")
+			raise ValidationError("Username not found")
 	def clean_password2(self):
 		password1 = self.cleaned_data['password1']
 		password2 = self.cleaned_data['password2']

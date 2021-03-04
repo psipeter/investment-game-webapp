@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 from os import environ
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     try:

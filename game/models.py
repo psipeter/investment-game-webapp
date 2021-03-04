@@ -258,6 +258,7 @@ class User(AbstractUser):
 		return 1 if np.random.rand() < 0.5 else 2
 	def g():
 		return get_random_string(length=32)
+	mturk = models.CharField(max_length=33, null=True, blank=True)
 	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
 	nGames = models.IntegerField(default=0)
 	winnings = models.IntegerField(default=0)
@@ -291,7 +292,7 @@ class User(AbstractUser):
 		fixed = FIXED_REWARD if self.doneRequired else 0
 		bonus = 0
 		for game in Game.objects.filter(user=self, complete=True):
-			for thr in len(BONUS):
+			for thr in range(len(BONUS)):
 				# loop backwards through list, add first bonus reward where score exceeded threshold
 				if sum(game.historyToArray("user", "reward")) >= BONUS[-thr][0]:
 					bonus += BONUS[-thr][1]

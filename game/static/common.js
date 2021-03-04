@@ -9,9 +9,9 @@ function initialize(url, method, cback) {
     };
     function check_state_machine() {
         if (state.loaded && state.data) {
-            $("#headerU").text("Username: "+state.data.username);
-            $("#headerG").text("Games Played: "+state.data.nGames);
-            $("#headerW").text("Winnings: $"+state.data.winnings);
+            $("#headerU").text(state.data.username);
+            $("#headerG").text("Games Played — "+state.data.nGames);
+            $("#headerW").text("Winnings — $"+state.data.winnings.toFixed(2));
             if (state.data.doneRequired === null) {
                 $('#cash-link').css('color', 'var(--myGray');
                 $("#cash-link").removeAttr('href');

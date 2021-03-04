@@ -2,9 +2,7 @@ body {
 	text-align: justify;
 }
 
-h3 {
-	margin: 2% 0;
-}
+h2 {margin: 2% 0; text-align: center;}
 
 .f1 {width: 60%; padding: 0 0 1% 0;}
 .f2 {width: 20%; padding: 0 0 1% 5%;}
@@ -15,10 +13,11 @@ input, select {
 	font: inherit;
 	font-size: inherit;
 	background: var(--myLightGray);
-	border: solid black;
+	border: 1pt solid black;
 }
 
 table {
+	width: 100%;
 	background-color: var(--myForeground);
 	padding: 1%;
 	border: 1pt solid black;
