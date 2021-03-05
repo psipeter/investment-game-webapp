@@ -349,7 +349,7 @@ class User(AbstractUser):
 		ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="All Players' Scores")
 		# leg = ax.legend(loc='upper right')
 		fig.tight_layout()
-		fig.savefig(f'game/static/{figScoreAll}')
+		fig.savefig(f'game/static/user-stats/{figScoreAll}')
 		plt.close()
 
 		figGenAll = f"Generosity_All.svg"
@@ -358,7 +358,7 @@ class User(AbstractUser):
 		ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="All Players' Generosity")
 		# leg = ax.legend(loc='upper right')
 		fig.tight_layout()
-		fig.savefig(f'game/static/{figGenAll}')
+		fig.savefig(f'game/static/user-stats/{figGenAll}')
 		plt.close()
 
 		figScoreUser = f"Score_{self.username}.svg"
@@ -367,7 +367,7 @@ class User(AbstractUser):
 		ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="Your Scores")
 		# leg = ax.legend(loc='upper right')
 		fig.tight_layout()
-		fig.savefig(f'game/static/{figScoreUser}')
+		fig.savefig(f'game/static/user-stats/{figScoreUser}')
 		plt.close()
 
 		figGenUser = f"Generosity_{self.username}.svg"
@@ -376,7 +376,7 @@ class User(AbstractUser):
 		ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="Your Generosity")
 		# leg = ax.legend(loc='upper right')
 		fig.tight_layout()
-		fig.savefig(f'game/static/{figGenUser}')
+		fig.savefig(f'game/static/user-stats/{figGenUser}')
 		plt.close()
 
 		return {

@@ -1,4 +1,4 @@
-ROUNDS = 5
+ROUNDS = 2
 CAPITAL = 10
 MATCH = 3
 REQUIRED = 10
@@ -18,11 +18,21 @@ REQUIRED_ROLES = [
 	["B", "A"],
 	["B", "A"],
 	["A", "B"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["B", "A"],
 ]
 REQUIRED_AGENTS = [
 	"Generous",
 	"Greedy",
 	"Generous",
+	"T4T-E",
+	"T4T-E",
+	"T4T-E",
+	"T4T-E",
+	"T4T-E",
 	"T4T-E",
 	"T4T-E",
 ]

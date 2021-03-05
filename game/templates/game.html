@@ -46,10 +46,7 @@
 		</div>
 	</div>
 	<div class="player-A-wrapper r5 c1">
-		<!-- <h1 id="headerA">Player A</h1> -->
-		<h1 id="nameA">Name A</h1>
-		<!-- <h2 id="receiveA"></h2> -->
-		<!-- <h2 id="sendA"></h2> -->
+		<h1 id="nameA"></h1>
 		<img id="c1a" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c2a" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c3a" class='coin' src="{% static 'full-coin.svg' %}">
@@ -82,9 +79,7 @@
 		<img id="c30a" class='coin' src="{% static 'full-coin.svg' %}">
 	</div>
 	<div class="player-B-wrapper r5 c1">
-		<h1 id="nameB">Name B</h1>
-		<!-- <h1 id="headerB">Player B</h1> -->
-		<!-- <h2 id="sendB"></h2> -->
+		<h1 id="nameB"></h1>
 		<img id="c1b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c2b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c3b" class='coin' src="{% static 'full-coin.svg' %}">
@@ -119,15 +114,6 @@
 	<div id="submit-wrapper" class="r5 c1">
 		<button hidden id="submit">Send</button>
 	</div>
-	<!-- <h3 id="turn" class="top">Turn 1/5</h3> -->
-	<!-- <h2 id="aTotal" class="total left">$0 — Total A</h2> -->
-	<!-- <h2 id="bTotal" class="total right">Total B — $0</h2> -->
-	<!-- <h2 id="aNow" class="available left">$0 — Available A</h2> -->
-	<!-- <h2 id="bNow" class="available right">Available B — $0</h2> -->
-	<!-- <h2 id="nameA" class="player left">A</h2> -->
-	<!-- <h2 id="nameB" class="player right">B</h2> -->
-	<!-- <div id="cash"> -->
-	<!-- </div> -->
 	<div id="img-A-wrapper" class='r6 c1'>
 		<img id="imgA" src="{% static 'userA.svg' %}">
 	</div>
@@ -138,18 +124,17 @@
 		{% csrf_token %}
 		<input hidden type="range" min="0" max="10" value="0" step="1" id="slider">
 		<div id="loading">
-			<h2 hidden id="loading-text">They are thinking...</h2>
-			<!-- <div id="loading-bar" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div> -->
+			<h1 hidden id="loading-text">They are thinking...</h1>
 		</div>
 
 	</form>
 	<div id="log-wrapper" class="r7 c1">
 	</div>
-	<!-- <h2 id="finalScore">Final Score</h2> -->
-	<!-- <h2 id="gameOver">Game Over</h2> -->
-	<!-- <a id="home" class="available left" href="{% url 'home' %}">Home</a> -->
-	<!-- <h3 id="flair" class="available cen">Isn't This Fun!</h3> -->
-	<!-- <a id="play-again" class="available right" href="{% url 'game' %}">Play Again</a> -->
+	<div hidden id="game-over-wrapper">
+		<h1 hidden id="flair-text">Isn't this fun!</h1>
+		<div id="play-again-wrapper"><a hidden id="play-again-text" href="{% url 'game' %}">New Game</a></div>
+		<h1 hidden id="game-over-text">Game Over</h1>
+	</div>
 
 {% endblock %}
 

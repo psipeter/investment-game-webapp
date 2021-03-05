@@ -6,6 +6,7 @@ game/RL/plots
 .sqlite3
 
 # user plots
+game/static/user-stats
 
 # settings
 IG/settings.py
