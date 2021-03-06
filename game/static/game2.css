@@ -206,7 +206,14 @@
 #play-again-text {
 	font-size: 250%;
 }
-#flair-text, #game-over-text {
+#flair-text {
+	color: var(--myPink);
+	width: 100%;
+	margin: 0;
+}
+
+#game-over-text {
+	color: var(--myTeal);
 	width: 100%;
 	margin: 0;
 }

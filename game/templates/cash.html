@@ -9,28 +9,49 @@
 {% endblock %}
 
 {% block body %}
-	<p>Thanks for playing the Investment Game!</p>
+	<h1>Thanks for playing the Investment Game!</h1>
+	<div class='space'></div>
 	{% if not user.doneCash %}
-		<p>Your HIT code is</p>
-		<p class="code">{{user.code}}</p>
-		<p>Please paste this code into the MTurk tab to earn the fixed reward (${{fixedReward}}) for completing the required games.</p>
-		<p>You may continue playing bonus games to earn high-paying bonus rewards. Each subsequent game will earn you a reward of ${{bonusRate}}, plus an additional ${{performanceRate}} bonus scoring above the threshold. Currently, you have earned</p>
-		<p class="code">${{bonusReward}}</p>
-		<p>To receive this payment, press the button below. Doing so will prevent you from earning any additional bonus.</p>
+		<h2>Your HIT code is</h2>
+		<div class="wrapper">
+			<p class="highlight">{{user.code}}</p>
+		</div>
+		<h2>Please paste this code into the Mechanical Turk browser tab to earn <strong>${{FIXED_REWARD}}</strong> for completing the required games</h2>
+		<div class='space'></div>
+		<h1>You may continue playing bonus games to earn high-paying bonus rewards</h1>
+		<div class='space'></div>
+		<h2>Your current winnings are</h2>
+		<div class="wrapper">
+			<p class="highlight">${{winnings}}</p>
+		</div>
+		<h2>To receive this additional payment, press the button below.</h2>
+		<!-- Doing so will prevent you from earning any additional bonus.</p> -->
+		<div class='space'></div>
 		<form method="post">
 			{% csrf_token %} 
 			<input hidden id="submit" type="submit" />
 		</form>
 		<div class="button-wrapper">
-			<button class="button"> <label for="submit">Cash Out and Finish</label></button>
+			<button class="button"> <label for="submit">Cash Out</label></button>
 		</div>
 	{% else %}
 		<p>Your HIT code was</p>
 		<p class="code">{{user.code}}</p>
 		<p>and you earned</p>
-		<p class="code">${{bonusReward}}</p>
+		<p class="code">${{winnings}}</p>
 		<p>in bonus rewards</p>
 	{% endif %}
+
+	<div class='space'></div>
+	<div class="appreciation">
+		<p>Dear Participant,</p>
+		<p>I would like to thank you for your participation in this study entitled "Social Behavior in a Web-Based Investment Game". As a reminder, the purpose of this study is to observe the strategies that new and experienced players adopt when playing the game, with the long-term goal of understanding how the brain uses learning to make social decisions.</p>
+		<p>Please remember that any data pertaining to you as an individual participant will be kept confidential.  Once all the data are collected and analyzed for this project, I plan on sharing this information with the research community through seminars, conferences, presentations, and journal articles.  If you are interested in receiving more information regarding the results of this study, or would like a summary of the results, please provide your email address, and when my dissertation is completed, anticipated by September 2023, I will send you the information.  In the meantime, if you have any questions about the study, please do not hesitate to contact me by email or telephone as noted below. </p>
+		<p>This study has been reviewed and received ethics clearance through a University of Waterloo Research Ethics Committee (ORE#42531). If you have questions for the Committee contact the Office of Research Ethics, at 1-519-888-4567 ext. 36005 or <a href="oreceo@uwaterloo.ca">oreceo@uwaterloo.ca</a>. If you have any questions or would like additional information about the study's scientific goals, contact <a href="mailto:pduggins@uwaterloo.ca?subject=Question%20regarding%20Investment%20Game%20Experiment">pduggins@uwaterloo.ca.</a></p>
+		<p class="signature"> Peter Duggins</p>
+		<p class="signature"> University of Waterloo</p>
+		<p class="signature"> Department of Systems Design Engineering</p>
+	</div>
 
 	<div class="link-wrapper">
 		<a class="link" href="{% url 'home' %}">Home</a>

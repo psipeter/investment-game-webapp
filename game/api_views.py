@@ -37,13 +37,14 @@ def status(request):
 		'doneMax': request.user.doneMax,
 		'doneHIT': request.user.doneCash,
 		'doneCash': request.user.doneCash,
-		'winnings': request.user.winnings,
+		'winnings': f"{request.user.winnings:.2f}",
 		}
 	return JsonResponse(data)
 
 
 @login_required
 def startGame(request):
+	request.user.setProgress()
 	if request.method != 'POST':
 		return JsonResponse({
 			"status": "error",
@@ -57,7 +58,7 @@ def startGame(request):
 			'username': game.user.username,
 			'agentname': game.agent.name,
 			'nGames': game.user.nGames,
-			'winnings': game.user.winnings,
+			'winnings': f"{request.user.winnings:.2f}",
 			'uuid': game.uuid,
 			'userRole': game.userRole,
 			'rounds': game.rounds,

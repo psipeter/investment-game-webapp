@@ -120,25 +120,17 @@ def stats(request):
 
 @login_required
 def cash(request):
+	request.user.setProgress()
 	if not (request.user.doneConsent and request.user.doneRequired):
 		error(request, 'You must complete the required games before cashing out')
 		return redirect('home')
 	else:
 		request.user.doneHIT = datetime.now()
 		request.user.save()
-		bonusGames = Game.objects.filter(user=request.user, complete=True).exclude(agent__name__in=REQUIRED_AGENTS)
-		performanceGames = 0
-		for game in bonusGames:
-			if sum(game.historyToArray("user", "reward")) >= PERFORMANCE_THR:
-				performanceGames+= 1
-		bonusReward = BONUS_RATE*bonusGames.count() + PERFORMANCE_RATE*performanceGames
 		form = CashForm(request.POST)
-		form.bonusReward = bonusReward
 		context = {
-			'fixedReward': FIXED_REWARD,
-			'bonusReward': bonusReward,
-			'bonusRate': BONUS_RATE,
-			'performanceRate': PERFORMANCE_RATE,
+			'winnings': f"{request.user.winnings:.2f}",
+			'FIXED_REWARD': FIXED_REWARD,
 			'form': form,
 			}
 		if request.method == 'POST':

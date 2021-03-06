@@ -45,11 +45,11 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#required-text').text("Required Games ["+status.nGames+"/"+status.required+"]");
     }
     if (doneCashBool) {
-        $('#cash-text').text('Cash Out [✔]');
+        $('#cash-text').text('HIT Code / Cash Out [✔]');
     }
     else {
         if (doneSurveyBool & doneTutorialBool & doneRequiredBool) {
-            $('#cash-text').text('Cash Out ($'+status.winnings+")");
+            $('#cash-text').text('HIT Code / Cash Out');
         }
         else {
             $('#cash-box').addClass('inactive');

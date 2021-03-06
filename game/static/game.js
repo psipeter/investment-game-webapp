@@ -55,7 +55,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         maxUser = 0;  // updated after agent moves
     }
     $("#game-over-wrapper").hide();
-    animateBar('turn');
+    animateBar('turn', game.userRole);
     turn++;
     executeMove("capital");
     // switch after animation time
@@ -206,7 +206,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 agentRewards = returnData.agentRewards;
                 complete = returnData.complete;
                 let wait = (game.userRole=="A") ? animateTime : 3*animateTime;
-                if (!complete){setTimeout(function () {switchToAgent();}, wait);}
+                if (!complete || game.userRole=="A"){setTimeout(function () {switchToAgent();}, wait);}
             }
         });
         return false;
@@ -226,12 +226,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
         scoreA += currentA;
         scoreB += currentB;
         setTimeout(()=> {
-            updateLog("score", scoreA, scoreB);
+            updateLog("score", currentA, currentB);
             animateCoins(0, currentA, -currentA, 'out', 'a');
             animateCoins(0, currentB, -currentB, 'out', 'b');
-            animateBar('scoreA');
-            animateBar('scoreB');
-            animateBar('bonus');
+            animateBar('scoreA', "A");
+            animateBar('scoreB', "B");
+            animateBar('bonus', game.userRole);
         }, animateTime);
         if (complete) {
             setTimeout(()=> {
@@ -240,7 +240,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         }
         else {
             setTimeout(()=> {
-                animateBar('turn');
+                animateBar('turn', game.userRole);
             }, animateTime);
             setTimeout(()=> {
                 turn++;
@@ -253,7 +253,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
 
     // Animate coin appearing and disappearing
     function animateCoins(i, start, delta, direction, player) {
-        // console.log(start+i, direction);
         let di;
         let opacity;
         if (direction=="in"){
@@ -298,7 +297,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function updateLog(stage, give, keep) {
         let pronoun1a = (game.userRole=="A") ? "You" : "They";
         let pronoun1b = (game.userRole=="A") ? "They" : "You";
-        let pronoun2 = (game.userRole=="A") ? "them" : "them";
+        let pronoun2 = (game.userRole=="A") ? "you" : "them";
         let currentUser = (game.userRole=="A") ? give : keep;
         let currentAgent = (game.userRole=="A") ? keep : give;
         if (stage=="capital") {
@@ -365,11 +364,10 @@ initialize("/game/api/startGame/", "POST", (game) => {
     }
 
     // Animate top bars increasing width and counting up
-    function animateBar(barName){
+    function animateBar(barName, player){
         let bar;
         let num;
         let widthNow;
-        let player = barName.slice(-1);
         let widthFrac = 0;
         let widthNew = 0;
         let widthText = parseInt($("#turn-text").css('width'));
@@ -400,14 +398,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
                     winnings = game.bonus[i][1];
                 }
             }
-            if (winnings==0) {return;}
             widthFrac = turn/game.rounds;
             widthNow = parseInt(bar.css('width'));
+            let bonusNow = Number(num.text().substring(1));
             if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
-            $({count: num.text()}).animate(
+            $({count: bonusNow}).animate(
                 {count: winnings},
                 {duration: animateTime, easing: 'linear', step: function () {
-                    num.text("$"+Math.round(100*Number(this.count))/100);
+                    let newBonus = Math.round(100*Number(this.count))/100;
+                    if (!isNaN(newBonus)){num.text("$"+newBonus.toFixed(2));}
                 }}
             );     
 
@@ -424,10 +423,26 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 {duration: animateTime, easing: 'linear', step: function () {
                     let newTurn = Math.max(turn, Math.round(Number(this.count)));
                     // don't display NaN on first steps
-                    if (typeof newTurn==='number'){num.text(newTurn+"/"+game.rounds);}
+                    if (!isNaN(newTurn)){num.text(newTurn+"/"+game.rounds);}
                 }}
             );              
         }
+    }
+
+    function animateWinnings(){
+        let bonusObj = $("#bonus-num");
+        let winObj = $("#headerW");
+        let playedObj = $("#headerG");
+        let bonus = Number(bonusObj.text().substring(1));  // remove "$"
+        let win = Number(game.winnings);  // str to number
+        $({count: win}).animate(
+                {count: win+bonus},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    let winNew = Math.round(100*Number(this.count))/100;
+                    if (!isNaN(winNew)){winObj.text("Winnings — $"+winNew.toFixed(2))};
+                }}
+            );
+        playedObj.text("Games Played — "+(game.nGames+1));
     }
 
     function rotateSlider() {
@@ -442,6 +457,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function finishGame() {
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
+        animateWinnings();
         if (game.userRole == "A") {
             $("#aTotal").text("$"+userScore);
             $("#bTotal").text("$"+agentScore);

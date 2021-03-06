@@ -1,15 +1,15 @@
-ROUNDS = 2
-CAPITAL = 10
-MATCH = 3
+ROUNDS = 5
+CAPITAL = 10  # don't change this
+MATCH = 3  # don't change this
 REQUIRED = 10
 MAX = 40
-GAME_REWARD = 0.05
 FIXED_REWARD = 2
 BONUS = [
-	[60, 0.05],
-	[80, 0.10],
-	[100, 0.15],
-	[150, 0.15],
+	[0, 0.05],
+	[60, 0.10],
+	[80, 0.15],
+	[100, 0.20],
+	[120, 0.25],
 ]
 REQUIRED_ROLES = [
 	# ["userRole", "agentRole"],

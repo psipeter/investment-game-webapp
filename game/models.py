@@ -47,11 +47,9 @@ class Agent(models.Model):
 		nA = int(game.capital+1) if player == "A" else int(game.capital*game.match+1)
 		nS = 10
 		if Blob.objects.filter(name=blobname).exists():
-			# print(f"loaded blob named {blobname}")
 			self.blob = Blob.objects.get(name=blobname)
 			self.obj = pickle.loads(self.blob.blob)
 		else:
-			# print(f"creating new blob named {blobname}")
 			if name=='Greedy':
 				self.obj = Greedy(player, mean=0.2, std=0.05)
 			elif name=="Generous":
@@ -288,16 +286,15 @@ class User(AbstractUser):
 		if self.doneMax == None and self.nGames >= MAX:
 			self.doneMax = datetime.now()
 		self.save()
-
-		fixed = FIXED_REWARD if self.doneRequired else 0
 		bonus = 0
 		for game in Game.objects.filter(user=self, complete=True):
-			for thr in range(len(BONUS)):
-				# loop backwards through list, add first bonus reward where score exceeded threshold
-				if sum(game.historyToArray("user", "reward")) >= BONUS[-thr][0]:
-					bonus += BONUS[-thr][1]
-					break
-		self.winnings = fixed + bonus
+			gameBonus = 0
+			score = sum(game.historyToArray("user", "reward"))
+			for i in range(len(BONUS)):
+				if score>= BONUS[i][0]:
+					gameBonus = BONUS[i][1]
+			bonus += gameBonus
+		self.winnings = np.around(bonus, 2)
 		self.save()
 
 	def makeFigs(self):
