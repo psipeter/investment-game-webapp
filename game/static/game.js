@@ -35,6 +35,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         // }
         $("#ts-progress").css('background-color', 'var(--myPink)');
         $("#ys-progress").css('background-color', 'var(--myTeal)');
+        $("#slider").css('--sliderColor1', 'var(--myTeal');
+        $("#slider").css('--sliderColor2', 'var(--myPink');
+        $("#slider").css('--coinImg', 'var(--coinImg1');
         // $("#ts-num").css('color', 'var(--myPink)');
         // $("#ys-num").css('color', 'var(--myTeal)');
     }
@@ -49,19 +52,25 @@ initialize("/game/api/startGame/", "POST", (game) => {
         // }
         $("#ts-progress").css('background-color', 'var(--myTeal)');
         $("#ys-progress").css('background-color', 'var(--myPink)');
+        $("#slider").css('--sliderColor1', 'var(--myPink');
+        $("#slider").css('--sliderColor2', 'var(--myTeal');
+        $("#slider").addClass('flipped');
+        $("#slider").css('--coinImg', 'var(--coinImg2');
         // $("#ts-num").css('color', 'var(--myTeal)');
         // $("#ys-num").css('color', 'var(--myPink)');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
     }
-    $("#game-over-wrapper").hide();
+    $("#loading").hide();
+    $("#arrow").hide();
+    $("#game-over-area").hide();
     animateBar('turn', game.userRole);
     turn++;
     executeMove("capital");
     // switch after animation time
     setTimeout(function() {
         if (game.userRole == "A") {switchToUser();}
-        else {rotateSlider(); switchToAgent();}
+        else {flipArrow(); switchToAgent();}
     }, animateTime);
     $("#submit").click(callUpdate);
 
@@ -69,10 +78,11 @@ initialize("/game/api/startGame/", "POST", (game) => {
 
     // Functions
     var slideFunction = function () {
+        $("#sendA").show();
+        $("#sendB").show();
         let max = maxUser;
         let slideVal = Number($("#slider").val());
         $("#submit").prop('disabled', false);
-        $("#receiveA").hide();
         if (game.userRole=="A"){
             let sendA = max-slideVal;
             let sendB = slideVal*game.match;
@@ -82,6 +92,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 else {$("#c"+i+"a").css('opacity', '0');}
                 if (i<=sendB) {$("#c"+i+"b").css('opacity', '0.3');}
                 else {$("#c"+i+"b").css('opacity', '0');}
+            $("#sendA").text("You keep "+sendA+" coins");
+            $("#sendB").text("They get "+sendB+" coins");
             }            
         }
         else {
@@ -97,7 +109,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 else if (i<=currentB){$("#c"+(currentB-i)+"b").css('opacity', '1');}
                 else {$("#c"+i+"b").css('opacity', '0');}
             }            
-        }
+            $("#sendA").text("They get "+sendA+" coins");
+            $("#sendB").text("You keep "+sendB+" coins");
+        }    
     }
     $("#slider").on('change', slideFunction);
     $("#slider").on('input', slideFunction);
@@ -105,43 +119,45 @@ initialize("/game/api/startGame/", "POST", (game) => {
 
     // Change view after the user or agent moves
     function switchToAgent() {
-        $("#loading-text").show();
+        $("#loading").show();
+        $("#arrow").hide();
         $("#submit").hide();
         // $("#form").hide();
         $("#slider").hide();
         setTimeout(function() {
-            $("#loading-text").hide();
+            $("#loading").hide();
+            flipArrow();
+            $("#arrow").show();
+            $("#sendA").show();
+            $("#sendB").show();
             let agentRole = (game.userRole=="A") ? "B": "A";
             let agentGive = agentGives[agentGives.length-1];
             let agentKeep = agentKeeps[agentKeeps.length-1];
-            // if (game.userRole == "A") {
-                // $("#sendA").text("you get "+agentGive+" coins");
-                // $("#sendB").text("they keep "+agentKeep);
-                // $("#slider").prop('value', agentKeeps[agentKeeps.length-1]);
-            // }
-            // else {
-                // $("#sendA").text("they keep "+agentKeep+" coins");
-                // $("#sendB").text("you get " +agentGive+" coins");
-                // $("#slider").css('value', agentGives[agentGives.length-1]);
-            // }
-            // $("#slider").css('max', maxAgent);
-            // $("#slider").prop("disabled", true);
-            // $("#form").show();            
-            // $("#slider").show();      
+            if (game.userRole == "A") {
+                $("#sendA").text("You get "+agentGive+" coins");
+                $("#sendB").text("They keep "+agentKeep);
+            }
+            else {
+                $("#sendA").text("They keep "+agentKeep+" coins");
+                $("#sendB").text("You get " +agentGive*game.match+" coins");
+            }    
             executeMove(agentRole, agentGive, agentKeep)
-            // switch to user after animation time
             let wait = (game.userRole=="A") ? 3*animateTime : animateTime;
-            setTimeout(function() {switchToUser();}, wait);
+            setTimeout(function() {
+                flipArrow();
+                switchToUser();
+            }, wait);
         }, agentTime);
     }
 
     function switchToUser() {
-        $("#loading-text").hide();
+        $("#loading").hide();
         // $("#cash").show();
         // $("#form").show();
         $("#submit").show();
         $("#slider").show();      
         $("#submit").show();
+        $("#arrow").show();
         $("#slider").prop("disabled", false);
         if (game.userRole=="A"){
             //pass
@@ -161,8 +177,14 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#submit").prop('disabled', false);
             $("#sendA").show();
             $("#sendB").show();
-            $("#sendA").text(sendAUserText+"0 coins");
-            $("#sendB").text(sendBUserText+"0 coins");
+            if (game.userRole=="A"){
+                $("#sendA").text("Keep 0 coins");
+                $("#sendB").text("Give them 0 coins");
+            }
+            else {
+                $("#sendA").text("Give them 0 coins");
+                $("#sendB").text("Keep 0 coins");                
+            }
             $("#slider").prop('min', 0);
             $("#slider").prop('max', 0);
             $("#slider").prop('value', 0);  
@@ -291,6 +313,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             currentB -= give;
             setTimeout(()=> {finishTurn();}, animateTime);
         }
+        setTimeout(()=> {$("#arrow").hide(); $("#sendA").hide(); $("#sendB").hide();}, animateTime);
     }
 
     // Update game log
@@ -301,9 +324,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let currentUser = (game.userRole=="A") ? give : keep;
         let currentAgent = (game.userRole=="A") ? keep : give;
         if (stage=="capital") {
-            $("#log-wrapper").append(`<div id='l${turn}w1' class='lc${turn} lr1'></div>`);
+            $("#log-area").append(`<div id='l${turn}w1' class='lc${turn} lr1'></div>`);
             $(`#l${turn}w1`).append(`<p id='l${turn}t' class='log-turn-text'></p>`);
-            $("#log-wrapper").append(`<div id='l${turn}w2' class='lc${turn} lr2'></div>`);
+            $("#log-area").append(`<div id='l${turn}w2' class='lc${turn} lr2'></div>`);
             $(`#l${turn}w2`).append(`<p id='l${turn}a1' class='log-text'></p>`);
             $(`#l${turn}w2`).append(`<p id='l${turn}a2' class='log-text'></p>`);
             $(`#l${turn}w2`).append(`<p id='l${turn}a3' class='log-text'></p>`);
@@ -314,8 +337,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $(`#l${turn}a3`).text("coins to start");
         }
         else if (stage=="A") {
-            $("#log-wrapper").append(`<div id='l${turn}w3' class='lc${turn} lr3'></div>`);
-            $("#log-wrapper").append(`<div id='l${turn}w4' class='lc${turn} lr4'></div>`);
+            $("#log-area").append(`<div id='l${turn}w3' class='lc${turn} lr3'></div>`);
+            $("#log-area").append(`<div id='l${turn}w4' class='lc${turn} lr4'></div>`);
             $(`#l${turn}w3`).append(`<p id='l${turn}b1' class='log-text'></p>`);
             $(`#l${turn}w3`).append(`<p id='l${turn}b2' class='log-text'></p>`);
             $(`#l${turn}w3`).append(`<p id='l${turn}b3' class='log-text'></p>`);
@@ -335,7 +358,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $(`#l${turn}c3`).text("coins from").append("&nbsp;").append(pronoun2);
         }
         else if (stage=="B") {
-            $("#log-wrapper").append(`<div id='l${turn}w5' class='lc${turn} lr5'></div>`);
+            $("#log-area").append(`<div id='l${turn}w5' class='lc${turn} lr5'></div>`);
             $(`#l${turn}w5`).append(`<p id='l${turn}d1' class='log-text'></p>`);
             $(`#l${turn}w5`).append(`<p id='l${turn}d2' class='log-text'></p>`);
             $(`#l${turn}w5`).append(`<p id='l${turn}d3' class='log-text'></p>`);
@@ -348,8 +371,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $(`#l${turn}d4`).addClass("pink");
         }
         else if (stage=="score") {
-            $("#log-wrapper").append(`<div id='l${turn}w6' class='lc${turn} lr6'></div>`);
-            $("#log-wrapper").append(`<div id='l${turn}w7' class='lc${turn} lr7'></div>`);
+            $("#log-area").append(`<div id='l${turn}w6' class='lc${turn} lr6'></div>`);
+            $("#log-area").append(`<div id='l${turn}w7' class='lc${turn} lr7'></div>`);
             $(`#l${turn}w6`).append(`<p id='l${turn}e1' class='log-text'></p>`);
             $(`#l${turn}w6`).append(`<p id='l${turn}e2' class='log-text'></p>`);
             $(`#l${turn}w7`).append(`<p id='l${turn}f1' class='log-text'></p>`);
@@ -445,12 +468,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         playedObj.text("Games Played — "+(game.nGames+1));
     }
 
-    function rotateSlider() {
-        $("#slider").css({
-                "-webkit-transform": "rotate(180deg)",
-                "-moz-transform": "rotate(180deg)",
-                "transform": "rotate(180deg)" /* For modern browsers(CSS3)  */
-            });
+    function flipArrow() {
+        if ($("#arrow").hasClass('flipped')) {$("#arrow").removeClass('flipped');}
+        else ($("#arrow").addClass('flipped'))
     }
 
     // Final page after game is complete
@@ -466,16 +486,17 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#aTotal").text("$"+agentScore);
             $("#bTotal").text("$"+userScore);
         }
-        $("#loading-text").hide();
+        $("#loading").hide();
         $("#submit").hide();
+        $("#arrow").hide();
         $("#slider").hide();
-        $("#player-A-wrapper").hide();
-        $("#player-B-wrapper").hide();
+        $("#playerA").hide();
+        $("#playerB").hide();
         $("#nameA").hide();
         $("#nameB").hide();
-        $("#img-A-wrapper").hide();
-        $("#img-B-wrapper").hide();
-        $("#game-over-wrapper").show();
+        $("#imgA").hide();
+        $("#imgB").hide();
+        $("#game-over-area").show();
         $("#flair-text").show();
         $("#game-over-text").show();
         $("#play-again-text").show();
