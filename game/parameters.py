@@ -5,6 +5,7 @@ REQUIRED = 10  # number of required games
 MAX = 40  # maximum number of games playable
 FIXED_REWARD = 2  # reward for finishing required games
 EPSILON = 0.0  # probability agent will move randomly
+SIGMA = 0.0  # standard deviation added to agent move
 BONUS = [  # thresholds for bonus winnings based on performance, [threshold, money]
 	[0, 0.05],
 	[60, 0.10],
@@ -56,6 +57,7 @@ PLAYERS = [
 	["A", "B"],
 	["B", "A"],
 ]
+
 AGENTS_F_A = [
 	"T4T",
 	"T4T",

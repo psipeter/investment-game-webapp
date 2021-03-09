@@ -61,6 +61,7 @@ def startGame(request):
 			'winnings': f"{request.user.winnings:.2f}",
 			'uuid': game.uuid,
 			'userRole': game.userRole,
+			'agentRole': game.agentRole,
 			'rounds': game.rounds,
 			'capital': game.capital,
 			'match': game.match,

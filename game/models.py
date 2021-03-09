@@ -52,17 +52,17 @@ class Agent(models.Model):
 		# 	self.obj = pickle.loads(self.blob.blob)
 		# else:
 		if name=='Greedy':
-			self.obj = Fixed(player, mean=0.2, std=0.1, E=EPSILON)
+			self.obj = Fixed(player, mean=0.2, E=EPSILON, S=SIGMA)
 		elif name=="Even":
-			self.obj = Fixed(player, mean=0.5, std=0.1, E=EPSILON)
+			self.obj = Fixed(player, mean=0.5, E=EPSILON, S=SIGMA)
 		elif name=="Generous":
-			self.obj = Fixed(player, mean=0.8, std=0.1, E=EPSILON)
+			self.obj = Fixed(player, mean=0.8, E=EPSILON, S=SIGMA)
 		elif name=="T4T":
-			self.obj = T4T(player, F=1, P=1, E=EPSILON)
+			self.obj = T4T(player, F=1, P=1, E=EPSILON, S=SIGMA)
 		elif name=="Expect":
-			self.obj = Expect(player, X=0.33, F=1, P=1, E=EPSILON)
+			self.obj = Expect(player, X=0.33, F=1, P=1, E=EPSILON, S=SIGMA)
 		elif name=="BecomeGreedy":
-			self.obj = BecomeGreedy(player, start=0.75, step=0.15, E=EPSILON)
+			self.obj = BecomeGreedy(player, start=0.75, step=0.15, E=EPSILON, S=SIGMA)
 			# elif name=="Bandit":
 			# 	self.obj = Bandit(player, nA)
 			# elif name=="QLearn":

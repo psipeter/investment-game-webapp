@@ -32,7 +32,7 @@ class HardcodedAgent(AgentBase):
 		elif np.random.rand() < self.E:
 			a = np.random.randint(0, money+1)
 		else:
-			a = money * self.state
+			a = money * np.random.normal(self.state, self.S) if self.S > 0 else money * self.state
 		give = int(np.clip(a, 0, money))
 		keep = int(money - give)
 		return give, keep
@@ -40,23 +40,24 @@ class HardcodedAgent(AgentBase):
 		self.state = 0
 
 class Fixed(HardcodedAgent):
-	def __init__(self, player, mean, std, E=0, ID="Fixed"):
+	def __init__(self, player, mean, S=0, E=0, ID="Fixed"):
 		self.player = player
 		self.ID = ID
 		self.mean = mean
-		self.std = std
 		self.E = E
+		self.S = S
 		self.state = 0
 	def update(self, history):
-		self.state = np.random.normal(self.mean, self.std)
+		self.state = self.mean
 
 class BecomeGreedy(HardcodedAgent):
-	def __init__(self, player, start, step, E=0, ID="BecomeGreedy"):
+	def __init__(self, player, start, step, S=0, E=0, ID="BecomeGreedy"):
 		self.player = player
 		self.ID = ID
 		self.start = start
 		self.step = step
 		self.E = E
+		self.S = S
 		self.state = self.start
 	def update(self, history):
 		self.state -= self.step
@@ -65,7 +66,7 @@ class BecomeGreedy(HardcodedAgent):
 		self.state = self.start
 
 class T4T(HardcodedAgent):
-	def __init__(self, player, F=1.0, P=1.0, E=0, ID="T4T"):
+	def __init__(self, player, F=1.0, P=1.0, E=0, S=0, ID="T4T"):
 		self.player = player
 		self.ID = ID
 		self.F = F  # rate of forgiveness (state increase with opponent generosity)
@@ -73,6 +74,7 @@ class T4T(HardcodedAgent):
 		assert F >= 0, "forgiveness rate must be positive or zero"
 		assert P >= 0, "punishment rate must be positive or zero"
 		self.E = E
+		self.S = S
 		self.state = 1.0 if self.player=="A" else 0.5
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 	def update(self, history):
@@ -97,7 +99,7 @@ class T4T(HardcodedAgent):
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 
 class Expect(HardcodedAgent):
-	def __init__(self, player, X, F=1.0, P=1.0, E=0, ID="Expect"):
+	def __init__(self, player, X, F=1.0, P=1.0, E=0, S=0, ID="Expect"):
 		self.player = player
 		assert self.player=="A", "Expect agents only play as player A"
 		self.ID = ID
@@ -107,6 +109,7 @@ class Expect(HardcodedAgent):
 		assert F >= 0, "forgiveness rate must be positive or zero"
 		assert P >= 0, "punishment rate must be positive or zero"
 		self.E = E
+		self.S = S
 		self.state = 1.0
 		self.maxGive = 1.0
 	def update(self, history):
