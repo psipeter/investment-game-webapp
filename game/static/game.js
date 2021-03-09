@@ -6,7 +6,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let maxAgent;
     let agentTime = 2000;
     let animateTime = 1000;
-    let waitTime = 1000;
     let startTime = performance.now();
     let endTime = performance.now();
     let currentA = game.capital;
@@ -135,12 +134,11 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 $("#sendB").text("You get " +agentGive*game.match+" coins");
             }    
             executeMove(agentRole, agentGive, agentKeep)
-            let wait = (game.userRole=="A") ? 3*animateTime : animateTime;
-            setTimeout(function() {
-                flipArrow();
-                switchToUser();
-            }, wait);
         }, agentTime);
+        if (!complete) {
+            let wait = (game.userRole=="A") ? 4*animateTime+agentTime : animateTime+agentTime;
+            setTimeout(function() {flipArrow(); switchToUser();}, wait);
+        }
     }
 
     function switchToUser() {

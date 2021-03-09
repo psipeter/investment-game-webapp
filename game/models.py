@@ -43,40 +43,42 @@ class Agent(models.Model):
 	def getObj(self, game):
 		name = self.name
 		player = self.player
-		blobname = f"{name}{player}"
+		# blobname = f"{name}{player}"
+		blobname = name
 		nA = int(game.capital+1) if player == "A" else int(game.capital*game.match+1)
 		nS = 10
-		if Blob.objects.filter(name=blobname).exists():
-			self.blob = Blob.objects.get(name=blobname)
-			self.obj = pickle.loads(self.blob.blob)
+		# if Blob.objects.filter(name=blobname).exists():
+		# 	self.blob = Blob.objects.get(name=blobname)
+		# 	self.obj = pickle.loads(self.blob.blob)
+		# else:
+		if name=='Greedy':
+			self.obj = Fixed(player, mean=0.2, std=0.1, E=EPSILON)
+		elif name=="Even":
+			self.obj = Fixed(player, mean=0.5, std=0.1, E=EPSILON)
+		elif name=="Generous":
+			self.obj = Fixed(player, mean=0.8, std=0.1, E=EPSILON)
+		elif name=="T4T":
+			self.obj = T4T(player, F=1, P=1, E=EPSILON)
+		elif name=="Expect":
+			self.obj = Expect(player, X=0.33, F=1, P=1, E=EPSILON)
+		elif name=="BecomeGreedy":
+			self.obj = BecomeGreedy(player, start=0.75, step=0.15, E=EPSILON)
+			# elif name=="Bandit":
+			# 	self.obj = Bandit(player, nA)
+			# elif name=="QLearn":
+			# 	self.obj = QLearn(player, nA, nS)
+			# elif name=="Wolf":
+			# 	self.obj = Wolf(player, nA, nS)
+			# elif name=="Hill":
+			# 	self.obj = Hill(player, nA, nS)
+			# elif name=="ModelBased":
+			# 	self.obj = ModelBased(player, nA, nS)
 		else:
-			if name=='Greedy':
-				self.obj = Fixed(player, mean=0.2, std=0.05)
-			elif name=="Even":
-				self.obj = Fixed(player, mean=0.5, std=0.05)
-			elif name=="Generous":
-				self.obj = Fixed(player, mean=0.8, std=0.05)
-			elif name=="T4T":
-				self.obj = T4T(player, F=1, P=1)
-			elif name=="Expect_X05":
-				self.obj = Expect(player, X=0.5, F=1, P=1)
-			elif name=="Expect_X03":
-				self.obj = Expect(player, X=0.3, F=1, P=1)
-			elif name=="Bandit":
-				self.obj = Bandit(player, nA)
-			elif name=="QLearn":
-				self.obj = QLearn(player, nA, nS)
-			elif name=="Wolf":
-				self.obj = Wolf(player, nA, nS)
-			elif name=="Hill":
-				self.obj = Hill(player, nA, nS)
-			elif name=="ModelBased":
-				self.obj = ModelBased(player, nA, nS)
-			else:
-				raise Exception(f'{name} is not a valid agent class')
-			self.blob = Blob.objects.create()
-			self.blob.name = blobname
-			self.blob.blob = pickle.dumps(self.obj)
+			raise Exception(f'{name} is not a valid agent class')
+		self.blob = Blob.objects.create()
+		self.blob.name = blobname
+		self.blob.blob = pickle.dumps(self.obj)
+		# stop indent
 		self.obj.loadArchive(file=f"{name}{player}.npz")
 		self.obj.reset()
 		agentStates = game.historyToArray("agent", "state")
@@ -118,27 +120,12 @@ class Game(models.Model):
 	seed = models.IntegerField(default=0)
 
 	def setAgent(self):
-		if not self.user.doneRequired:
-			idx = self.user.nGames
-			name = REQUIRED_AGENTS[idx]
-		elif self.user.group == "1":
-			# forgiving agents
-			if self.userRole == "A":
-				idx = np.random.randint(0, len(BONUS_AGENTS_F_B))
-				name = BONUS_AGENTS_F_B[idx]
-			else:
-				idx = np.random.randint(0, len(BONUS_AGENTS_F_A))
-				name = BONUS_AGENTS_F_A[idx]
-		elif self.user.group == "2":
-			# punishing agents
-			if self.userRole == "A":
-				idx = np.random.randint(0, len(BONUS_AGENTS_P_B))
-				name = BONUS_AGENTS_P_B[idx]
-			else:
-				idx = np.random.randint(0, len(BONUS_AGENTS_P_A))
-				name = BONUS_AGENTS_P_A[idx]
-		else:
-			raise "agent not set"
+		idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
+		if self.user.group == "1" and self.userRole == "A": name = AGENTS_F_B[idx]
+		elif self.user.group == "1" and self.userRole == "B": name = AGENTS_F_A[idx]
+		elif self.user.group == "2" and self.userRole == "A": name = AGENTS_P_B[idx]
+		elif self.user.group == "2" and self.userRole == "B": name = AGENTS_P_A[idx]
+		else: raise "agent not set"
 		self.agent = Agent.objects.create()
 		self.agent.start(name, self.agentRole)
 		self.save()
@@ -147,16 +134,9 @@ class Game(models.Model):
 		self.user = user
 		self.seed = np.random.randint(1e6)
 		np.random.seed(self.seed)  # set random number seed
-		if not self.user.doneRequired:
-			idx = self.user.nGames
-			self.userRole = REQUIRED_ROLES[idx][0]
-			self.agentRole = REQUIRED_ROLES[idx][1]
-		elif np.random.rand() > 0.5:
-			self.userRole = "A"
-			self.agentRole = "B"
-		else:
-			self.userRole = "B"
-			self.agentRole = "A"
+		idx = self.user.nGames
+		self.userRole = PLAYERS[idx][0]
+		self.agentRole = PLAYERS[idx][1]
 		self.save()
 		self.setAgent()
 		if self.agentRole == "A":

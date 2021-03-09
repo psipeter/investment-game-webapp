@@ -1,10 +1,11 @@
-ROUNDS = 5
-CAPITAL = 10  # don't change this
-MATCH = 3  # don't change this
-REQUIRED = 10
-MAX = 40
-FIXED_REWARD = 2
-BONUS = [
+ROUNDS = 5  # rounds per game
+CAPITAL = 10  # don't change this - money available to A 
+MATCH = 3  # don't change this  - multiplication of A's investment to B
+REQUIRED = 10  # number of required games
+MAX = 40  # maximum number of games playable
+FIXED_REWARD = 2  # reward for finishing required games
+EPSILON = 0.0  # probability agent will move randomly
+BONUS = [  # thresholds for bonus winnings based on performance, [threshold, money]
 	[0, 0.05],
 	[60, 0.10],
 	[80, 0.15],
@@ -12,40 +13,134 @@ BONUS = [
 	[120, 0.25],
 	[150, 0.25],
 ]
-REQUIRED_ROLES = [
+PLAYERS = [
 	# ["userRole", "agentRole"],
-	["B", "A"],
-	["B", "A"],
-	["B", "A"],
-	["B", "A"],
-	["A", "B"],
 	["A", "B"],
 	["B", "A"],
+	["A", "B"],
 	["B", "A"],
+	["A", "B"],
 	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
+	["B", "A"],
+	["A", "B"],
 	["B", "A"],
 ]
-REQUIRED_AGENTS = [
-	"Expect_X05",
-	"Expect_X03",
-	"Expect_X03",
+AGENTS_F_A = [
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+]
+AGENTS_F_B = [
+	"T4T",
+	"Even",
+	"T4T",
+	"Generous",
+	"T4T",
+	"Even",
+	"T4T",
+	"Generous",
+	"T4T",
+	"Even",
+	"T4T",
+	"Generous",
+	"T4T",
+	"Even",
+	"T4T",
+	"Generous",
+	"T4T",
+	"Even",
+	"T4T",
+	"Generous",	
+]
+AGENTS_P_A = [
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",
+	"Generous",
+	"Expect",	
+]
+AGENTS_P_B = [
 	"Greedy",
-	"T4T",
-	"T4T",
-	"T4T",
-	"T4T",
-	"T4T",
-	"T4T",
-]
-BONUS_AGENTS_F_B = [
-	"T4T",
-]
-BONUS_AGENTS_F_A = [
-	"T4T",
-]
-BONUS_AGENTS_P_B = [
-	"T4T",
-]
-BONUS_AGENTS_P_A = [
-	"T4T",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",
+	"Greedy",
+	"BecomeGreedy",	
 ]

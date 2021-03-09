@@ -50,6 +50,20 @@ class Fixed(HardcodedAgent):
 	def update(self, history):
 		self.state = np.random.normal(self.mean, self.std)
 
+class BecomeGreedy(HardcodedAgent):
+	def __init__(self, player, start, step, E=0, ID="BecomeGreedy"):
+		self.player = player
+		self.ID = ID
+		self.start = start
+		self.step = step
+		self.E = E
+		self.state = self.start
+	def update(self, history):
+		self.state -= self.step
+		self.state = np.clip(self.state, 0, 1)
+	def reset(self):
+		self.state = self.start
+
 class T4T(HardcodedAgent):
 	def __init__(self, player, F=1.0, P=1.0, E=0, ID="T4T"):
 		self.player = player
