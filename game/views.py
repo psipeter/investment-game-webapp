@@ -114,11 +114,6 @@ def tutorial(request):
 		return redirect('home')
 
 @login_required
-def stats(request):
-	context = request.user.makeFigs()
-	return render(request, "stats.html", context=context)
-
-@login_required
 def cash(request):
 	request.user.setProgress()
 	if not (request.user.doneConsent and request.user.doneRequired):

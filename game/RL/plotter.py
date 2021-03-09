@@ -718,3 +718,91 @@ def plotFriendlinessFriendliness(df, capital, match):
 # 	plt.title("Std B Rewards")
 # 	fig.savefig("plots/friendliness2d_stdB.pdf")
 
+
+
+
+# def makeFigs(self):
+# 	gamesAAll = Game.objects.filter(userRole="A", complete=True)
+# 	gamesBAll = Game.objects.filter(userRole="B", complete=True)
+# 	gamesAUser = Game.objects.filter(user=self, userRole="A", complete=True)
+# 	gamesBUser = Game.objects.filter(user=self, userRole="B", complete=True)
+
+# 	dfsAll = []
+# 	columns = ('player', 'turn', 'score', 'generosity')
+# 	for game in gamesAAll:
+# 		for t in range(game.rounds):
+# 			give = game.historyToArray("user", "give")
+# 			keep = game.historyToArray("user", "keep")
+# 			reward = game.historyToArray("user", "reward")
+# 			dfsAll.append(pd.DataFrame([["A", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
+# 	for game in gamesBAll:
+# 		for t in range(game.rounds):
+# 			give = game.historyToArray("user", "give")
+# 			keep = game.historyToArray("user", "keep")
+# 			reward = game.historyToArray("user", "reward")
+# 			dfsAll.append(pd.DataFrame([["B", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
+# 	dfAll = pd.concat([df for df in dfsAll], ignore_index=True)
+
+# 	dfsUser = []
+# 	columns = ('player', 'turn', 'score', 'generosity')
+# 	for game in gamesAUser:
+# 		for t in range(game.rounds):
+# 			give = game.historyToArray("user", "give")
+# 			keep = game.historyToArray("user", "keep")
+# 			reward = game.historyToArray("user", "reward")
+# 			dfsUser.append(pd.DataFrame([["A", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
+# 	for game in gamesBUser:
+# 		for t in range(game.rounds):
+# 			give = game.historyToArray("user", "give")
+# 			keep = game.historyToArray("user", "keep")
+# 			reward = game.historyToArray("user", "reward")
+# 			dfsUser.append(pd.DataFrame([["B", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
+# 	dfUser = pd.concat([df for df in dfsUser], ignore_index=True)
+
+# 	ylim = ((0, 1))
+# 	binsG = np.linspace(0, 1, game.capital+1)
+# 	binsS = np.arange(0, game.match*game.capital+1, 2)
+# 	color_dict = {'A': "#66c3d2ff", 'B': '#d8388bff'}
+
+# 	figScoreAll = f"Score_All.svg"
+# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
+# 	sns.histplot(data=dfAll, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player', palette=color_dict)  
+# 	ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="All Players' Scores")
+# 	# leg = ax.legend(loc='upper right')
+# 	fig.tight_layout()
+# 	fig.savefig(f'game/static/user-stats/{figScoreAll}')
+# 	plt.close()
+
+# 	figGenAll = f"Generosity_All.svg"
+# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
+# 	sns.histplot(data=dfAll, x='generosity', ax=ax, stat="probability", bins=binsG, element="step", hue='player', palette=color_dict)  
+# 	ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="All Players' Generosity")
+# 	# leg = ax.legend(loc='upper right')
+# 	fig.tight_layout()
+# 	fig.savefig(f'game/static/user-stats/{figGenAll}')
+# 	plt.close()
+
+# 	figScoreUser = f"Score_{self.username}.svg"
+# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
+# 	sns.histplot(data=dfUser, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player', palette=color_dict)  
+# 	ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="Your Scores")
+# 	# leg = ax.legend(loc='upper right')
+# 	fig.tight_layout()
+# 	fig.savefig(f'game/static/user-stats/{figScoreUser}')
+# 	plt.close()
+
+# 	figGenUser = f"Generosity_{self.username}.svg"
+# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
+# 	sns.histplot(data=dfUser, x='generosity', ax=ax, stat="probability", bins=binsG, element="step", hue='player', palette=color_dict)  
+# 	ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="Your Generosity")
+# 	# leg = ax.legend(loc='upper right')
+# 	fig.tight_layout()
+# 	fig.savefig(f'game/static/user-stats/{figGenUser}')
+# 	plt.close()
+
+# 	return {
+# 		'figScoreUser': figScoreUser,
+# 		'figGenUser': figGenUser,
+# 		'figScoreAll': figScoreAll,
+# 		'figGenAll': figGenAll,
+# 	}

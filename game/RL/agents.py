@@ -39,25 +39,14 @@ class HardcodedAgent(AgentBase):
 	def reset(self):
 		self.state = 0
 
-class Generous(HardcodedAgent):
-	def __init__(self, player, mean=1.0, std=0.05, E=0, ID="Generous"):
+class Fixed(HardcodedAgent):
+	def __init__(self, player, mean, std, E=0, ID="Fixed"):
 		self.player = player
 		self.ID = ID
 		self.mean = mean
 		self.std = std
 		self.E = E
 		self.state = 0
-	def update(self, history):
-		self.state = np.random.normal(self.mean, self.std)
-
-class Greedy(HardcodedAgent):
-	def __init__(self, player, mean=0.0, std=0.05, E=0, ID="Greedy"):
-		self.player = player
-		self.ID = ID
-		self.mean = mean
-		self.std = std
-		self.E = E
-		self.state = 1
 	def update(self, history):
 		self.state = np.random.normal(self.mean, self.std)
 
@@ -80,7 +69,7 @@ class T4T(HardcodedAgent):
 			otherKeep = history['bKeeps'][-1]
 			# delta proportional to give minus keep
 			# unless no information (because A gave 0), in which case forgive a bit
-			delta = (otherGive-otherKeep)/(otherGive+otherKeep) if otherGive+otherKeep>0 else 0.1
+			delta = (otherGive-otherKeep)/(otherGive+otherKeep) if otherGive+otherKeep>0 else self.F
 		else:
 			otherGive = history['aGives'][-1]
 			otherKeep = history['aKeeps'][-1]
@@ -92,6 +81,34 @@ class T4T(HardcodedAgent):
 	def reset(self):
 		self.state = 1.0 if self.player=="A" else 0.5
 		self.maxGive = 1.0 if self.player=="A" else 0.5
+
+class Expect(HardcodedAgent):
+	def __init__(self, player, X, F=1.0, P=1.0, E=0, ID="Expect"):
+		self.player = player
+		assert self.player=="A", "Expect agents only play as player A"
+		self.ID = ID
+		self.X = X  # expected return as a percentage of what they could give
+		self.F = F  # rate of forgiveness (state increase with opponent generosity)
+		self.P = P  # rate of punishment (state decrease with opponent greed)
+		assert F >= 0, "forgiveness rate must be positive or zero"
+		assert P >= 0, "punishment rate must be positive or zero"
+		self.E = E
+		self.state = 1.0
+		self.maxGive = 1.0
+	def update(self, history):
+		if len(history['aGives'])==0 or len(history['bGives'])==0:
+			return
+		otherGive = history['bGives'][-1]
+		otherKeep = history['bKeeps'][-1]
+		# delta proportional to the difference between actual and expected generosity
+		# unless no information (because A gave 0), in which case forgive a bit
+		delta = otherGive/(otherGive+otherKeep) - self.X if otherGive+otherKeep>0 else self.F
+		self.state += delta*self.F if delta>0 else delta*self.P
+		self.state = np.clip(self.state, 0, self.maxGive)
+	def reset(self):
+		self.state = 1.0
+		self.maxGive = 1.0
+
 
 
 class RLAgent(AgentBase):

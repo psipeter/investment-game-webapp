@@ -65,6 +65,7 @@ def startGame(request):
 			'capital': game.capital,
 			'match': game.match,
 			'bonus': BONUS,
+			'required': REQUIRED,
 			'doneRequired': game.user.doneRequired,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),

@@ -32,17 +32,15 @@
 		<img id="game-img" class="image" src="{% static 'game.svg' %}" alt="game icon">
 		<h2 id="game-text" class="text">Game</h2>
 	</div>
-	<div id="stats-box" class="box" href="{% url 'stats' %}">
-		<img id="stats-img" class="image" src="{% static 'stats.svg' %}" alt="stats icon">
-		<h2 id="stats-text" class="text">Game Stats</h2>		
-	</div>
-	<div id="cash-box" class="box" href="{% url 'cash' %}">
-		<img id="cash-img" class="image" src="{% static 'cash.svg' %}" alt="cash icon">
-		<h2 id="cash-text" class="text">HIT Code / Cash Out</h2>		
-	</div>
-	<div id="feedback-box" class="box" href="{% url 'feedback' %}">
-		<img id="feedback-img" class="image" src="{% static 'feedback.svg' %}" alt="feedback icon">
-		<h2 id="feedback-text" class="text">Feedback</h2>		
+	<div id="bottom-wrapper">
+		<div id="cash-box" class="box" href="{% url 'cash' %}">
+			<img id="cash-img" class="image" src="{% static 'cash.svg' %}" alt="cash icon">
+			<h2 id="cash-text" class="text">HIT Code / Cash Out</h2>		
+		</div>
+		<div id="feedback-box" class="box" href="{% url 'feedback' %}">
+			<img id="feedback-img" class="image" src="{% static 'feedback.svg' %}" alt="feedback icon">
+			<h2 id="feedback-text" class="text">Feedback</h2>		
+		</div>
 	</div>
 {% endblock %}
 

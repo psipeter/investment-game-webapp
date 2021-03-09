@@ -8,7 +8,6 @@ urlpatterns = [
     path('consent', views.consent, name='consent'),
     path('survey', views.survey, name='survey'),
     path('tutorial', views.tutorial, name="tutorial"),
-    path('stats', views.stats, name="stats"),
     path('cash', views.cash, name="cash"),
     path('feedback', views.feedback, name="feedback"),
     path('api/status/', api_views.status),

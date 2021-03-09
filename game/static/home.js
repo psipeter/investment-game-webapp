@@ -16,7 +16,6 @@ initialize("/game/api/status/", "GET", (status) => {
     $('#survey-box').click(function(e) {window.location.href=$(this).attr("href");});
     $('#tutorial-box').click(function(e) {window.location.href=$(this).attr("href");});
     $('#game-box').click(function(e) {window.location.href=$(this).attr("href");});
-    $('#stats-box').click(function(e) {window.location.href=$(this).attr("href");});
     $('#cash-box').click(function(e) {window.location.href=$(this).attr("href");});
     $('#feedback-box').click(function(e) {window.location.href=$(this).attr("href");});
 
@@ -32,9 +31,6 @@ initialize("/game/api/status/", "GET", (status) => {
     else {
         $('#tutorial-box').show();
         $('#game-box').hide();
-        $('#stats-box').addClass('inactive');
-        $('#stats-box').off('click');
-        $('#stats-box').click(function(e) {alert("To view game statistics, finish the tutorial and play games");});
     }
     if (doneRequiredBool) {
         $('#games-text').text('Games [✔]');

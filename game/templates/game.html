@@ -5,7 +5,7 @@
 {% block title2 %}Game{% endblock %}
 
 {% block css %}
-	<link rel="stylesheet" href="{% static 'game2.css' %}">
+	<link rel="stylesheet" href="{% static 'game.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -40,7 +40,11 @@
 				<h2 id="bonus-text" class='text'>Bonus</h2>
 			</div>
 			<div id="bonus-progress" class="progress-box">
-				<h2 id="bonus-num" class='num'>$0.05</h2>
+			</div>
+		</div>
+		<div id="thr-wrapper" class="bar-wrapper">
+			<div class="text-box">
+				<h2 id="thr-text" class='text'></h2>
 			</div>
 		</div>
 	</div>
@@ -112,13 +116,13 @@
 	<div id="player-area">
 		<h1 id="nameA"></h1>
 		<h1 id="nameB"></h1>
-		<img id="arrow" src="{% static 'arrow.svg' %}">
+		<img hidden id="arrow" src="{% static 'arrow.svg' %}">
 		<img id="imgA" src="{% static 'userA.svg' %}">
 		<img id="imgB" src="{% static 'userB.svg' %}">
 		<div id="slider-wrapper">
 			<input hidden type="range" min="0" max="10" value="0" step="1" id="slider">
 		</div>
-		<h1 id="loading">They are thinking...</h1>
+		<h1 hidden id="loading">They are thinking...</h1>
 		<h2 id="sendA"></h2>
 		<h2 id="sendB"></h2>
 		<form id="form">{% csrf_token %}</form>

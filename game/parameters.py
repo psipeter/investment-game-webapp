@@ -10,11 +10,12 @@ BONUS = [
 	[80, 0.15],
 	[100, 0.20],
 	[120, 0.25],
+	[150, 0.25],
 ]
 REQUIRED_ROLES = [
 	# ["userRole", "agentRole"],
-	["A", "B"],
-	["A", "B"],
+	["B", "A"],
+	["B", "A"],
 	["B", "A"],
 	["B", "A"],
 	["A", "B"],
@@ -25,26 +26,26 @@ REQUIRED_ROLES = [
 	["B", "A"],
 ]
 REQUIRED_AGENTS = [
-	"Generous",
+	"Expect_X05",
+	"Expect_X03",
+	"Expect_X03",
 	"Greedy",
-	"Generous",
-	"T4T-E",
-	"T4T-E",
-	"T4T-E",
-	"T4T-E",
-	"T4T-E",
-	"T4T-E",
-	"T4T-E",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
+	"T4T",
 ]
 BONUS_AGENTS_F_B = [
-	"T4T-F",
+	"T4T",
 ]
 BONUS_AGENTS_F_A = [
-	"T4T-F",
+	"T4T",
 ]
 BONUS_AGENTS_P_B = [
-	"T4T-P",
+	"T4T",
 ]
 BONUS_AGENTS_P_A = [
-	"T4T-P",
+	"T4T",
 ]

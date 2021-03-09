@@ -51,15 +51,17 @@ class Agent(models.Model):
 			self.obj = pickle.loads(self.blob.blob)
 		else:
 			if name=='Greedy':
-				self.obj = Greedy(player, mean=0.2, std=0.05)
+				self.obj = Fixed(player, mean=0.2, std=0.05)
+			elif name=="Even":
+				self.obj = Fixed(player, mean=0.5, std=0.05)
 			elif name=="Generous":
-				self.obj = Generous(player, mean=0.8, std=0.05)
-			elif name=="T4T-E":
+				self.obj = Fixed(player, mean=0.8, std=0.05)
+			elif name=="T4T":
 				self.obj = T4T(player, F=1, P=1)
-			elif name=="T4T-F":
-				self.obj = T4T(player, F=1, P=0.5)
-			elif name=="T4T-P":
-				self.obj = T4T(player, F=0.5, P=1)
+			elif name=="Expect_X05":
+				self.obj = Expect(player, X=0.5, F=1, P=1)
+			elif name=="Expect_X03":
+				self.obj = Expect(player, X=0.3, F=1, P=1)
 			elif name=="Bandit":
 				self.obj = Bandit(player, nA)
 			elif name=="QLearn":
@@ -296,89 +298,3 @@ class User(AbstractUser):
 			bonus += gameBonus
 		self.winnings = np.around(bonus, 2)
 		self.save()
-
-	def makeFigs(self):
-		gamesAAll = Game.objects.filter(userRole="A", complete=True)
-		gamesBAll = Game.objects.filter(userRole="B", complete=True)
-		gamesAUser = Game.objects.filter(user=self, userRole="A", complete=True)
-		gamesBUser = Game.objects.filter(user=self, userRole="B", complete=True)
-
-		dfsAll = []
-		columns = ('player', 'turn', 'score', 'generosity')
-		for game in gamesAAll:
-			for t in range(game.rounds):
-				give = game.historyToArray("user", "give")
-				keep = game.historyToArray("user", "keep")
-				reward = game.historyToArray("user", "reward")
-				dfsAll.append(pd.DataFrame([["A", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-		for game in gamesBAll:
-			for t in range(game.rounds):
-				give = game.historyToArray("user", "give")
-				keep = game.historyToArray("user", "keep")
-				reward = game.historyToArray("user", "reward")
-				dfsAll.append(pd.DataFrame([["B", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-		dfAll = pd.concat([df for df in dfsAll], ignore_index=True)
-
-		dfsUser = []
-		columns = ('player', 'turn', 'score', 'generosity')
-		for game in gamesAUser:
-			for t in range(game.rounds):
-				give = game.historyToArray("user", "give")
-				keep = game.historyToArray("user", "keep")
-				reward = game.historyToArray("user", "reward")
-				dfsUser.append(pd.DataFrame([["A", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-		for game in gamesBUser:
-			for t in range(game.rounds):
-				give = game.historyToArray("user", "give")
-				keep = game.historyToArray("user", "keep")
-				reward = game.historyToArray("user", "reward")
-				dfsUser.append(pd.DataFrame([["B", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-		dfUser = pd.concat([df for df in dfsUser], ignore_index=True)
-
-		ylim = ((0, 1))
-		binsG = np.linspace(0, 1, game.capital+1)
-		binsS = np.arange(0, game.match*game.capital+1, 2)
-		color_dict = {'A': "#66c3d2ff", 'B': '#d8388bff'}
-
-		figScoreAll = f"Score_All.svg"
-		fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-		sns.histplot(data=dfAll, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player', palette=color_dict)  
-		ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="All Players' Scores")
-		# leg = ax.legend(loc='upper right')
-		fig.tight_layout()
-		fig.savefig(f'game/static/user-stats/{figScoreAll}')
-		plt.close()
-
-		figGenAll = f"Generosity_All.svg"
-		fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-		sns.histplot(data=dfAll, x='generosity', ax=ax, stat="probability", bins=binsG, element="step", hue='player', palette=color_dict)  
-		ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="All Players' Generosity")
-		# leg = ax.legend(loc='upper right')
-		fig.tight_layout()
-		fig.savefig(f'game/static/user-stats/{figGenAll}')
-		plt.close()
-
-		figScoreUser = f"Score_{self.username}.svg"
-		fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-		sns.histplot(data=dfUser, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player', palette=color_dict)  
-		ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="Your Scores")
-		# leg = ax.legend(loc='upper right')
-		fig.tight_layout()
-		fig.savefig(f'game/static/user-stats/{figScoreUser}')
-		plt.close()
-
-		figGenUser = f"Generosity_{self.username}.svg"
-		fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-		sns.histplot(data=dfUser, x='generosity', ax=ax, stat="probability", bins=binsG, element="step", hue='player', palette=color_dict)  
-		ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="Your Generosity")
-		# leg = ax.legend(loc='upper right')
-		fig.tight_layout()
-		fig.savefig(f'game/static/user-stats/{figGenUser}')
-		plt.close()
-
-		return {
-			'figScoreUser': figScoreUser,
-			'figGenUser': figGenUser,
-			'figScoreAll': figScoreAll,
-			'figGenAll': figGenAll,
-		}

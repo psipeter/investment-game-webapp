@@ -25,39 +25,31 @@ initialize("/game/api/startGame/", "POST", (game) => {
     if (game.userRole == "A") {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
-        // if (doneRequiredBool) {
-        //     $("#nameA").text(game.username);
-        //     $("#nameB").text("???");
-        // }
-        // else {
+        // $("#nameA").text("YOU");
+        // $("#nameB").text("them");
         $("#nameA").text(game.username);
         $("#nameB").text(game.agentname);
-        // }
+        $("#nameB").css('opacity', '0.5')
+        $("#imgB").css('opacity', '0.5')
         $("#ts-progress").css('background-color', 'var(--myPink)');
         $("#ys-progress").css('background-color', 'var(--myTeal)');
         $("#slider").css('--sliderColor1', 'var(--myTeal');
         $("#slider").css('--sliderColor2', 'var(--myPink');
         $("#slider").css('--coinImg', 'var(--coinImg1');
-        // $("#ts-num").css('color', 'var(--myPink)');
-        // $("#ys-num").css('color', 'var(--myTeal)');
     }
     else {
-        // if (doneRequiredBool) {
-        //     $("#nameA").text("???");
-        //     $("#nameB").text(game.username);
-        // }
-        // else {
         $("#nameA").text(game.agentname);
         $("#nameB").text(game.username);
-        // }
+        // $("#nameB").text("YOU");
+        // $("#nameA").text("them");
+        $("#nameA").css('opacity', '0.5')
+        $("#imgA").css('opacity', '0.5')
         $("#ts-progress").css('background-color', 'var(--myTeal)');
         $("#ys-progress").css('background-color', 'var(--myPink)');
         $("#slider").css('--sliderColor1', 'var(--myPink');
         $("#slider").css('--sliderColor2', 'var(--myTeal');
         $("#slider").addClass('flipped');
         $("#slider").css('--coinImg', 'var(--coinImg2');
-        // $("#ts-num").css('color', 'var(--myTeal)');
-        // $("#ys-num").css('color', 'var(--myPink)');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
     }
@@ -65,6 +57,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     $("#arrow").hide();
     $("#game-over-area").hide();
     animateBar('turn', game.userRole);
+    addThresholds();
     turn++;
     executeMove("capital");
     // switch after animation time
@@ -304,6 +297,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             animateCoins(0, 0, give*game.match, 'in', 'b');
             currentA = keep;
             currentB = game.match*give;
+            setTimeout(()=> {$("#arrow").hide(); $("#sendA").hide(); $("#sendB").hide();}, animateTime);
         }
         if (move=="B") {
             updateLog("B", give, keep);
@@ -311,9 +305,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
             animateCoins(0, currentA, give, 'in', 'a');
             currentA += give;
             currentB -= give;
+            setTimeout(()=> {$("#arrow").hide(); $("#sendA").hide(); $("#sendB").hide();}, animateTime);
             setTimeout(()=> {finishTurn();}, animateTime);
         }
-        setTimeout(()=> {$("#arrow").hide(); $("#sendA").hide(); $("#sendB").hide();}, animateTime);
     }
 
     // Update game log
@@ -416,23 +410,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
             num = $("#bonus-num");
             for (let i=0; i<game.bonus.length; i++) {
                 if (score>=game.bonus[i][0]) {
-                    widthFrac = game.bonus[i][0]/(game.rounds*game.capital*game.match);
-                    widthNew = (widthTotal-widthText) * widthFrac;
-                    winnings = game.bonus[i][1];
+                    $(`#thr${i+1}`).css('background-color', 'var(--myYellow');
                 }
             }
-            widthFrac = turn/game.rounds;
-            widthNow = parseInt(bar.css('width'));
-            let bonusNow = Number(num.text().substring(1));
-            if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
-            $({count: bonusNow}).animate(
-                {count: winnings},
-                {duration: animateTime, easing: 'linear', step: function () {
-                    let newBonus = Math.round(100*Number(this.count))/100;
-                    if (!isNaN(newBonus)){num.text("$"+newBonus.toFixed(2));}
-                }}
-            );     
-
         }
         else if (barName=="turn") {
             bar = $("#turn-progress");
@@ -453,13 +433,16 @@ initialize("/game/api/startGame/", "POST", (game) => {
     }
 
     function animateWinnings(){
-        let bonusObj = $("#bonus-num");
+        let reward;
+        let score = (game.userRole=="A") ? scoreA : scoreB;
+        for (let i=0; i<game.bonus.length; i++) {
+            if (score >= game.bonus[i][0]) {reward = game.bonus[i][1];}
+        }
         let winObj = $("#headerW");
         let playedObj = $("#headerG");
-        let bonus = Number(bonusObj.text().substring(1));  // remove "$"
         let win = Number(game.winnings);  // str to number
         $({count: win}).animate(
-                {count: win+bonus},
+                {count: win+reward},
                 {duration: animateTime, easing: 'linear', step: function () {
                     let winNew = Math.round(100*Number(this.count))/100;
                     if (!isNaN(winNew)){winObj.text("Winnings — $"+winNew.toFixed(2))};
@@ -471,6 +454,25 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function flipArrow() {
         if ($("#arrow").hasClass('flipped')) {$("#arrow").removeClass('flipped');}
         else ($("#arrow").addClass('flipped'))
+    }
+
+    function addThresholds(){
+        let thrBar = $("#thr-wrapper");
+        let widthText = parseInt($("#thr-text").css('width'));
+        let widthTotal = parseInt($("#thr-wrapper").css('width'));
+        for (let i=1; i<game.bonus.length; i++) {
+            let reward = game.bonus[i-1][1];
+            let widthFrac = (game.bonus[i][0] - game.bonus[i-1][0]) /(game.rounds*game.capital*game.match);
+            let widthNew = (widthTotal-widthText) * widthFrac;
+            let heightNew = parseInt($("#thr-wrapper").css('height'));
+            thrBar.append(`<div id='thr${i}' class='thr'></div>`);
+            $(`#thr${i}`).css("width", widthNew);  
+            $(`#thr${i}`).css("height", heightNew);  
+            if (i<game.bonus.length-1) {$(`#thr${i}`).css("borderRight", "1pt solid black");}
+            $(`#thr${i}`).addClass("thr");  
+            $(`#thr${i}`).append(`<h2 class="text">$${reward}</h2>`);
+            if (i==1) {$(`#thr${i}`).css('background-color', 'var(--myYellow');}
+        }
     }
 
     // Final page after game is complete
@@ -498,6 +500,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#imgB").hide();
         $("#game-over-area").show();
         $("#flair-text").show();
+        if (game.nGames+1 == game.required) {
+            $("#flair-text").text("Required games complete!");
+        }
         $("#game-over-text").show();
         $("#play-again-text").show();
     }
