@@ -58,10 +58,10 @@ class Agent(models.Model):
 		elif name=="Generous":
 			self.obj = Fixed(player, mean=0.8, E=EPSILON, S=SIGMA)
 		elif name=="T4T":
-			self.obj = T4T(player, F=1, P=1, E=EPSILON, S=SIGMA)
+			self.obj = T4T(player, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
 		elif name=="Expect":
-			self.obj = Expect(player, X=0.33, F=1, P=1, E=EPSILON, S=SIGMA)
-		elif name=="BecomeGreedy":
+			self.obj = Expect(player, X=0.33, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
+		elif name=="Greedy2":
 			self.obj = BecomeGreedy(player, start=0.75, step=0.15, E=EPSILON, S=SIGMA)
 			# elif name=="Bandit":
 			# 	self.obj = Bandit(player, nA)

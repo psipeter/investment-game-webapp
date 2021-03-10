@@ -115,19 +115,22 @@ initialize("/game/api/startGame/", "POST", (game) => {
 
     // Change view after the user or agent moves
     function switchToAgent(userGive) {
+        console.log('switch to agent');
         let agentGive = agentGives[agentGives.length-1];
         let agentKeep = agentKeeps[agentKeeps.length-1];
         hideForm();
         hideInputs();
         flipArrow();
-        if (userGive==0 & game.userRole=="A") {skipAnimations(game.agentRole, agentKeep);}
+        if (userGive==0 & game.userRole=="A") {
+            skipAnimations(game.agentRole, agentKeep);
+        }
         else if (agentGive==0) {
             showLoading();
             setTimeout(function() {
                 hideLoading();
                 showGreedy(game.agentRole);
-                skipAnimations(game.agentRole, agentKeep);}, agentTime+waitTime);
-            setTimeout(function() {hideGreedy(game.agentRole);}, animateTime+agentTime+waitTime);
+                skipAnimations(game.agentRole, agentKeep);}, agentTime);
+            setTimeout(function() {hideGreedy(game.agentRole);}, agentTime+animateTime);
         }
         else {
             showLoading();
@@ -137,16 +140,20 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 updateSendAgent(agentGive, agentKeep);
                 executeMove(game.agentRole, agentGive, agentKeep);
             }, agentTime);
+            setTimeout(function() {hideForm();}, animateTime+agentTime+waitTime);
         }
         let wait;
-        if (userGive==0) {wait = 3*animateTime;}
-        else if (agentGive==0) {wait = 2*animateTime+agentTime;}
-        else if (game.userRole=="A") {wait = 5*animateTime+agentTime;}
-        else {wait = animateTime+agentTime;}
+        // if (userGive==0 & game.agentRole=="A") {wait = 5*animateTime;}  // userGive doesn't matter in this case
+        if (userGive==0 & game.agentRole=="B") {wait = 5*animateTime;}  // agent is skipped
+        else if (agentGive==0 & game.agentRole=="A") {wait = agentTime;}
+        else if (agentGive==0 & game.agentRole=="B") {wait = 4*animateTime+agentTime;}
+        else if (agentGive>0 & game.agentRole=="A") {wait = animateTime+agentTime;}
+        else if (agentGive>0 & game.agentRole=="B") {wait = 5*animateTime+agentTime;}
         if (!complete) {setTimeout(function() {flipArrow(); switchToUser();}, wait+waitTime);}
     }
 
     function switchToUser() {
+        console.log('switch to user');
         hideLoading();
         hideForm();
         if (game.userRole=="B"){maxUser = game.match*agentGives[agentGives.length-1];}
@@ -176,7 +183,10 @@ initialize("/game/api/startGame/", "POST", (game) => {
         userKeeps.push(userKeep);
         if (game.userRole == "A") {maxAgent = userGive * game.match} // update global
         hideInputs();
-        if (userGive==0 & userKeep>0) {
+        if (userGive==0 & userKeep==0) { //forced skip
+            skipAnimations(game.userRole, userKeep);
+        }
+        else if (userGive==0 & userKeep>0) {
             showGreedy(game.userRole);
             skipAnimations(game.userRole, userKeep);
             setTimeout(function() {hideGreedy(game.userRole);}, animateTime+waitTime);
@@ -211,9 +221,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 if (!complete || game.userRole=="A") {
                     let wait;
                     if (userGive==0 & game.userRole=="A"){wait=0;}
+                    else if (userGive==0 & game.userRole=="B"){wait=4*animateTime;}
                     else if (userGive>0 & game.userRole=="A"){wait=animateTime;}
-                    else if (userGive==0 & game.userRole=="B"){wait=3*animateTime;}
-                    else {wait=4*animateTime;}
+                    else if (userGive>0 & game.userRole=="B") {wait=4*animateTime;}
                     setTimeout(function () {switchToAgent(userGive);}, wait+waitTime);
                 }
             }
