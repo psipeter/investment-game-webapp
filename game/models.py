@@ -113,6 +113,7 @@ class Game(models.Model):
 	agentStates = models.CharField(max_length=50, blank=True, null=True, default=str)
 	userRole = models.CharField(max_length=1, choices=(("A", "A"), ("B", "B")), null=True, blank=True)
 	agentRole = models.CharField(max_length=1, choices=(("A", "A"), ("B", "B")), null=True, blank=True)
+	tutorial = models.BooleanField(default=False)
 	complete = models.BooleanField(default=False)
 	rounds = models.IntegerField(default=ROUNDS)
 	capital = models.IntegerField(default=CAPITAL)

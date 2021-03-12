@@ -44,34 +44,49 @@
 	grid-row: 1;
 	grid-column: 2;	
 }
-#survey-box {
+#tutorial-box {
 	grid-row: 1;
 	grid-column: 3;	
-}
-#tutorial-box {
-	grid-row: 2;
-	grid-column: 1/4;	
 }
 #game-box {
 	grid-row: 2;
 	grid-column: 1/4;	
 }
-#bottom-wrapper {
+#survey-box {
 	grid-row: 3;
-	grid-column: 1/4;
-	display: grid;
-	grid-template-rows: 1;
-	grid-template-columns: repeat(2, 50%);
-}
-#cash-box {
-	grid-row: 1;
 	grid-column: 1;	
 }
-#feedback-box {
-	grid-row: 1;
+#cash-box {
+	grid-row: 3;
 	grid-column: 2;	
 }
+#feedback-box {
+	grid-row: 3;
+	grid-column: 3;	
+}
 
+#game-text-wrapper {
+	display: flex;
+	justify-content: space-between;
+}
+#game-text1 {
+	width: 100%;
+	font-size: 120%;
+	margin: 2% 5%;
+	text-align: left;
+}
+#game-text2 {
+	width: 100%;
+	font-size: 220%;
+	margin: 1% 5%;
+	text-align: center;
+}
+#game-text3 {
+	width: 100%;
+	font-size: 120%;
+	margin: 2% 5%;
+	text-align: right;
+}
 .inactive {
 	opacity: 0.5;
 	cursor: not-allowed;

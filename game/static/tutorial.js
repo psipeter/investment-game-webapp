@@ -1,430 +1,767 @@
-initialize("/game/api/status/", "GET", (status) => {
+initialize("/game/api/startTutorial/", "POST", (game) => {
+
+    // Initialization and globals
     "use strict";
-    let progress = 0;
-    let maxProgress = 8;
-    let fadeTime = 200;
-    updateProgress();
-    updateMain();  // Fade in first page
+    let maxUser;
+    let maxAgent;
+    let agentTime = 2000;
+    let animateTime = 1000;
+    let waitTime = 500;
+    let startTime = performance.now();
+    let endTime = performance.now();
+    let currentA = game.capital;
+    let currentB = 0;
+    let scoreA = 0;
+    let scoreB = 0;
+    let turn = 1;
+    let complete = false
+    let userGives = game.userGives;
+    let userKeeps = game.userKeeps;
+    let userRewards = game.userRewards;
+    let agentGives = game.agentGives;
+    let agentKeeps = game.agentKeeps;
+    let agentRewards = game.agentRewards;
+    if (game.userRole == "A") {
+        maxUser = game.capital;
+        maxAgent = 0;  // updated after user moves
+        // $("#nameA").text("YOU");
+        // $("#nameB").text("them");
+        $("#nameA").text(game.username);
+        // $("#nameB").text(game.agentname);
+        $("#nameB").text("Instructor");
+        $("#nameB").css('opacity', '0.5')
+        $("#imgB").css('opacity', '0.5')
+        $("#ts-progress").css('background-color', 'var(--myPink)');
+        $("#ys-progress").css('background-color', 'var(--myTeal)');
+        $("#slider").css('--sliderColor1', 'var(--myTeal');
+        $("#slider").css('--sliderColor2', 'var(--myPink');
+        $("#slider").css('--coinImg', 'var(--coinImg1');
+        $("#greedyA").text("You kept everything!");
+        $("#greedyB").text("They kept everything!");
+    }
+    else {
+        $("#nameA").text(game.agentname);
+        $("#nameB").text(game.username);
+        // $("#nameB").text("YOU");
+        // $("#nameA").text("them");
+        $("#nameA").css('opacity', '0.5')
+        $("#imgA").css('opacity', '0.5')
+        $("#ts-progress").css('background-color', 'var(--myTeal)');
+        $("#ys-progress").css('background-color', 'var(--myPink)');
+        $("#slider").css('--sliderColor1', 'var(--myPink');
+        $("#slider").css('--sliderColor2', 'var(--myTeal');
+        $("#slider").addClass('flipped');
+        $("#slider").css('--coinImg', 'var(--coinImg2');
+        $("#greedyA").text("They kept everything!");
+        $("#greedyB").text("You kept everything!");
+        maxAgent = game.capital;
+        maxUser = 0;  // updated after agent moves
+    }
+    $("#game-over-area").hide();
+    // $("#submit").click(callUpdate);
 
-    // Redirect on click
-    $('#next').click(function(e) {
-        updateMain();
-        updateProgress();
+    // Add navigation
+    linkNotes();
+    function linkNotes() {
+        let notes = $(".note");
+        for (let n=0; n<notes.length; n++) {
+            notes.eq(n).hide();
+            notes.eq(n).append(`<div id='n-nav${n}' class='n-nav'> </div>`);
+            $(`#n-nav${n}`).append(`<p id='n-back${n}' class="back">back</p>`);
+            $(`#n-nav${n}`).append(`<p id='n-next${n}'class="next">next</p>`);
+            addNav(n);
+        }
+    }
+    function addNav(n){
+        $(`#n-back${n}`).addClass('back')
+        $(`#n-back${n}`).removeClass('inactive')
+        $(`#n-back${n}`).click(function() {$(`#n${n}`).hide(); $(`#n${n-1}`).show();})
+        $(`#n-next${n}`).addClass('next')
+        $(`#n-next${n}`).removeClass('inactive')
+        $(`#n-next${n}`).click(function() {$(`#n${n}`).hide(); $(`#n${n+1}`).show();})
+    }
+    function removeNav(element){
+        element.off('click');
+        element.removeClass('next');
+        element.addClass('inactive');
+    }
+
+    // Tutorial Sequence
+
+    $("#n-area").show();
+    removeNav($(`#n-back0`));
+    $(".note").eq(0).show();
+    $("#n-next1").click(function() {animateBar('turn', game.userRole);});
+    $("#n-next2").click(function() {executeMove('capital');});
+    $("#n-back3").click(function() {fastCoins(0, "a");});
+    $("#n-next3").click(function() {switchToUser();});
+    $("#slider").on('change', function() {$("#n4-after").show(); $("#submit").addClass("submit-highlight");});
+    $("#slider").on('input', function() {$("#n4-after").show(); $("#submit").addClass("submit-highlight");});
+    removeNav($("#n-next4"));
+    $("#n-back4").click(function() {$("#n4-after").hide(); $("#n4-after2").hide();});
+    $("#submit").click(function () {
+        $("#n4-after2").hide();
+        let userGive = Number($("#slider").val());
+        let userKeep = maxUser - userGive;
+        if (userGive==0){$("#n4-after2").show();}
+        else {
+            userGives.push(userGive);
+            userKeeps.push(userKeep);
+            if (game.userRole == "A") {maxAgent = userGive * game.match} // update global
+            hideInputs();
+            showForm();
+            executeMove(game.userRole, userGive, userKeep);
+            $(".note").eq(4).hide();
+            $(".note").eq(4+1).show();
+            setTimeout(function() {hideForm();}, animateTime+waitTime);
+            removeNav($("#n-next5"));
+            removeNav($("#n-back5"));
+            setTimeout(function() {addNav(5); addN5Back(); addN5Next();}, animateTime+waitTime);
+        }
     });
-    $('#back').click(function(e) {
-        progress = Math.max(0, progress-1);
-        updateMain();
-        updateProgress();
-    });
-
-    // update progress bar
-    function updateProgress(e) {
-        let width = Math.min(100, Math.max(0, 100*progress/maxProgress));
-        $("#progress-bar-fg").width(width+"%");
-    }
-
-    // load new minipage
-    function updateMain(e) {    
-        $('#finish-link').hide();
-        $('#m1').hide();
-        $('#m2').hide();
-        $('#m3').hide();
-        $('#m4').hide();
-        $('#m5').hide();
-        $('#m6').hide();
-        $('#m7').hide();
-        $('#m8').hide();
-        $('#m9').hide();
-        $('#m1').children().fadeOut(0);
-        $('#m2').children().fadeOut(0);
-        $('#m3').children().fadeOut(0);
-        $('#m4').children().fadeOut(0);
-        $('#m5').children().fadeOut(0);
-        $('#m6').children().fadeOut(0);
-        $('#m7').children().fadeOut(0);
-        $('#m8').children().fadeOut(0);
-        $('#m9').children().fadeOut(0);
-        resetVals("m2");
-        resetVals("m3");
-        resetVals("m4");
-        // $("#back").prop("disabled", true);
-        $("#next").prop("disabled", true);
-        if (progress<=0) {main1();}
-        if (progress==1) {main2();}
-        if (progress==2) {main3();}
-        if (progress==3) {main4();}
-        if (progress==4) {main5();}
-        if (progress==5) {main6();}
-        if (progress==6) {main7();}
-        if (progress==7) {main8();}
-        if (progress==8) {main9();}
-    }
-
-    // display and timing of main content
-    function main1(e) {
-        $('#m1').show();
-        $('#m1a').fadeIn(fadeTime);
-        setTimeout(function(){$('#m1b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m1c').fadeIn(fadeTime);}, 2*fadeTime);
-        enableNavigation(3*fadeTime, 1);
-    }
-
-    function main2(e) {
-        let capital = 10;
-        let giveA = 7;
-        let keepA = 3;
-        let giveB = 10;
-        let keepB = 20;
-        $('#m2').show();
-        $('#m2a').fadeIn(fadeTime);
-        $('.center').fadeIn(0);        
-        $('.center').children().fadeOut(0);
-        $('.total').fadeIn(0);
-        $('.available').fadeIn(0);
-        $('.player').fadeIn(0);
-        animateCapital(2*fadeTime, "m2",capital);
-        setTimeout(function(){$("#m2b1").fadeIn(fadeTime);}, fadeTime);
-        animateAToBTutor(4*fadeTime, "m2", giveA, keepA);
-        setTimeout(function(){$("#m2b2").fadeIn(fadeTime);}, 3*fadeTime);
-        animateAToB(6*fadeTime, "m2", giveA, keepA);
-        setTimeout(function(){$("#m2b3").fadeIn(fadeTime);}, 5*fadeTime);
-        animateBToA(8*fadeTime, "m2", keepA, giveB, keepB);
-        setTimeout(function(){$("#m2b4").fadeIn(fadeTime);}, 7*fadeTime);
-        animateTotal(10*fadeTime, "m2", keepA, giveB, keepB)
-        setTimeout(function(){$("#m2b5").fadeIn(fadeTime);}, 9*fadeTime);
-        setTimeout(function(){$('#m2c').fadeIn(fadeTime);}, 11*fadeTime);
-        enableNavigation(12*fadeTime, 2);
-    }
-
-    function main3(e) {
-        let capital = 10;
-        let giveA = 10;
-        let keepA = 0;
-        let giveB = 15;
-        let keepB = 15;
-        let giveA2 = 10;
-        let keepA2 = 0;
-        let giveB2 = 0;
-        let keepB2 = 30;
-        $('#m3').show();
-        $('#m3a').fadeIn(fadeTime);
-        $('.center').fadeIn(0);        
-        $('.center').children().fadeOut(0);
-        $('.total').fadeIn(0);
-        $('.available').fadeIn(0);
-        $('.player').fadeIn(0);
-        setTimeout(function(){$("#m3c").fadeIn(fadeTime);}, 1*fadeTime);
-        animateCapital(2*fadeTime, "m3", capital);
-        animateAToB(3*fadeTime, "m3", giveA, keepA);
-        animateBToA(4*fadeTime, "m3", keepA, giveB, keepB);
-        animateTotal(5*fadeTime, "m3", keepA, giveB, keepB)
-        setTimeout(function(){$("#m3c2").fadeIn(fadeTime);}, 5*fadeTime);
-        setTimeout(function(){
-            resetVals("m3");
-            $("#m3c").css('color', 'gray');
-            $("#m3d").fadeIn(fadeTime);},
-        6*fadeTime);
-        animateCapital(7*fadeTime, "m3", capital);
-        animateAToB(8*fadeTime, "m3", giveA2, keepA2);
-        animateBToA(9*fadeTime, "m3", keepA2, giveB2, keepB2);
-        setTimeout(function(){$("#m3d2").fadeIn(fadeTime);}, 10*fadeTime);
-        animateTotal(10*fadeTime, "m3", keepA2, giveB2, keepB2)
-        setTimeout(function(){
-            resetVals("m3");
-            $("#m3d").css('color', 'gray');
-            $("#m3c").fadeOut(fadeTime);
-            $("#m3d").fadeOut(fadeTime);},
-        11*fadeTime);
-        setTimeout(function(){$("#m3e").fadeIn(fadeTime);}, 12*fadeTime);
-        enableNavigation(13*fadeTime, 3);
-    }
-
-    function main4(e) {
-        $('#m4').show();
-        $('#m4a').fadeIn(fadeTime);
-        $('.total').fadeIn(0);
-        $('.available').fadeIn(0);
-        $('.player').fadeIn(0);
-
-        let capital = 10;
-        let maxUser = capital;
-        $("#slider").attr('max', maxUser);
-        $("#slider").attr('value', maxUser/2);
-        $("#slider").prop("disabled", false);
-        $("#submit").prop('disabled', true);
-        $("#slider").on('change', function () {
-            // let preA = (userRole=="A") ? "Send $" : "Keep $";
-            // let preB = (userRole=="A") ? "Send $" : "Keep $";
-            let max = maxUser;
-            let val = $("#slider").val();
-            $("#submit").prop('disabled', false);
-            $("#sendA").css('visibility', 'visible');
-            $("#sendB").css('visibility', 'visible');
-            $("#sendA").text("Keep $"+(max-val));
-            $("#sendB").text("Send $"+val);
+    function addN5Back(){
+        $("#n-back5").click(function() {
+            let userGive = Number($("#slider").val());
+            let userKeep = maxUser - userGive;
+            fastCoins(game.capital, "a");
+            fastCoins(0, "b");
+            currentA = game.capital;
+            currentB = 0;
+            switchToUser();
         });
-        $("#slider").on('input', function () {
-            let max = maxUser;
-            let val = $("#slider").val();
-            $("#submit").prop('disabled', false);
-            $("#sendA").css('visibility', 'visible');
-            $("#sendB").css('visibility', 'visible');
-            $("#sendA").text("Keep $"+(max-val));
-            $("#sendB").text("Send $"+val);
+    }
+    function addN5Next() {
+        $("#n-next5").click(function() {
+            // code from callUpdate() and switchToAgent(), minus extra waiting and switching
+            let userGive = Number($("#slider").val());
+            let userKeep = maxUser - userGive;
+            let userTime = 0;
+            removeNav($("#n-next6"));
+            removeNav($("#n-back6"));
+            let form = $("#form");
+            let giveData = $('<input type="hidden" name="userGive"/>').val(userGive);
+            let keepData = $('<input type="hidden" name="userKeep"/>').val(userKeep);
+            let timeData = $('<input type="hidden" name="userTime"/>').val(userTime);
+            form.append(giveData);
+            form.append(keepData);
+            form.append(timeData);
+            let sendData = form.serialize();
+            $.ajax({
+                method: 'POST',
+                url: '/game/api/updateGame/',
+                data: sendData,
+                dataType: 'json',
+                success: function (returnData) {
+                    // update globals
+                    userGives = returnData.userGives;
+                    userKeeps = returnData.userKeeps;
+                    userRewards = returnData.userRewards;
+                    agentGives = returnData.agentGives;
+                    agentKeeps = returnData.agentKeeps;
+                    agentRewards = returnData.agentRewards;
+                    complete = returnData.complete;
+                    instructorMove();
+                }
+            });
         });
-        $("#submit").css('visibility', 'hidden');
-        $("#sendA").css('visibility', 'hidden');
-        $("#sendB").css('visibility', 'hidden');
-        animateCapital(fadeTime, "m4", capital);
-        setTimeout(function(){
-            $("#cash").fadeIn(fadeTime);
-            $("#slider").fadeIn(fadeTime);
-            $("#submit").fadeIn(fadeTime);
-            $("#submit").css('visibility', 'visible');
-            $("#submit").prop('disabled', true);
-            $("#m4a").fadeOut(fadeTime/2);
-            $("#m4c").fadeIn(fadeTime);},
-        2*fadeTime);
-        $("#submit").click(function () {
-            let giveA = Number($("#slider").val());
-            let keepA = maxUser - giveA;
-            let giveB = 0;
-            let keepB = 3*giveA;
-            $("#m4c").fadeOut(fadeTime/2);
-            $("#m4d").fadeIn(fadeTime);
-            $("#submit").prop('disabled', true);
-            $("#submit").css('visibility', 'hidden');
-            $("#slider").css('visibility', 'hidden');
-            $("#sendA").css('visibility', 'hidden');
-            $("#sendB").css('visibility', 'hidden');
-            $("#cash").fadeOut(fadeTime/2);
-            $("#slider").fadeOut(fadeTime/2);
-            $("#submit").fadeOut(fadeTime/2);
-            $("#loading").fadeIn(fadeTime);
-            // $("#transfer").fadeOut(fadeTime/2);
-            animateAToB(0, "m4", giveA, keepA);
+    }
+    function instructorMove() {
+        removeNav($("#n-next6"));
+        removeNav($("#n-back6"));
+        let agentGive = agentGives[agentGives.length-1];
+        let agentKeep = agentKeeps[agentKeeps.length-1];
+        hideForm();
+        hideInputs();
+        flipArrow();
+        if (agentGive==0) {
+            showLoading();
             setTimeout(function() {
-                $("#loading").fadeOut(fadeTime/2);
-                $("#slider").prop("disabled", true);
-                $("#cash").fadeIn(fadeTime);
-                $("#slider").fadeIn(fadeTime);
-                $("#submit").fadeIn(fadeTime);
-                $("#sendA").css('visibility', 'visible');
-                $("#sendB").css('visibility', 'visible');
-                $("#sendA").text(giveB);
-                $("#sendB").text(keepB);
-                $("#slider").prop('max', keepB);
-                $("#slider").prop('value', keepB);
-                $("#slider").css('visibility', 'visible');            
-                $("#slider").css('visibility', 'visible');      
-                $("#submit").css('visibility', 'hidden');
-                }, 2*fadeTime); 
-            animateBToA(2*fadeTime, "m4", keepA, giveB, keepB);
-            animateTotal(3*fadeTime, "m4", keepA, giveB, keepB);
-            setTimeout(function() {$("#m4d").fadeOut(fadeTime/2);}, 2*fadeTime);
-            setTimeout(function() {$("#m4e").fadeIn(fadeTime);}, 2*fadeTime);
-            setTimeout(function() {$("#m4e").fadeOut(fadeTime/2);}, 4*fadeTime);
-            setTimeout(function() {$("#m4f").fadeIn(fadeTime);}, 4*fadeTime);
-            // setTimeout(function() {$("#transfer").fadeOut(fadeTime/2);}, 4*fadeTime);
-            setTimeout(function() {$("#cash").fadeOut(fadeTime/2);}, 4*fadeTime);
-            setTimeout(function() {$("#slider").fadeOut(fadeTime/2);}, 4*fadeTime);
-            setTimeout(function() {$("#submit").fadeOut(fadeTime/2);}, 4*fadeTime);
-            setTimeout(function() {$("#m4g").fadeIn(fadeTime);}, 5*fadeTime);
-            enableNavigation(6*fadeTime, 4);
+                hideLoading();
+                showGreedy(game.agentRole);
+                skipAnimations(game.agentRole, agentKeep);
+            }, agentTime);
+            setTimeout(function() {
+                addNav(6);
+                addN6Back();
+                addN6Next();
+            }, agentTime+animateTime);
+        }
+        else {
+            showLoading();
+            setTimeout(function() {
+                hideLoading();
+                showForm();
+                updateSendAgent(agentGive, agentKeep);
+                executeMove(game.agentRole, agentGive, agentKeep, false);
+            }, agentTime);
+            setTimeout(function() {
+                addNav(6);
+                addN6Back();
+                addN6Next();
+            }, animateTime+agentTime+waitTime);
+        }
+    }
+    function addN6Back() {
+        $("#n-back6").click(function() {
+            let userGive = Number($("#slider").val());
+            let userKeep = maxUser - userGive;
+            fastCoins(userKeep, "a");
+            fastCoins(userGive*game.match, "b");
+            currentA = userKeep;
+            currentB = userGive*game.match;
+            flipArrow();
+        });
+    }
+    function addN6Next() {
+        // from finishTurn()
+        $("#n-next6").click(function() {
+            hideGreedy(game.agentRole);
+            hideForm();
+            removeNav($("#n-next7"));
+            removeNav($("#n-back7"));
+            setTimeout(function() {addNav(7); addN7Back(); addN7Next();}, animateTime+waitTime);
+            scoreA += currentA;
+            scoreB += currentB;
+            updateLog("score", currentA, currentB);
+            animateCoins(0, currentA, -currentA, 'out', 'a');
+            animateCoins(0, currentB, -currentB, 'out', 'b');
+            animateBar('scoreA', "A");
+            animateBar('scoreB', "B");
+            currentA = 0;
+            currentB = 0;
+            turn++;
+            setTimeout(()=> {animateBar('turn', game.userRole);}, animateTime+waitTime);
+            // if (complete) {
+            //     setTimeout(()=> {finishGame();}, animateTime+waitTime);
+            // }
+            // else {
+            //     setTimeout(()=> {animateBar('turn', game.userRole);}, animateTime+waitTime);
+            //     setTimeout(()=> {executeMove('capital');}, 2*animateTime+waitTime);
+            // }
+        });
+    }
+    function addN7Back() {
+        $("#n-back7").click(function() {
+            let userGive = Number($("#slider").val());
+            let userKeep = maxUser - userGive;
+            fastCoins(userKeep, "a");
+            fastCoins(userGive*game.match, "b");
+            currentA = userKeep;
+            currentB = userGive*game.match;
+            scoreA = 0;
+            scoreB = 0;
+            turn = 1;
+            flipArrow();
+            instructorMove();
+            // todo: fix turn and score bars
+        });        
+    }
+    function addN7Next() {
+        $("#n-next7").click(function() {
+            addThresholds();
+            animateBar('bonus', game.userRole);
+            $("#n-next8").text("Tutorial Part 2");
+            $("#n-next8").click(function() {});
         });
     }
 
-
-    function main5(e) {
-        $('#m5').show();
-        $('#m5a').fadeIn(fadeTime);
-        $('#img5').fadeIn(fadeTime);
-        setTimeout(function(){$('#m5b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m5c').fadeIn(fadeTime);}, 2*fadeTime);
-        setTimeout(function(){$('#m5d').fadeIn(fadeTime);}, 2*fadeTime);
-        enableNavigation(3*fadeTime, 5);
-    }
-
-    function main6(e) {
-        $('#m6').show();
-        $('#m6a').fadeIn(fadeTime);
-        $('#img6').fadeIn(fadeTime);
-        setTimeout(function(){$('#m6b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m6c').fadeIn(fadeTime);}, 2*fadeTime);
-        setTimeout(function(){$('#m6d').fadeIn(fadeTime);}, 2*fadeTime);
-        enableNavigation(3*fadeTime, 6);
-    }
-
-    function main7(e) {
-        $('#m7').show();
-        $('#m7a').fadeIn(fadeTime);
-        $('#img7').fadeIn(fadeTime);
-        setTimeout(function(){$('#m7b').fadeIn(fadeTime);}, fadeTime);
-        // setTimeout(function(){$('#m7c').fadeIn(fadeTime);}, 2*fadeTime);
-        // setTimeout(function(){$('#m7d').fadeIn(fadeTime);}, 2*fadeTime);
-        enableNavigation(2*fadeTime, 7);
-    }
-
-    function main8(e) {
-        $('#m8').show();
-        $('#m8a').fadeIn(fadeTime);
-        $('#img8').fadeIn(fadeTime);
-        setTimeout(function(){$('#m8b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m8c').fadeIn(fadeTime);}, 2*fadeTime);
-        setTimeout(function(){$('#m8d').fadeIn(fadeTime);}, 2*fadeTime);
-        enableNavigation(3*fadeTime, 8);
-    }
-
-    function main9(e) {
-        $('#m9').show();
-        $('#m9a').fadeIn(fadeTime);
-        $('#img9').fadeIn(fadeTime);
-        setTimeout(function(){$('#m9b').fadeIn(fadeTime);}, fadeTime);
-        setTimeout(function(){$('#m9c').show();}, 2*fadeTime);
-        setTimeout(function(){$('#home-link').hide();}, 2*fadeTime);
-        setTimeout(function(){$('#finish-link').show();}, 2*fadeTime);
-        enableNavigation(3*fadeTime, 9);
-    }
+    // hideLoading();
+    // hideForm();
+    // animateBar('turn', game.userRole);
+    // addThresholds();
+    // executeMove("capital");
+    // setTimeout(function() {
+    //     if (game.userRole == "A") {switchToUser();}
+    //     else {flipArrow(); switchToAgent(1);}
+    // }, animateTime+waitTime);
 
     // Functions
-
-    function animateCapital(timeout, addTo, capital) {
-        setTimeout(function(){
-            $("#aNow"+addTo).text("$"+capital+" — Available A");
-            $("#bNow"+addTo).text("Available B — $0");
-            let cap = $("#aNow"+addTo).clone();
-            cap.attr("id", "cap");
-            cap.text("$"+capital)
-            cap.appendTo("#"+addTo);
-            cap.css("position", "relative");
-            cap.css("left", "-=10%");
-            cap.animate({
-                left : "+=10%",
-                'opacity': 0,
-                }, fadeTime,
-                function() {cap.remove();});
-        }, timeout);
+    var slideFunction = function () {
+        $("#sendA").show();
+        $("#sendB").show();
+        let max = maxUser;
+        let slideVal = Number($("#slider").val());
+        $("#submit").prop('disabled', false);
+        if (game.userRole=="A"){
+            let sendA = max-slideVal;
+            let sendB = slideVal*game.match;
+            for (let i = 0; i <= game.capital*game.match; i++) {
+                if (i<=sendA) {$("#c"+i+"a").css('opacity', '1');}
+                else if (i<=max){$("#c"+i+"a").css('opacity', '0.3');}
+                else {$("#c"+i+"a").css('opacity', '0');}
+                if (i<=sendB) {$("#c"+i+"b").css('opacity', '0.3');}
+                else {$("#c"+i+"b").css('opacity', '0');}
+            $("#sendA").text("You keep "+sendA+" coins");
+            $("#sendB").text("They get "+sendB+" coins");
+            }            
+        }
+        else {
+            let sendA = slideVal;  // compensate for rotated slider
+            let sendB = max-slideVal;  // compensate for rotated slider
+            // $("#sendA").text("they get "+sendA+" coins");
+            // $("#sendB").text("you keep "+sendB+" coins");
+            for (let i = 0; i <= currentB; i++) {
+                if (i<=currentA) {$("#c"+i+"a").css('opacity', '1');}
+                else if (i<=(currentA+sendA)){$("#c"+i+"a").css('opacity', '0.3');}
+                else {$("#c"+i+"a").css('opacity', '0');}
+                if (i<sendA) {$("#c"+(currentB-i)+"b").css('opacity', '0.3');}
+                else if (i<=currentB){$("#c"+(currentB-i)+"b").css('opacity', '1');}
+                else {$("#c"+i+"b").css('opacity', '0');}
+            }            
+            $("#sendA").text("They get "+sendA+" coins");
+            $("#sendB").text("You keep "+sendB+" coins");
+        }    
     }
-    function animateAToBTutor(timeout, addTo, giveA, keepA) {
-        setTimeout(function(){
-            $("#aNow"+addTo).text("$"+keepA+" — Available A");
-            $("#bNow"+addTo).text("Available B — $"+giveA);
-            let toB = $("#aNow"+addTo).clone();
-            let width = $("#bNow"+addTo).width();
-            toB.attr("id", "toB");
-            toB.text("$"+giveA);
-            toB.css("position", "relative");
-            // toB.width("5%");
-            toB.appendTo("#"+addTo);
-            toB.animate({
-                left: "+="+width,
-                width: "-="+width, // prevent empty space on right
-                'color': $("#bNow"+addTo).css('color'),
-                'opacity': 0,
-                }, fadeTime,
-                function() {toB.remove();});
-        }, timeout);
-    }
-    function animateAToB(timeout, addTo, giveA, keepA) {
-        setTimeout(function(){
-            let toB = $("#aNow"+addTo).clone();
-            let width = $("#bNow"+addTo).width();
-            let matchB = $("#bNow"+addTo).clone();
-            $("#aNow"+addTo).text("$"+keepA + " — Available A");
-            $("#bNow"+addTo).text("Available B — $"+3*giveA);
-            toB.text("$"+giveA);
-            toB.attr("id", "toB2");
-            toB.css("position", "relative");
-            // toB.width("5%");
-            toB.appendTo("#"+addTo);
-            toB.animate({
-                left: "+="+width,
-                width: "-="+width, // prevent empty space on right
-                'color': $("#bNow"+addTo).css('color'),
-                'opacity': 0,
-                }, fadeTime,
-                function() {toB.remove()});
-            matchB.attr("id", "matchB");
-            matchB.css("position", "relative");
-            matchB.css("left", "+=10%");
-            // matchB.width("5%");
-            matchB.text("$"+2*giveA);
-            matchB.appendTo("#"+addTo);
-            matchB.animate({
-                left: "-=10%",
-                'opacity': 0,
-                }, fadeTime,
-                function() {matchB.remove();});
-        }, timeout);
-    }
-    function animateBToA(timeout, addTo, keepA, giveB, keepB) {
-        setTimeout(function(){
-            let width = $("#bNow"+addTo).width();
-            $("#aNow"+addTo).text("$"+(keepA+giveB)+" — Available A");
-            let toA = $("#bNow"+addTo).clone();
-            $("#bNow"+addTo).text("Available B — $"+keepB);
-            toA.attr("id", "toA2");
-            toA.text("$"+giveB);
-            toA.css("position", "relative");
-            toA.appendTo("#"+addTo);
-            toA.animate({
-                left: "-="+width,
-                // width: "-="+width, // prevent empty space on left
-                'color': $("#aNow"+addTo).css('color'),
-                'opacity': 0,
-                }, fadeTime,
-                function() {toA.remove();});
-        }, timeout);
-    }
-    function animateTotal(timeout, addTo, keepA, giveB, keepB){
-        setTimeout(function(){
-            $("#aTotal"+addTo).text("$"+(keepA+giveB)+" — Total A");
-            $("#bTotal"+addTo).text("Total B — $"+keepB);
-            let upA = $("#aNow"+addTo).clone();
-            let upB = $("#bNow"+addTo).clone();
-            let mTotal = parseInt($("#aTotal"+addTo).offset().top);
-            let mNow = parseInt($("#aNow"+addTo).offset().top);
-            let dY = mNow - mTotal;
-            $("#aNow"+addTo).text("$0 — Available A");
-            $("#bNow"+addTo).text("Available B — $0");
-            upA.attr("id", "upA");
-            upA.css("position", "relative");
-            upA.text("$"+(keepA+giveB));
-            upA.appendTo("#"+addTo);
-            upA.animate({
-                top: "-="+dY,
-                'opacity': 0,
-                }, fadeTime,
-                function() {upA.remove();});        
-            upB.attr("id", "upB");
-            upB.css("position", "relative");
-            upB.text("$"+keepB);
-            upB.appendTo("#"+addTo);
-            upB.animate({
-                top: "-="+dY,
-                'opacity': 0,
-                }, fadeTime,
-                function() {upB.remove();});
-        }, timeout);
-    }
+    $("#slider").on('change', slideFunction);
+    $("#slider").on('input', slideFunction);
 
 
-
-    function resetVals(addTo) {
-        $("#aNow"+addTo).text("$0 — Available A");
-        $("#bNow"+addTo).text("Available B — $0");
-        $("#aTotal"+addTo).text("$0 — Total A");
-        $("#bTotal"+addTo).text("Total B — $0");
+    // Change view after the user or agent moves
+    function switchToAgent(userGive) {
+        console.log('switch to agent');
+        let agentGive = agentGives[agentGives.length-1];
+        let agentKeep = agentKeeps[agentKeeps.length-1];
+        hideForm();
+        hideInputs();
+        flipArrow();
+        if (userGive==0 & game.userRole=="A") {
+            skipAnimations(game.agentRole, agentKeep);
+        }
+        else if (agentGive==0) {
+            showLoading();
+            setTimeout(function() {
+                hideLoading();
+                showGreedy(game.agentRole);
+                skipAnimations(game.agentRole, agentKeep);}, agentTime);
+            setTimeout(function() {hideGreedy(game.agentRole);}, agentTime+animateTime);
+        }
+        else {
+            showLoading();
+            setTimeout(function() {
+                hideLoading();
+                showForm();
+                updateSendAgent(agentGive, agentKeep);
+                executeMove(game.agentRole, agentGive, agentKeep);
+            }, agentTime);
+            setTimeout(function() {hideForm();}, animateTime+agentTime+waitTime);
+        }
+        let wait;
+        // if (userGive==0 & game.agentRole=="A") {wait = 5*animateTime;}  // userGive doesn't matter in this case
+        if (userGive==0 & game.agentRole=="B") {wait = 5*animateTime;}  // agent is skipped
+        else if (agentGive==0 & game.agentRole=="A") {wait = agentTime;}
+        else if (agentGive==0 & game.agentRole=="B") {wait = 4*animateTime+agentTime;}
+        else if (agentGive>0 & game.agentRole=="A") {wait = animateTime+agentTime;}
+        else if (agentGive>0 & game.agentRole=="B") {wait = 5*animateTime+agentTime;}
+        if (!complete) {setTimeout(function() {flipArrow(); switchToUser();}, wait+waitTime);}
     }
 
-    function enableNavigation(timeout, prog) {
-         setTimeout(function(){
-            $("#back").prop("disabled", false);
-            if (prog < 9) {
-                $("#next").prop("disabled", false);
+    function switchToUser() {
+        console.log('switch to user');
+        hideLoading();
+        hideForm();
+        if (game.userRole=="B"){maxUser = game.match*agentGives[agentGives.length-1];}
+        startTime = performance.now()  // track user response time
+        if (maxUser==0) { // forced turn skip
+            resetSlider(maxUser);
+            callUpdate();
+        }
+        else {
+            showForm();
+            showInputs();
+            resetSlider(maxUser);
+            $("#arrow").css('visibility', 'visible');
+            $("#submit").prop('disabled', true);  // until slider moves
+            $("#sendA").hide();  // until slider moves
+            $("#sendB").hide();  // until slider moves
+        }
+    }
+
+    // Communicate with the server through AJAX (views.updateGame())
+    function callUpdate() {
+        endTime = performance.now() // track user response time
+        let userGive = Number($("#slider").val());
+        let userKeep = maxUser - userGive;
+        let userTime = (endTime-startTime);
+        userGives.push(userGive);
+        userKeeps.push(userKeep);
+        if (game.userRole == "A") {maxAgent = userGive * game.match} // update global
+        hideInputs();
+        if (userGive==0 & userKeep==0) { //forced skip
+            skipAnimations(game.userRole, userKeep);
+        }
+        else if (userGive==0 & userKeep>0) {
+            showGreedy(game.userRole);
+            skipAnimations(game.userRole, userKeep);
+            setTimeout(function() {hideGreedy(game.userRole);}, animateTime+waitTime);
+        }
+        else {
+            showForm();
+            executeMove(game.userRole, userGive, userKeep);
+            setTimeout(function() {hideForm();}, animateTime+waitTime);
+        }
+        let form = $("#form");
+        let giveData = $('<input type="hidden" name="userGive"/>').val(userGive);
+        let keepData = $('<input type="hidden" name="userKeep"/>').val(userKeep);
+        let timeData = $('<input type="hidden" name="userTime"/>').val(userTime);
+        form.append(giveData);
+        form.append(keepData);
+        form.append(timeData);
+        let sendData = form.serialize();
+        $.ajax({
+            method: 'POST',
+            url: '/game/api/updateGame/',
+            data: sendData,
+            dataType: 'json',
+            success: function (returnData) {
+                // update globals
+                userGives = returnData.userGives;
+                userKeeps = returnData.userKeeps;
+                userRewards = returnData.userRewards;
+                agentGives = returnData.agentGives;
+                agentKeeps = returnData.agentKeeps;
+                agentRewards = returnData.agentRewards;
+                complete = returnData.complete;
+                if (!complete || game.userRole=="A") {
+                    let wait;
+                    if (userGive==0 & game.userRole=="A"){wait=0;}
+                    else if (userGive==0 & game.userRole=="B"){wait=4*animateTime;}
+                    else if (userGive>0 & game.userRole=="A"){wait=animateTime;}
+                    else if (userGive>0 & game.userRole=="B") {wait=4*animateTime;}
+                    setTimeout(function () {switchToAgent(userGive);}, wait+waitTime);
+                }
             }
-            progress = prog;
-        }, timeout);
+        });
+        return false;
     }
 
-});  // document load end
+    // Start new turn
+    function finishTurn() {
+        // todo: alignment check
+        scoreA += currentA;
+        scoreB += currentB;
+        updateLog("score", currentA, currentB);
+        animateCoins(0, currentA, -currentA, 'out', 'a');
+        animateCoins(0, currentB, -currentB, 'out', 'b');
+        animateBar('scoreA', "A");
+        animateBar('scoreB', "B");
+        animateBar('bonus', game.userRole);
+        currentA = 0;
+        currentB = 0;
+        turn++;
+        if (complete) {
+            setTimeout(()=> {finishGame();}, animateTime+waitTime);
+        }
+        else {
+            setTimeout(()=> {animateBar('turn', game.userRole);}, animateTime+waitTime);
+            setTimeout(()=> {executeMove('capital');}, 2*animateTime+waitTime);
+        }
+    }
+
+    // Animate coin appearing and disappearing
+    function animateCoins(i, start, delta, direction, player) {
+        let di;
+        let opacity;
+        if (direction=="in"){
+            if (i>delta) {return;} // base case
+            di = 1; // count up
+            opacity = '1';  // become visible
+        }
+        else {
+            if (i<=delta) {return;} // base case            
+            di = -1;  // count down
+            opacity = '0';  // become invisible
+        }
+        setTimeout(() => {
+            $("#c"+(start+i)+player).css('opacity', opacity);
+            animateCoins(i+di, start, delta, direction, player); // recursive call
+        }, animateTime/Math.abs(delta));   
+    }
+    function fastCoins(delta, player) {
+        for (let i=1; i<=game.capital*game.match; i++){
+            if (i<=delta){$("#c"+i+player).css('opacity', "1");}
+            else {$("#c"+i+player).css('opacity', "0");}
+        }
+    }   
+    function executeMove(move, give=null, keep=null, finish=true){
+        if (move=="capital") {
+            updateLog("capital", game.capital, 0);
+            animateCoins(0, 0, game.capital, 'in', 'a');
+            currentA = game.capital;
+        }
+        if (move=="A"){
+            updateLog("A", give, keep);
+            animateCoins(0, game.capital, -give, 'out', 'a');
+            animateCoins(0, 0, give*game.match, 'in', 'b');
+            currentA = keep;
+            currentB = game.match*give;
+        }
+        if (move=="B") {
+            updateLog("B", give, keep);
+            animateCoins(0, currentB, -give, 'out', 'b');
+            animateCoins(1, currentA, give, 'in', 'a');
+            currentA += give;
+            currentB -= give;
+            if (finish) {setTimeout(()=> {finishTurn();}, animateTime+waitTime);}
+        }
+    }
+    // if one player gave zero, skip timing to transfer coins to other player
+    function skipAnimations(player, keep) {
+        if (player=="A") {
+            updateLog("A", 0, keep);
+            hideForm();}
+        else {
+            updateLog("B", 0, keep);
+            hideForm();
+            setTimeout(()=> {finishTurn();}, animateTime+waitTime);
+        }
+    }
+
+    // Update game log
+    function updateLog(stage, give, keep) {
+        let pronoun1a = (game.userRole=="A") ? "You" : "They";
+        let pronoun1b = (game.userRole=="A") ? "They" : "You";
+        let pronoun2 = (game.userRole=="A") ? "you" : "them";
+        let currentUser = (game.userRole=="A") ? give : keep;
+        let currentAgent = (game.userRole=="A") ? keep : give;
+        if (stage=="capital") {
+            $("#log-area").append(`<div id='l${turn}w1' class='lc${turn} lr1'></div>`);
+            $(`#l${turn}w1`).append(`<p id='l${turn}t' class='log-turn-text'></p>`);
+            $("#log-area").append(`<div id='l${turn}w2' class='lc${turn} lr2'></div>`);
+            $(`#l${turn}w2`).append(`<p id='l${turn}a1' class='log-text'></p>`);
+            $(`#l${turn}w2`).append(`<p id='l${turn}a2' class='log-text'></p>`);
+            $(`#l${turn}w2`).append(`<p id='l${turn}a3' class='log-text'></p>`);
+            $(`#l${turn}t`).text("Turn "+turn);
+            $(`#l${turn}a1`).text(pronoun1a).append("&nbsp;");
+            $(`#l${turn}a2`).text("received "+give).append("&nbsp;");
+            $(`#l${turn}a2`).addClass("teal");
+            $(`#l${turn}a3`).text("coins to start");
+        }
+        else if (stage=="A") {
+            $("#log-area").append(`<div id='l${turn}w3' class='lc${turn} lr3'></div>`);
+            $("#log-area").append(`<div id='l${turn}w4' class='lc${turn} lr4'></div>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b1' class='log-text'></p>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b2' class='log-text'></p>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b3' class='log-text'></p>`);
+            $(`#l${turn}w3`).append(`<p id='l${turn}b4' class='log-text'></p>`);
+            $(`#l${turn}w4`).append(`<p id='l${turn}c1' class='log-text'></p>`);
+            $(`#l${turn}w4`).append(`<p id='l${turn}c2' class='log-text'></p>`);
+            $(`#l${turn}w4`).append(`<p id='l${turn}c3' class='log-text'></p>`);
+            $(`#l${turn}b1`).text(pronoun1a).append("&nbsp;");
+            $(`#l${turn}b2`).text("gave "+give).append("&nbsp;");
+            $(`#l${turn}b2`).addClass("pink");
+            $(`#l${turn}b3`).text("coins and").append("&nbsp;");
+            $(`#l${turn}b4`).text("kept "+keep).append("&nbsp;");
+            $(`#l${turn}b4`).addClass("teal");
+            $(`#l${turn}c1`).text(pronoun1b).append("&nbsp;");
+            $(`#l${turn}c2`).text("received "+give*game.match).append("&nbsp;");
+            $(`#l${turn}c2`).addClass("pink");
+            $(`#l${turn}c3`).text("coins from").append("&nbsp;").append(pronoun2);
+        }
+        else if (stage=="B") {
+            $("#log-area").append(`<div id='l${turn}w5' class='lc${turn} lr5'></div>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d1' class='log-text'></p>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d2' class='log-text'></p>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d3' class='log-text'></p>`);
+            $(`#l${turn}w5`).append(`<p id='l${turn}d4' class='log-text'></p>`);
+            $(`#l${turn}d1`).text(pronoun1b).append("&nbsp;");
+            $(`#l${turn}d2`).text("gave "+give).append("&nbsp;");
+            $(`#l${turn}d2`).addClass("teal");
+            $(`#l${turn}d3`).text("coins and").append("&nbsp;");
+            $(`#l${turn}d4`).text("kept "+keep);
+            $(`#l${turn}d4`).addClass("pink");
+        }
+        else if (stage=="score") {
+            $("#log-area").append(`<div id='l${turn}w6' class='lc${turn} lr6'></div>`);
+            $("#log-area").append(`<div id='l${turn}w7' class='lc${turn} lr7'></div>`);
+            $(`#l${turn}w6`).append(`<p id='l${turn}e1' class='log-text'></p>`);
+            $(`#l${turn}w6`).append(`<p id='l${turn}e2' class='log-text'></p>`);
+            $(`#l${turn}w7`).append(`<p id='l${turn}f1' class='log-text'></p>`);
+            $(`#l${turn}w7`).append(`<p id='l${turn}f2' class='log-text'></p>`);
+            $(`#l${turn}e1`).text("Their score increased by").append("&nbsp;");
+            $(`#l${turn}e2`).text(currentAgent);
+            if (game.userRole=="A") {$(`#l${turn}e2`).addClass("pink");}
+            else {$(`#l${turn}e2`).addClass("teal");}
+            $(`#l${turn}f1`).text("Your score increased by").append("&nbsp;");
+            $(`#l${turn}f2`).text(currentUser);
+            if (game.userRole=="A") {$(`#l${turn}f2`).addClass("teal");}
+            else {$(`#l${turn}f2`).addClass("pink");}
+        }
+    }
+
+    // Animate top bars increasing width and counting up
+    function animateBar(barName, player){
+        let bar;
+        let num;
+        let widthNow;
+        let widthFrac = 0;
+        let widthNew = 0;
+        let widthText = parseInt($("#turn-text").css('width'));
+        let widthTotal = parseInt($("#turn-wrapper").css('width'));
+        let score = (player=="A") ? scoreA : scoreB;
+        let winnings = 0.0;
+        if (barName=="scoreA" || barName=="scoreB") {
+            bar = (game.userRole==player) ? $("#ys-progress") : $("#ts-progress");
+            num = (game.userRole==player) ? $("#ys-num") : $("#ts-num");
+            widthFrac = score/(game.rounds*game.capital*game.match);
+            widthNew = (widthTotal-widthText) * widthFrac;
+            widthNow = parseInt(bar.css('width'));
+            if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
+            $({count: num.text()}).animate(
+                {count: score},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    num.text(Number(this.count).toFixed());
+                }}
+            );            
+        }
+        else if (barName=="bonus") {
+            bar = $("#bonus-progress");
+            num = $("#bonus-num");
+            console.log(bar, num, score);
+            for (let i=0; i<game.bonus.length; i++) {
+                if (score>=game.bonus[i][0]) {
+                    $(`#thr${i+1}`).css('background-color', 'var(--myYellow');
+                }
+            }
+        }
+        else if (barName=="turn") {
+            bar = $("#turn-progress");
+            num = $("#turn-num");
+            widthFrac = turn/game.rounds;
+            widthNew = (widthTotal-widthText) * widthFrac;
+            widthNow = parseInt(bar.css('width'));
+            if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
+            $({count: num.text()}).animate(
+                {count: turn-1},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    let newTurn = Math.max(turn, Math.round(Number(this.count)));
+                    // don't display NaN on first steps
+                    if (!isNaN(newTurn)){num.text(newTurn+"/"+game.rounds);}
+                }}
+            );              
+        }
+    }
+
+    function animateWinnings(){
+        let reward;
+        let score = (game.userRole=="A") ? scoreA : scoreB;
+        for (let i=0; i<game.bonus.length; i++) {
+            if (score >= game.bonus[i][0]) {reward = game.bonus[i][1];}
+        }
+        let winObj = $("#headerW");
+        let playedObj = $("#headerG");
+        let win = Number(game.winnings);  // str to number
+        $({count: win}).animate(
+                {count: win+reward},
+                {duration: animateTime, easing: 'linear', step: function () {
+                    let winNew = Math.round(100*Number(this.count))/100;
+                    if (!isNaN(winNew)){winObj.text("Winnings — $"+winNew.toFixed(2))};
+                }}
+            );
+        playedObj.text("Games Played — "+(game.nGames+1));
+    }
+
+    function flipArrow() {
+        if ($("#arrow").hasClass('flipped')) {$("#arrow").removeClass('flipped');}
+        else ($("#arrow").addClass('flipped'))
+    }
+    function hideForm() {
+        $("#arrow").hide();
+        $("#sendA").hide();
+        $("#sendB").hide();
+    }
+    function showForm() {
+        $("#arrow").show();
+        $("#sendA").show();
+        $("#sendB").show();        
+    }
+    function hideInputs() {
+        $("#submit").prop('disabled', true);
+        $("#submit").hide();
+        $("#slider").hide();
+    }
+    function showInputs() {
+        $("#slider").prop('disabled', false);
+        $("#submit").show();
+        $("#slider").show();
+    }
+    function showGreedy(player){
+        if (player=="A") {$("#greedyA").show();}
+        else {$("#greedyB").show();}
+    }
+    function hideGreedy(player){
+        if (player=="A") {$("#greedyA").hide();}
+        else {$("#greedyB").hide();}
+    }
+    function showLoading() {
+        $("#loading").show();
+    }
+    function hideLoading() {
+        $("#loading").hide();
+    }
+    function resetSlider(maxUser) {
+        $("#slider").prop('min', 0);
+        $("#slider").prop('max', maxUser);
+        $("#slider").prop('value', 0);
+    }
+
+    function updateSendAgent(agentGive, agentKeep){
+        if (game.userRole == "A") {
+            $("#sendA").text("You get "+agentGive+" coins");
+            $("#sendB").text("They keep "+agentKeep);
+        }
+        else {
+            $("#sendA").text("They keep "+agentKeep+" coins");
+            $("#sendB").text("You get " +agentGive*game.match+" coins");
+        }
+    }
+
+    function addThresholds(){
+        let thrBar = $("#thr-wrapper");
+        let widthText = parseInt($("#thr-text").css('width'));
+        let widthTotal = parseInt($("#thr-wrapper").css('width'));
+        for (let i=1; i<game.bonus.length; i++) {
+            let reward = game.bonus[i-1][1];
+            let widthFrac = (game.bonus[i][0] - game.bonus[i-1][0]) /(game.rounds*game.capital*game.match);
+            let widthNew = (widthTotal-widthText) * widthFrac;
+            let heightNew = parseInt($("#thr-wrapper").css('height'));
+            thrBar.append(`<div id='thr${i}' class='thr'></div>`);
+            $(`#thr${i}`).css("width", widthNew);  
+            $(`#thr${i}`).css("height", heightNew);  
+            if (i<game.bonus.length-1) {$(`#thr${i}`).css("borderRight", "1pt solid black");}
+            $(`#thr${i}`).addClass("thr");  
+            $(`#thr${i}`).append(`<h2 class="text">$${reward}</h2>`);
+            if (i==1) {$(`#thr${i}`).css('background-color', 'var(--myYellow');}
+        }
+    }
+
+    // Final page after game is complete
+    function finishGame() {
+        let userScore = userRewards.reduce((a, b) => a + b, 0);
+        let agentScore = agentRewards.reduce((a, b) => a + b, 0);
+        animateWinnings();
+        if (game.userRole == "A") {
+            $("#aTotal").text("$"+userScore);
+            $("#bTotal").text("$"+agentScore);
+        }
+        else {
+            $("#aTotal").text("$"+agentScore);
+            $("#bTotal").text("$"+userScore);
+        }
+        hideLoading()
+        hideInputs();
+        hideForm();
+        $("#playerA").hide();
+        $("#playerB").hide();
+        $("#nameA").hide();
+        $("#nameB").hide();
+        $("#imgA").hide();
+        $("#imgB").hide();
+        $("#game-over-area").show();
+        $("#flair-text").show();
+        if (game.nGames+1 == game.required) {
+            $("#flair-text").text("Required games complete!");
+        }
+        $("#game-over-text").show();
+        $("#play-again-text").show();
+    }
+});

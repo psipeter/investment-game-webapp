@@ -25,21 +25,31 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#survey-text').text('Survey [✔]');
     }
     if (doneTutorialBool) {
-        $('#tutorial-box').hide();
-        $('#game-box').show();
+        $('#tutorial-text').text('Tutorial [✔]');
     }
     else {
-        $('#tutorial-box').show();
-        $('#game-box').hide();
+        $('#game-box').addClass('inactive');
+        $('#game-box').off('click');
+        $('#game-box').click(function(e) {alert("To play games, first complete the tutorial");});
     }
-    if (doneRequiredBool) {
-        $('#games-text').text('Games [✔]');
-        $('#games-box').addClass('inactive');
-        $('#games-box').off('click');
+    if (doneTutorialBool) {
+        if (status.nGames < status.required) {
+            $('#game-text1').text(`Required: ${status.nGames}/${status.required}`)
+            $('#game-text3').text(``)
+        }
+        else {
+            $('#game-text1').text(`Required: ${status.required}/${status.required}`)            
+            $('#game-text3').text(`Bonus: ${status.nGames-status.required}/${status.max-status.required}`)
+        }
     }
-    else if (doneTutorialBool) {
-        $('#required-text').text("Required Games ["+status.nGames+"/"+status.required+"]");
-    }
+    // if (doneRequiredBool) {
+    //     $('#games-text2').text('Games [Required ✔]');
+    //     $('#games-box').addClass('inactive');
+    //     $('#games-box').off('click');
+    // }
+    // else if (doneTutorialBool) {
+    //     $('#required-text').text("Required Games ["+status.nGames+"/"+status.required+"]");
+    // }
     if (doneCashBool) {
         $('#cash-text').text('HIT Code / Cash Out [✔]');
     }

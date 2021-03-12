@@ -5,139 +5,184 @@
 {% block title2 %}Tutorial{% endblock %}
 
 {% block css %}
+	<link rel="stylesheet" href="{% static 'game.css' %}">
 	<link rel="stylesheet" href="{% static 'tutorial.css' %}">
 {% endblock %}
 
 {% block body %}
-	<div id="m1" class="main">
-		<div id='m1a' class="row">
-			<h2 class="text">The investment game is a two player, turn based game</h2>
-			<img id="img1a" src="{% static 'two-player.png' %}">
-		</div>
-		<div id='m1b' class="row">
-			<img id="img1b" src="{% static 'sending.png' %}">
-			<h2 class="text">Each turn, one player sends points to the other</h2>
-		</div>
-		<div id='m1c' class="row">
-			<div>
-				<h2 class="text">Sending points represents doing somebody a favor,<br> &nbsp &nbsp &nbsp investing in a startup, or lending money to a friend</h2>
+	<div id="bar-area">
+		<div id="turn-wrapper" class="bar-wrapper">
+			<div class="text-box">
+				<h2 id="turn-text" class='text'>Turn</h2>
 			</div>
-			<img id="img1c" src="{% static 'dollar-coin.png' %}">
+			<div id="turn-progress" class="progress-box">
+				<h2 id="turn-num" class='num'></h2>
+			</div>
+		</div>
+		<div id="ts-wrapper" class="bar-wrapper">
+			<div class="text-box">
+				<h2 id="ts-text" class='text'>Their Score</h2>
+			</div>
+			<div id="ts-progress" class="progress-box">
+				<h2 id="ts-num" class='num'></h2>
+			</div>
+		</div>
+		<div id="ys-wrapper" class="bar-wrapper">
+			<div class="text-box">
+				<h2 id="ys-text" class='text'>Your Score</h2>
+			</div>
+			<div id="ys-progress" class="progress-box">
+				<h2 id="ys-num" class='num'></h2>
+			</div>
+		</div>
+		<div id="bonus-wrapper" class="bar-wrapper">
+			<div class="text-box">
+				<h2 id="bonus-text" class='text'>Bonus</h2>
+			</div>
+			<div id="bonus-progress" class="progress-box">
+			</div>
+		</div>
+		<div id="thr-wrapper" class="bar-wrapper">
+			<div class="text-box">
+				<h2 id="thr-text" class='text'></h2>
+			</div>
+		</div>
+	</div>
+	<div id="coin-area">
+		<img id="c1a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c2a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c3a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c4a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c5a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c6a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c7a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c8a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c9a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c10a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c11a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c12a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c13a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c14a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c15a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c16a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c17a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c18a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c19a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c20a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c21a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c22a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c23a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c24a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c25a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c26a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c27a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c28a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c29a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c30a" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c1b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c2b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c3b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c4b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c5b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c6b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c7b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c8b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c9b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c10b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c11b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c12b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c13b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c14b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c15b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c16b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c17b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c18b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c19b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c20b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c21b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c22b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c23b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c24b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c25b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c26b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c27b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c28b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c29b" class='coin' src="{% static 'full-coin.svg' %}">
+		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
+		<button hidden id="submit">Send</button>
+	</div>
+	<div id="player-area">
+		<h1 id="nameA"></h1>
+		<h1 id="nameB"></h1>
+		<img hidden id="arrow" src="{% static 'arrow.svg' %}">
+		<img id="imgA" src="{% static 'userA.svg' %}">
+		<img id="imgB" src="{% static 'userB.svg' %}">
+		<div id="slider-wrapper">
+			<input hidden type="range" min="0" max="10" value="0" step="1" id="slider">
+		</div>
+		<h1 hidden id="loading">They are thinking...</h1>
+		<h1 hidden id="greedyA"></h1>
+		<h1 hidden id="greedyB"></h1>
+		<h2 id="sendA"></h2>
+		<h2 id="sendB"></h2>
+		<form id="form">{% csrf_token %}</form>
+	</div>
+	<div id="log-area"></div>
+	<div id="game-over-area">
+		<h1 hidden id="flair-text">Isn't this fun!</h1>
+		<div id="play-again-wrapper"><a hidden id="play-again-text" href="{% url 'game' %}">New Game</a></div>
+		<h1 hidden id="game-over-text">Game Over</h1>
+	</div>
+	<div hidden id="n-area">
+	<!-- <div id="n-area"> -->
+		<div id="n0" class="note">
+			<p class='n-text'>Welcome to the Investment Game Tutorial!</p>
+		</div>
+		<div id="n1" class="note">
+			<p class='n-text'>The Investment Game is a two-player game</p>
+			<p class='n-text'>The left player is the <span class='teal'>investor</span> and the right player is the <span class="pink">trustee</span></p>
+			<p class='n-text'>At the start of the game, you will be assigned to one of these players</p>
+		</div>
+		<div id="n2" class="note">
+			<p class='n-text'>Each game has 5 turns</p>
+			<p class='n-text'>On each turn, the <span class='teal'>investor</span> and the <span class="pink">trustee</span> will each make one move</p>
+			<p class='n-text'>Let's go through an example turn</p>
+		</div>
+		<div id="n3" class="note">
+			<p class='n-text'>First, the <span class='teal'>investor</span> will get 10 coins</p>
+			<p class='n-text'>These coins represent money that the player may "invest" in the <span class="pink">trustee</span> or keep for <span class='teal'>themselves</span></p>
+		</div>
+		<div id="n4" class="note">
+			<p class='n-text'>Try it now!</p>
+			<p class='n-text'>Use the slider to select how many coins you will <span class="teal">keep</span> and how many you will <span class="pink">give</span> to the trustee</p>
+			<p hidden id="n4-after" class='n-text'>You'll notice that the <span class="pink">trustee</span> gets way more coins than you're giving away ... press <span class="yellow-span">send</span> to learn more</p>			
+			<p hidden id="n4-after2" class='n-text warning'>Please choose a value greater than 0</p>			
+		</div>
+		<div id="n5" class="note">
+			<p class='n-text'>When the <span class='teal'>investor</span> gives away coins, the <span class="pink">trustee</span> always gets <span class='red-span'>3 times</span> that many coins!</p>	
+			<p class='n-text'>Figuratively, the <span class="pink">trustee</span> uses the investor's gift as "startup money" to (somehow) make a <span class="red-span">large profit</span></p>
+		</div>
+		<div id="n6" class="note">
+			<p class='n-text'>It is now the <span class="pink">trustee</span>'s' turn...</p>	
+			<p class='n-text'>The trustee will <span class='teal'>give back</span> some of their coins to the investor and <span class="pink">keep the rest</span></p>
+		</div>
+		<div id="n7" class="note">
+			<p class='n-text'>The turn is now over</p>	
+			<p class='n-text'>Coins collected by the <span class='teal'>investor</span> and <span class="pink">trustee</span> are added to their scores</p>
+			<p class='n-text'>... and the next turn begins!</p>
+		</div>
+		<div id="n8" class="note">
+			<p class='n-text'>As your score increases (passes the <span class="black-span">lines</span> in the "bonus" bar), you will unlock <span class="yellow-span">bonus rewards</span></p>
+			<p class='n-text'>To add these rewards to your winnings, you must <span class="red-span">finish the game</span></p>
+			<p class='n-text'>In the second half of the tutorial, we'll briefly review strategy and explain how to complete the HIT</p>
 		</div>
 	</div>
 
-	<div id="m2" class="main">
-		<h2 id="m2a" class="top-text">Each round of the game has <strong>four</strong> steps</h2>
-		<h2 id="aTotalm2" class="total left">$0 — Total A</h2>
-		<h2 id="bTotalm2" class="total right">Total B — $0</h2>
-		<h2 id="aNowm2" class="available left">$0 — Available A</h2>
-		<h2 id="bNowm2" class="available right">Available B — $0</h2>
-		<h2 class="player left">A (Alfred)</h2>
-		<h2 class="player right">B (Bubba)</h2>
-		<h2 id="m2c" class="bottom-text">Each game has <strong>five</strong> rounds</h2>
-		<div class='center'>
-			<h3 id="m2b1" class="center-text">1. Alfred receives $10</h3>
-			<h3 id="m2b2" class="center-text">2. Alfred sends some money to Bubba</h3>
-			<h3 id="m2b3" class="center-text">3. Bubba receives 3X this amount</h3>
-			<h3 id="m2b4" class="center-text">4. Buba sends some money back to Alfred</h3>
-			<h3 id="m2b5" class="center-text">[5.] Update score and repeat</h3>
-		</div>
-	</div>
-
-	<div id="m3" class="main">
-		<h2 id="m3a" class="top-text">There is a tradeoff between <strong>immediate reward</strong> and <strong>long-term reputation</strong></h2>
-		<h2 id="aTotalm3" class="total left">$0 — Total A</h2>
-		<h2 id="bTotalm3" class="total right">Total B — $0</h2>
-		<h2 id="aNowm3" class="available left">$0 — Available A</h2>
-		<h2 id="bNowm3" class="available right">Available B — $0</h2>
-		<h2 class="player left">A (Alfred)</h2>
-		<h2 class="player right">B (Bubba)</h2>
-		<div class='center'>
-			<h3 id="m3c2" class="center-text"><strong>Generous — </strong>Alfred $15, Bubba $15</h3>
-			<h3 id="m3d2" class="center-text"><strong>Greedy — </strong>Alfred $0, Bubba $30</h3>
-		</div>
-		<h3 id="m3c" class="bottom-text">If A and B are both <strong>generous</strong>, each will score moderately</h3>
-		<h3 id="m3d" class="bottom-text">If one player is <strong>greedy</strong>, they will score big at the expense of the other</h3>
-		<h2 id="m3e" class="bottom-text">There is no optimal strategy — you must learn through <strong>trial and error</strong>!</h2>
-	</div>
-
-	<div id="m4" class="main">
-		<h2 id="m4a"class="top-text">You will be randomly assigned to player A or B</h2>
-		<h2 id="m4c"class="top-text">Use the <strong>slider</strong> to choose an amount, then press <strong>send</strong> to submit</h2>
-		<h2 id="m4d"class="top-text"><strong>Wait</strong> while the other player makes a choice</h2>
-		<h2 id="m4e"class="top-text">A grayed out slider indicates <strong>their move</strong></h2>
-		<h2 id="m4f"class="top-text">The website will <strong>record</strong> both players' moves and final scores</h2>
-		<h2 id="aTotalm4" class="total left">$0 — Total A</h2>
-		<h2 id="bTotalm4" class="total right">Total B — $0</h2>
-		<h2 id="aNowm4" class="available left">$0 — Available A</h2>
-		<h2 id="bNowm4" class="available right">Available B — $0</h2>
-		<h2 class="player left">A (You)</h2>
-		<h2 class="player right">B (Computer)</h2>
-		<div id="cash">
-			<h2 id="sendA">$0</h2>
-			<h2 id="sendB">$0</h2>
-		</div>
-		<input type="range" min="0" max="10" value="5" step="1" id="slider">
-		<input type="submit" id="submit" value="send">
-		<div id="loading">
-			<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-		</div>
-		<h2 id="m4g" class="bottom-text">Leaving an incomplete game will result in a score of <strong>0</strong></h2>
-	</div>
-
-	<div id="m5" class="main">
-		<h2 id="m5a">After finishing the Tutorial, you will play <strong>5 Required Games</strong></h2>
-		<img id="img5" src="{% static 'required.png' %}">
-		<h3 id="m5b" class="extra-text">These games are for practice — you will play against <strong>computers</strong> and your scores will <strong>not</strong> count</h3>
-		<h3 id="m5c" class="extra-text">After the Required Games, you may select Cash Out to receive your <strong>HIT code for ${{FIXED_REWARD}}</strong></h3>
-	</div>
-
-	<div id="m6" class="main">
-		<h2 id="m6a">You may also continue playing Bonus Games for <strong>additional high-paying rewards</strong></h2>
-		<img id="img6" src="{% static 'bonus.png' %}">
-		<h3 id="m6b" class="extra-text">You will earn ${{BONUS_RATE}} per bonus game, plus ${{PERFORMANCE_RATE}} if you score higher than {{PERFORMANCE_THR}} points</h3>
-		<h3 id="m6c" class="extra-text">If you play quickly, that's almost minimum wage :O</h3>
-	</div>
-
-	<div id="m7" class="main">
-		<h2 id="m7a">Check out how you're doing on the <strong>Game Stats</strong> page</h2>
-		<img id="img7" src="{% static 'stats.png' %}">
-		<h3 id="m7b" class="extra-text">You can compare your scores to other players on the site</h3>
-		<!-- <h3 id="m7c" class="extra-text">Nice.</h3> -->
-	</div>
-
-	<div id="m8" class="main">
-		<h2 id="m8a">When you're ready, select <strong>Cash Out</strong> to receive your HIT code or request your bonus</h2>
-		<img id="img8" src="{% static 'cash.png' %}">
-		<h3 id="m8b" class="extra-text">Paste your <span class="HIT">HIT Code</span> into your MTurk Browser Tab to complete the task</h3>
-		<h3 id="m8c" class="extra-text">Afterwards, play more bonus games, then click <strong>Cash Out and Finish</strong> to receive bonus payment</h3>
-	</div>
-
-	<div id="m9" class="main">
-		<h3 id="m9a">If you have questions, concerns, or suggestions, please leave a comment on the <strong>Feedback</strong> page</h3>
-		<img id="img9" src="{% static 'feedback.png' %}">
-		<h3 id="m9b">That's it! Click the button below to finish the tutorial and start playing games</h3>
-		<form id="m9c" method="POST">
-			{% csrf_token %}
-			<input hidden id="finish-btn" type="submit"/>
-		</form>
-	</div>
-
-	<div id="bottom-bar">
-		<div class="navigation-wrapper">
-			<button type="button" disabled id="back">Back</button>
-			<button id="finish-link" class="button"> <label for="finish-btn">Finish Tutorial</label></button>
-			<a id="home-link" class="link" href="{% url 'home' %}">Home</a>
-			<button type="button" id="next">Next</button>
-		</div>
-		<div id="progress-bar-bg">
-			<div id="progress-bar-fg"></div>	
-		</div>
-	</div>
-
+	<!-- Let's talk strategy -->
 {% endblock %}
 
+
 {% block javascript %}
-	<script type="text/javascript" src="{% static 'common.js' %}"></script>
+	<script src="{% static 'common.js' %}"></script>
 	<script src="{% static 'tutorial.js' %}"></script>
 {% endblock %}

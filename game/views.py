@@ -99,21 +99,6 @@ def survey(request):
 	return render(request, 'survey.html', {'form': form})
 
 @login_required
-def tutorial(request):
-	if request.user.doneConsent:
-		if request.method == 'POST':
-			form = TutorialForm(request.POST)
-			request.user.doneTutorial = datetime.now()
-			request.user.save()
-			return redirect('home')
-		else:
-			form = TutorialForm()			
-		return render(request, "tutorial.html")
-	else:
-		error(request, 'You must sign the consent form before taking the tutorial')
-		return redirect('home')
-
-@login_required
 def cash(request):
 	request.user.setProgress()
 	if not (request.user.doneConsent and request.user.doneRequired):
@@ -162,4 +147,8 @@ def startGame(request):
 	else:
 		error(request, 'You must complete the tutorial before playing the required games')
 		return redirect('home')
+
+@login_required
+def startTutorial(request):
+	return render(request, "tutorial.html")
 
