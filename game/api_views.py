@@ -118,8 +118,8 @@ def startTutorial(request):
 		})
 	else:
 		game = Game.objects.create()
-		game.start(request.user)
 		game.tutorial = True
+		game.startTutorial(request.user, "A", "B", "T4T")
 		game.save()
 		data = {
 			'username': game.user.username,
@@ -159,11 +159,28 @@ def updateTutorial(request):
 		'agentGives': list(game.historyToArray("agent", "give")),
 		'agentKeeps': list(game.historyToArray("agent", "keep")),
 		'agentRewards': list(game.historyToArray("agent", "reward")),
+		'complete': False,
 	}
-	if game.complete:
-		data['complete'] = True
-		request.user.doneTutorial = datetime.now()
-		request.user.save()
-	else:
-		data['complete'] = False
 	return JsonResponse(data, encoder=NpEncoder)
+
+@login_required
+def restartTutorial(request):
+	game = Game.objects.create()
+	game.tutorial = True
+	game.startTutorial(request.user, "B", "A", "T4T")
+	game.save()
+	data = {
+		'userGives': list(game.historyToArray("user", "give")),
+		'userKeeps': list(game.historyToArray("user", "keep")),
+		'userRewards': list(game.historyToArray("user", "reward")),
+		'agentGives': list(game.historyToArray("agent", "give")),
+		'agentKeeps': list(game.historyToArray("agent", "keep")),
+		'agentRewards': list(game.historyToArray("agent", "reward")),
+	}
+	return JsonResponse(data, encoder=NpEncoder)
+
+@login_required
+def finishTutorial(request):
+	request.user.doneTutorial = datetime.now()
+	request.user.save()
+	return JsonResponse({}, encoder=NpEncoder)

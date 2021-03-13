@@ -24,7 +24,7 @@
 }
 
 .n-nav {
-	margin: 1% 2%;
+	margin: 2% 2%;
 	width: 96%;
 	flex-grow: 1;
 	display: flex;
@@ -36,6 +36,11 @@
 	cursor: pointer;
 	align-self: flex-end;
 	font-size: 140%;
+	padding: 0.5% 1%;
+	background-color: var(--myLightGray);
+	border: 1pt solid black;
+	border-radius: 2px;
+	z-index: 2;
 }
 
 .inactive {
@@ -51,36 +56,22 @@
 
 #n0 {
 	width: 80%;
-	height: 10%;
-	top: 30%;
+	height: 35%;
+	top: 27%;
 	left: 10%;
 }
 
 #n1 {
-	width: 45%;
-	height: 18%;
-	top: 55%;
-	left: 27.5%;
+	width: 80%;
+	height: 35%;
+	top: 27%;
+	left: 10%;
 }
 
 #n2 {
 	width: 80%;
 	height: 20%;
-	top: 14%;
-	left: 10%;
-}
-
-#n3 {
-	width: 40%;
-	height: 16%;
-	top: 27%;
-	left: 50%;
-}
-
-#n4 {
-	width: 80%;
-	height: 24%;
-	top: 75%;
+	top: 50%;
 	left: 10%;
 }
 
@@ -88,47 +79,40 @@
 	z-index: 1;
 }
 
-.yellow-span {
+.yellow, #bonus-span {
 	font-weight: bold;
 	color: var(--myYellow);
 }
 
-.submit-highlight {
-	border: 3pt solid var(--myYellow);
-}
-
-.warning, .red-span {
+.warning, .red, #required-span {
 	color: var(--myRed);
 }
 
-#n5 {
+.black {
+	color: black;
+}
+
+.gray {
+	color: var(--myGray);
+}
+
+#n3 {
 	width: 80%;
-	height: 15%;
-	top: 10%;
+	height: 30%;
+	top: 40%;
 	left: 10%;
 }
 
-#n6 {
+#n4 {
 	width: 80%;
-	height: 15%;
-	top: 75%;
-	left: 10%;
-}
-
-#n7 {
-	width: 30%;
-	height: 20%;
-	top: 10%;
-	left: 60%;
-}
-
-#n8 {
-	width: 80%;
-	height: 20%;
+	height: 30%;
 	top: 27%;
 	left: 10%;
 }
 
-.black-span {
-	color: black;
+#n5 {
+	width: 80%;
+	height: 35%;
+	top: 40%;
+	left: 10%;
 }

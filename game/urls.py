@@ -5,6 +5,7 @@ from . import api_views
 urlpatterns = [
     path('game/', views.startGame, name='game'),
     path('tutorial', views.startTutorial, name="tutorial"),
+    path('tutorial2', views.startTutorial2, name="tutorial2"),
     path('information', views.information, name='information'),
     path('consent', views.consent, name='consent'),
     path('survey', views.survey, name='survey'),
@@ -15,4 +16,6 @@ urlpatterns = [
     path('api/updateGame/', api_views.updateGame),
     path('api/startTutorial/', api_views.startTutorial),
     path('api/updateTutorial/', api_views.updateTutorial),
+    path('api/finishTutorial/', api_views.finishTutorial),
+    path('api/restartTutorial/', api_views.restartTutorial),
 ]

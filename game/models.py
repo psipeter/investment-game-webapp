@@ -120,6 +120,21 @@ class Game(models.Model):
 	match = models.FloatField(default=MATCH)
 	seed = models.IntegerField(default=0)
 
+	def start(self, user):
+		self.user = user
+		self.seed = np.random.randint(1e6)
+		np.random.seed(self.seed)  # set random number seed
+		idx = self.user.nGames
+		self.userRole = PLAYERS[idx][0]
+		self.agentRole = PLAYERS[idx][1]
+		self.save()
+		self.setAgent()
+		if self.agentRole == "A":
+			self.goAgent(self.capital)
+		self.user.currentGame = self
+		self.user.save()
+		self.save()
+
 	def setAgent(self):
 		idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
 		if self.user.group == "1" and self.userRole == "A": name = AGENTS_F_B[idx]
@@ -131,15 +146,15 @@ class Game(models.Model):
 		self.agent.start(name, self.agentRole)
 		self.save()
 
-	def start(self, user):
+	def startTutorial(self, user, userRole, agentRole, agentName):
 		self.user = user
 		self.seed = np.random.randint(1e6)
 		np.random.seed(self.seed)  # set random number seed
-		idx = self.user.nGames
-		self.userRole = PLAYERS[idx][0]
-		self.agentRole = PLAYERS[idx][1]
+		self.userRole = userRole
+		self.agentRole = agentRole
 		self.save()
-		self.setAgent()
+		self.agent = Agent.objects.create()
+		self.agent.start(agentName, self.agentRole)
 		if self.agentRole == "A":
 			self.goAgent(self.capital)
 		self.user.currentGame = self

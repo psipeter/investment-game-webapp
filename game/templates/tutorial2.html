@@ -1,12 +1,12 @@
 {% extends "default.html" %}
 {% load static %}
 
-{% block title %}<title>Tutorial</title>{% endblock %}
+{% block title %}<title>Tutorial Part 2</title>{% endblock %}
 {% block title2 %}Tutorial{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'game.css' %}">
-	<link rel="stylesheet" href="{% static 'tutorial.css' %}">
+	<link rel="stylesheet" href="{% static 'tutorial2.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -128,61 +128,52 @@
 		<form id="form">{% csrf_token %}</form>
 	</div>
 	<div id="log-area"></div>
-	<div id="game-over-area">
-		<h1 hidden id="flair-text">Isn't this fun!</h1>
-		<div id="play-again-wrapper"><a hidden id="play-again-text" href="{% url 'game' %}">New Game</a></div>
-		<h1 hidden id="game-over-text">Game Over</h1>
-	</div>
+
 	<div hidden id="n-area">
-	<!-- <div id="n-area"> -->
 		<div id="n0" class="note">
-			<p class='n-text'>Welcome to the Investment Game Tutorial!</p>
+			<p class='n-text'>Let's talk strategy!</p>
+			<p class='n-text'>In the Investment Game, there is a tradeoff between <span class="teal">immediate reward</span> and <span class='pink'>long-term reputation</span></p>
+			<p class='n-text'>To demonstrate this, we'll play two mini-games (3 turns)</p>
+			<p class='n-text'>In the first game, you'll be the <span class="teal">investor</span> and we'll force you to make <span class="yellow">generous investments</span></p>
+			<p class='n-text'>In the second game, you'll be the <span class="pink">trustee</span> and we'll for you to make <span class="red">greedy returns</span></p>
 		</div>
 		<div id="n1" class="note">
-			<p class='n-text'>The Investment Game is a two-player game</p>
-			<p class='n-text'>The left player is the <span class='teal'>investor</span> and the right player is the <span class="pink">trustee</span></p>
-			<p class='n-text'>At the start of the game, you will be assigned to one of these players</p>
+			<p class='n-text'>You've just finished your first game!</p>
+			<p class='n-text'>By investing generously, both <span class="teal">you</span> and the <span class="pink">trustee</span> have collected a good number of coins</p>
+			<p class='n-text'>Your final score is <span id='s1a' class="teal">X</span> and the instructor's score is <span id='s1b'class="pink">Y</span></p>
+			<p class='n-text'>If, instead, you had chosen to keep <span class="teal">everything</span> and invest <span class="pink">nothing</span>, the final scores would have been <span class="teal">30</span> and <span class="pink">0</span></p>
+			<p class='n-text'>This shows that investing <span class="yellow">generously</span> can benefit both players ... but what if the <span class="pink">trustee</span> gets <span class="red">greedy?</span></p>
 		</div>
 		<div id="n2" class="note">
-			<p class='n-text'>Each game has 5 turns</p>
-			<p class='n-text'>On each turn, the <span class='teal'>investor</span> and the <span class="pink">trustee</span> will each make one move</p>
-			<p class='n-text'>Let's go through an example turn</p>
+			<p class='n-text'>In this game, you'll play as the <span class="pink">trustee</span></p>
+			<p class='n-text'>We'll force you to make <span class="red">greedy</span> decisions, and see what happens ...</p>
 		</div>
 		<div id="n3" class="note">
-			<p class='n-text'>First, the <span class='teal'>investor</span> will get 10 coins</p>
-			<p class='n-text'>These coins represent money that the player may "invest" in the <span class="pink">trustee</span> or keep for <span class='teal'>themselves</span></p>
+			<p class='n-text'>When the <span class="pink">trustee</span> is <span class="red">greedy</span>, they can collect many coins on a single turn</p>
+			<p class='n-text'>However, this action may anger the <span class="teal">investor</span>, causing them to give less next turn</p>
+			<p class='n-text'>In this game, the <span class="teal">instructor</span> punished your <span class="red">greedy</span> actions, preventing you from collecting many coins later in the game</p>
+			<p class='n-text'>You can check the <span class="black">Game Log</span> at the bottom to see this for yourself</p>
 		</div>
 		<div id="n4" class="note">
-			<p class='n-text'>Try it now!</p>
-			<p class='n-text'>Use the slider to select how many coins you will <span class="teal">keep</span> and how many you will <span class="pink">give</span> to the trustee</p>
-			<p hidden id="n4-after" class='n-text'>You'll notice that the <span class="pink">trustee</span> gets way more coins than you're giving away ... press <span class="yellow-span">send</span> to learn more</p>			
-			<p hidden id="n4-after2" class='n-text warning'>Please choose a value greater than 0</p>			
+			<p class='n-text'>There is no optimal strategy in the Investment Game — you must learn the best way to deal with each opponent through <span class='red'>trial and error</span>!</p>
+			<p class='n-text'>When playing games, you will face a variety of opponents without knowing their identity</p>
+			<p class='n-text'>These opponents might be <span class="black">dumb</span> agents (computers which always make greedy or generous moves), <span class="black">smart</span> agents (computers which respond to your choices or learn over time), or other <span class="black">human players</span>.</p>
+			<p class='n-text'>Our research study is focused on how <span class="red">you</span> learn over time, so try your best, and earn <span class="yellow">bonus</span> rewards for playing well!</p>
 		</div>
-		<div id="n5" class="note">
-			<p class='n-text'>When the <span class='teal'>investor</span> gives away coins, the <span class="pink">trustee</span> always gets <span class='red-span'>3 times</span> that many coins!</p>	
-			<p class='n-text'>Figuratively, the <span class="pink">trustee</span> uses the investor's gift as "startup money" to (somehow) make a <span class="red-span">large profit</span></p>
+		<div id="n5" class="note" href='{% url "home" %}'>
+			<p class='n-text'>To complete the study, you must <span id="required-span">complete 10 games. View your progress in the upper left.</span></p>
+			<p class='n-text'>You may also play up to 30 bonus games to earn more <span id="bonus-span">rewards</span>, at a rate of $0.05-$0.25 per game</p>
+			<p class='n-text'>Receive your <span class='black'>HIT code</span> and bonus payment by selecting Cash Out from the upper right</p>
+			<p class='n-text'>You must complete the Survey for <span class="gray">Cash Out</span> to become available. The Survey can be accessed through the Home page.</p>
+			<p class='n-text'>You have completed the tutorial and may now start playing games. Happy investing!</p>
 		</div>
-		<div id="n6" class="note">
-			<p class='n-text'>It is now the <span class="pink">trustee</span>'s' turn...</p>	
-			<p class='n-text'>The trustee will <span class='teal'>give back</span> some of their coins to the investor and <span class="pink">keep the rest</span></p>
-		</div>
-		<div id="n7" class="note">
-			<p class='n-text'>The turn is now over</p>	
-			<p class='n-text'>Coins collected by the <span class='teal'>investor</span> and <span class="pink">trustee</span> are added to their respective scores</p>
-			<p class='n-text'>... and the next turn begins!</p>
-		</div>
-		<div id="n8" class="note">
-			<p class='n-text'>As your score increases (passes the <span class="black-span">lines</span> in the "bonus" bar), you will unlock <span class="yellow-span">bonus rewards</span></p>
-			<p class='n-text'>To add these rewards to your real-money winnings, you must <span class="red-span">finish the game</span></p>
-			<p id="tut2" href='{% url "tutorial2" %}' class='n-text'>In the second half of the tutorial, we'll discuss strategy and explain how to complete the HIT</p>
-		</div>
-	</div>
 
-	<!-- Let's talk strategy -->
+		<!-- and happy investing -->
+	</div>
 {% endblock %}
 
 
 {% block javascript %}
 	<script src="{% static 'common.js' %}"></script>
-	<script src="{% static 'tutorial.js' %}"></script>
+	<script src="{% static 'tutorial2.js' %}"></script>
 {% endblock %}
