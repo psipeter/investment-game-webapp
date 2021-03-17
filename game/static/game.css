@@ -1,3 +1,17 @@
+:root {
+	--PinkLeft: url('carrot_pink_left.svg');
+	--PinkRight: url('carrot_pink_right.svg');
+	--TealLeft: url('carrot_teal_left.svg');
+	--TealRight: url('carrot_teal_right.svg');
+	--sliderHeight: 6vh;
+	--ColorGive: var(--myTeal);
+	--ColorKeep: var(--myPink);
+	--ImgGive: var(--PinkRight);
+	--ImgKeep: var(--TealLeft);
+	--agentBackground: var(--TealLeft);
+	--agentAnimate: -20vw;
+}
+
 /*Overall grid*/
 .body {
 	margin: 1% 0 0 0;
@@ -103,76 +117,78 @@
 #c28b {grid-row: 3; grid-column: 18;}
 #c29b {grid-row: 3; grid-column: 17;}
 #c30b {grid-row: 3; grid-column: 16;}
-#submit {
-	grid-row: 2;
-	grid-column: 11/16;
-	font-size: 200%;
-	width: 60%;
-	height: 100%;
-	margin: 0 20%;
-	padding: 0;
-	cursor: pointer;
-}
-
 
 /*Players*/
-#player-area {grid-row: 3; grid-column: 1; display: grid; grid-template-rows: repeat(4, 1fr); grid-template-columns: 20% 60% 20%;}
+#player-area {grid-row: 3; grid-column: 1; display: grid; grid-template-rows: repeat(4, 6vh); grid-template-columns: 20% 60% 20%;}
 #nameA {grid-row: 1; grid-column: 1; width: 100%; text-align: center; color: var(--myTeal);}
 #nameB {grid-row: 1; grid-column: 3; width: 100%; text-align: center; color: var(--myPink);}
-#arrow {grid-row: 1; grid-column: 2; width: 100%; height: 100%;}
+/*#arrow {grid-row: 1; grid-column: 2; width: 100%; height: 100%;}*/
 #imgA {grid-row: 2/5; grid-column: 1; height: 100%; width: 100%;}
 #imgB {grid-row: 2/5; grid-column: 3; height: 100%; width: 100%;}
 /*#playerA {grid-row: 5; grid-column: 1; width: 100%; text-align: center;}*/
 /*#playerB {grid-row: 5; grid-column: 3; width: 100%; text-align: center;}*/
-#sendA {grid-row: 4; grid-column: 2; width: 80%; margin: 0 10%; align-self: flex-end; text-align: left; color: var(--myTeal);}
-#sendB {grid-row: 4; grid-column: 2; width: 80%; margin: 0 10%; align-self: flex-end; text-align: right; color: var(--myPink);}
+#sendA, #agentA {grid-row: 4; grid-column: 2; width: 80%; margin: 2vh 10%; align-self: flex-start; text-align: right; color: var(--myTeal);}
+#sendB, #agentB {grid-row: 4; grid-column: 2; width: 80%; margin: 2vh 10%; align-self: flex-start; text-align: left; color: var(--myPink);}
 #slider-wrapper {grid-row: 3; grid-column: 2; width: 100%; height: 100%;}
-#loading {grid-row: 3; grid-column: 2; width: 100%; text-align: center;}
-#greedyA {grid-row: 3; grid-column: 2; width: 100%; text-align: center; color: var(--myTeal);}
-#greedyB {grid-row: 3; grid-column: 2; width: 100%; text-align: center; color: var(--myPink);}
+#loading {grid-row: 2; grid-column: 2; width: 100%; text-align: center;}
+#form {width: 0; height: 0; margin: 0;}
+#submit {
+	grid-row: 2;
+	grid-column: 2;
+	font-size: 200%;
+	width: 30%;
+	height: 70%;
+	margin: 0 35%;
+	padding: 0;
+	cursor: pointer;
+}
+@keyframes animateRight {100% {background-position: 20vw 0}}
+@keyframes animateLeft {100% {background-position: -20vw 0}}
+@keyframes animateAgent {100% {background-position: var(--agentAnimate) 0}}
 #slider {
 	-webkit-appearance: none;
 	width: 80%;
-	height: 50%;
+	/*height: 50%;*/
 	margin-left: 10%;
+	height: var(--sliderHeight);
 	background: transparent;
-	--sliderColor1: var(--myTeal);
-	--sliderColor2: var(--myPink);
-	--coinImg1: url('coin.svg');
-	--coinImg2: url('coin-flipped.svg');
-	--coinImg: var(--coinImg1);
 }
 
 #slider::-moz-range-track {
 	-webkit-appearance: none;
-	height: 50%;
+	height: var(--sliderHeight);
 	border: none;
 	border-radius: 5pt;
-	background: var(--sliderColor1);
+	/*background: var(--ImgKeep);*/
+	/*background-size: auto 6vh;*/
+	/*background-position: 0%;*/
+	/*background-repeat: repeat-x;*/
+	background-color: var(--ColorKeep);
+    /*animation: animateLeft 20s linear infinite;*/
 	cursor: pointer;
 }
 
 #slider::-moz-range-thumb {
 	-webkit-appearance: none;
-	/*background: var(--myYellow);*/
-	height: 200%;
-	width: 13%;
+	height: var(--sliderHeight);
+	width: 10%;
 	border: 1pt solid black;
-	border-radius: 3pt;
+	/*border-radius: 20pt;*/
 	margin-top: 0;
-	background-image: var(--coinImg);
-    background-size: cover;
-   	background-position: center; 
+	background-color: var(--myYellow);
 	cursor: pointer;
 }
 
 #slider::-moz-range-progress {
 	border: none;
 	border-radius: 5pt;
-	/*border-top-left-radius: 20pt;*/
-	/*border-bottom-left-radius: 20pt;*/
-	height: 50%;
-	background: var(--sliderColor2);
+	height: var(--sliderHeight);
+	background: var(--ImgGive);
+	background-size: auto var(--sliderHeight);
+	background-position: 0%;
+	background-repeat: repeat-x;
+	background-color: var(--ColorGive);
+    animation: animateRight 20s linear infinite;
 }
 .flipped {
     transform: scale(-1, 1);
@@ -181,6 +197,30 @@
     -o-transform: scale(-1, 1);
     -khtml-transform: scale(-1, 1);
     -ms-transform: scale(-1, 1);
+}
+
+#agentBarGive {
+	grid-row: 3;
+	grid-column: 2;
+	height: var(--sliderHeight);
+	width: 80%;
+	margin-left: 10%;
+	border: none;
+	background: var(--agentBackground);
+	background-size: auto var(--sliderHeight);
+	background-position: 0%;
+	background-repeat: repeat-x;
+	background-color: var(--ColorKeep);
+    animation: animateAgent 20s linear infinite;}
+#agentBarKeep {
+	grid-row: 3;
+	grid-column: 2;
+	height: var(--sliderHeight);
+	width: 40%;
+	margin-left: 50%;
+	border: none;
+	background-color: var(--ColorGive);
+	/*background-color: white;*/
 }
 
 /*Log*/
@@ -250,5 +290,3 @@
 	width: 100%;
 	margin: 0;
 }
-
-/*Slider Styling*/
