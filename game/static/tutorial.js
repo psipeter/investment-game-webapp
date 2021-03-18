@@ -455,7 +455,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let widthNow;
         let widthFrac = 0;
         let widthNew = 0;
-        let widthText = parseInt($("#turn-text").css('width'));
+        let widthText = parseInt($("#turn-box").css('width'));
         let widthTotal = parseInt($("#turn-wrapper").css('width'));
         let score = (player=="A") ? scoreA : scoreB;
         let winnings = 0.0;
@@ -472,6 +472,11 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
                     num.text(Number(this.count).toFixed());
                 }}
             );            
+            // fallback if animation of numbers in score bars has rounding errors
+            setTimeout(()=> {
+                if (game.userRole=="A") {$("#ys-num").text(scoreA); $("#ts-num").text(scoreB);}
+                else {$("#ys-num").text(scoreB); $("#ts-num").text(scoreA);}
+            }, animateTime);
         }
         else if (barName=="bonus") {
             bar = $("#bonus-progress");

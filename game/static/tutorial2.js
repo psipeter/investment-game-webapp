@@ -7,7 +7,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     let endTime = performance.now();
     let giveThrMin = 7;
     let giveThrMax = 0.3;
-    let maxTurns = 1;
+    let maxTurns = 2;
     let tutorialGame = 1;
     let maxAgent;
     let agentTime = 2000;
@@ -382,7 +382,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let widthNow;
         let widthFrac = 0;
         let widthNew = 0;
-        let widthText = parseInt($("#turn-text").css('width'));
+        let widthText = parseInt($("#turn-box").css('width'));
         let widthTotal = parseInt($("#turn-wrapper").css('width'));
         let score = (player=="A") ? scoreA : scoreB;
         let winnings = 0.0;
@@ -399,6 +399,11 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
                     num.text(Number(this.count).toFixed());
                 }}
             );            
+            // fallback if animation of numbers in score bars has rounding errors
+            setTimeout(()=> {
+                if (game.userRole=="A") {$("#ys-num").text(scoreA); $("#ts-num").text(scoreB);}
+                else {$("#ys-num").text(scoreB); $("#ts-num").text(scoreA);}
+            }, animateTime);
         }
         else if (barName=="bonus") {
             bar = $("#bonus-progress");
@@ -412,7 +417,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         else if (barName=="turn") {
             bar = $("#turn-progress");
             num = $("#turn-num");
-            widthFrac = turn/maxTurns - 0.05;  //todo: find bug
+            widthFrac = turn/maxTurns;
             widthNew = (widthTotal-widthText) * widthFrac;
             widthNow = parseInt(bar.css('width'));
             if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
@@ -434,12 +439,12 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let numB = $("#ts-num");
         let barT = $("#turn-progress");
         let numT = $("#turn-num");
-        let widthText = parseInt($("#turn-text").css('width'));
+        let widthText = parseInt($("#turn-box").css('width'));
         let widthTotal = parseInt($("#turn-wrapper").css('width'));
-        let widthFrac = turn/maxTurns - 0.05;
+        let widthFrac = turn/maxTurns;
         let widthNew = (widthTotal-widthText) * widthFrac;
-        barA.animate({'width': '3vw'}, animateTime);
-        barB.animate({'width': '3vw'}, animateTime);
+        barA.animate({'width': '2vw'}, animateTime);
+        barB.animate({'width': '2vw'}, animateTime);
         barT.animate({'width': widthNew}, animateTime);
         $({count: numA.text()}).animate(
             {count: scoreA},

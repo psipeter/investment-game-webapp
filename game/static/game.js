@@ -27,9 +27,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
         // $("#nameA").text("YOU");
-        // $("#nameB").text("them");
+        $("#nameB").text("Trustee");
         $("#nameA").text(game.username);
-        $("#nameB").text(game.agentname);
+        // $("#nameB").text(game.agentname);
         $("#nameB").css('opacity', '0.5')
         $("#imgB").css('opacity', '0.5')
         $("#ts-progress").css('background-color', 'var(--myPink)');
@@ -45,10 +45,10 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#agent-move-wrapper").addClass('flipped');
     }
     else {
-        $("#nameA").text(game.agentname);
+        // $("#nameA").text(game.agentname);
         $("#nameB").text(game.username);
         // $("#nameB").text("YOU");
-        // $("#nameA").text("them");
+        $("#nameA").text("Investor");
         $("#nameA").css('opacity', '0.5')
         $("#imgA").css('opacity', '0.5')
         $("#ts-progress").css('background-color', 'var(--myTeal)');
@@ -371,12 +371,13 @@ initialize("/game/api/startGame/", "POST", (game) => {
 
     // Animate top bars increasing width and counting up
     function animateBar(barName, player){
+        console.log(barName);
         let bar;
         let num;
         let widthNow;
         let widthFrac = 0;
         let widthNew = 0;
-        let widthText = parseInt($("#turn-text").css('width'));
+        let widthText = parseInt($("#turn-box").css('width'));
         let widthTotal = parseInt($("#turn-wrapper").css('width'));
         let score = (player=="A") ? scoreA : scoreB;
         let winnings = 0.0;
@@ -389,10 +390,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
             if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
             $({count: num.text()}).animate(
                 {count: score},
-                {duration: animateTime, easing: 'linear', step: function () {
+                {duration: animateTime, step: function () {
                     num.text(Number(this.count).toFixed());
                 }}
-            );            
+            );
+            // fallback if animation of numbers in score bars has rounding errors
+            setTimeout(()=> {
+                if (game.userRole=="A") {$("#ys-num").text(scoreA); $("#ts-num").text(scoreB);}
+                else {$("#ys-num").text(scoreB); $("#ts-num").text(scoreA);}
+            }, animateTime);
         }
         else if (barName=="bonus") {
             bar = $("#bonus-progress");
@@ -409,6 +415,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             widthFrac = turn/game.rounds;
             widthNew = (widthTotal-widthText) * widthFrac;
             widthNow = parseInt(bar.css('width'));
+            console.log(widthFrac, widthNew, widthTotal-widthText);
             if (widthNew > widthNow){bar.animate({'width': widthNew}, animateTime);}
             $({count: num.text()}).animate(
                 {count: turn-1},
@@ -419,6 +426,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 }}
             );              
         }
+
     }
 
     function animateWinnings(){

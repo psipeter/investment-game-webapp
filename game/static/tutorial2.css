@@ -54,9 +54,6 @@
 	cursor: not-allowed;
 }
 
-.teal {color: var(--myTeal);}
-.pink {color: var(--myPink);}
-
 #n0 {
 	width: 80%;
 	height: 35%;
@@ -73,30 +70,9 @@
 
 #n2 {
 	width: 80%;
-	height: 20%;
+	height: 16%;
 	top: 50%;
 	left: 10%;
-}
-
-#slider-wrapper, #submit {
-	z-index: 1;
-}
-
-.yellow, #bonus-span {
-	font-weight: bold;
-	color: var(--myYellow);
-}
-
-.warning, .red, #required-span {
-	color: var(--myRed);
-}
-
-.black {
-	color: black;
-}
-
-.gray {
-	color: var(--myGray);
 }
 
 #n3 {
@@ -119,5 +95,16 @@
 	top: 40%;
 	left: 10%;
 }
+
+
+#slider-wrapper, #submit {z-index: 1;}
+
+.yellow, #bonus-span {font-weight: bold; color: var(--myYellow);}
+.warning, .red, #required-span {color: var(--myRed);}
+.black {color: black;}
+.gray {color: var(--myGray);}
+.green {color: var(--myDarkGreen);}
+.teal {color: var(--myTeal);}
+.pink {color: var(--myPink);}
 
 #warning {grid-row: 2; grid-column: 2; width: 100%; text-align: center; font-size: 150%; color: var(--myRed);}
