@@ -1,3 +1,6 @@
+#ys-box, #ys-progress {background-color: var(--myTeal);}
+#ts-box, #ts-progress {background-color: var(--myPink);}
+
 #n-area {
 	grid-row: 1/5;
 	grid-column: 1;
@@ -24,7 +27,7 @@
 }
 
 .n-nav {
-	margin: 1% 2%;
+	margin: 2% 2%;
 	width: 96%;
 	flex-grow: 1;
 	display: flex;
@@ -36,10 +39,16 @@
 	cursor: pointer;
 	align-self: flex-end;
 	font-size: 140%;
+	padding: 0.5% 1%;
+	background-color: var(--myLightGray);
+	border: 1pt solid black;
+	border-radius: 2px;
+	z-index: 2;
 }
 
 .inactive {
 	margin: 0;
+	/*visibility: hidden;*/
 	color: var(--myGray);
 	align-self: flex-end;
 	font-size: 140%;
@@ -51,28 +60,28 @@
 
 #n0 {
 	width: 80%;
-	height: 10%;
+	height: 12%;
 	top: 30%;
 	left: 10%;
 }
 
 #n1 {
-	width: 45%;
+	width: 40%;
 	height: 18%;
 	top: 55%;
-	left: 27.5%;
+	left: 30%;
 }
 
 #n2 {
 	width: 80%;
-	height: 20%;
+	height: 24%;
 	top: 14%;
 	left: 10%;
 }
 
 #n3 {
 	width: 40%;
-	height: 16%;
+	height: 20%;
 	top: 27%;
 	left: 50%;
 }
@@ -100,31 +109,32 @@
 .warning, .red-span {
 	color: var(--myRed);
 }
+#warning {grid-row: 2; grid-column: 2; width: 100%; text-align: center; font-size: 150%; color: var(--myRed);}
 
 #n5 {
 	width: 80%;
-	height: 15%;
+	height: 20%;
 	top: 10%;
 	left: 10%;
 }
 
 #n6 {
 	width: 80%;
-	height: 15%;
+	height: 20%;
 	top: 75%;
 	left: 10%;
 }
 
 #n7 {
 	width: 30%;
-	height: 20%;
+	height: 24%;
 	top: 10%;
 	left: 60%;
 }
 
 #n8 {
 	width: 80%;
-	height: 20%;
+	height: 24%;
 	top: 27%;
 	left: 10%;
 }

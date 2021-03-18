@@ -289,7 +289,7 @@ class User(AbstractUser):
 			gameBonus = 0
 			score = sum(game.historyToArray("user", "reward"))
 			for i in range(len(BONUS)):
-				if score>= BONUS[i][0]:
+				if score >= BONUS[i][0]:
 					gameBonus = BONUS[i][1]
 			bonus += gameBonus
 		self.winnings = np.around(bonus, 2)

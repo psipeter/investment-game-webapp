@@ -13,6 +13,7 @@ body {
 	background: var(--myWhite);
 	width: 60%;
 	margin-top: 5%;
+	margin-bottom: 5%;
 	margin-left: 20%;
 	border: 1pt solid black;
 	background-color: var(--myForeground);

@@ -12,32 +12,32 @@
 {% block body %}
 	<div id="bar-area">
 		<div id="turn-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="turn-text" class='text'>Turn</h2>
+			<div id="turn-box" class="text-box">
+				<h2 id="turn-text" class='textL'>Turn</h2>
 			</div>
 			<div id="turn-progress" class="progress-box">
-				<h2 id="turn-num" class='num'></h2>
+				<h2 id="turn-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="ts-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="ts-text" class='text'>Their Score</h2>
+			<div id="ts-box" class="text-box">
+				<h2 id="ts-text" class='textL'>Their Score</h2>
 			</div>
 			<div id="ts-progress" class="progress-box">
-				<h2 id="ts-num" class='num'></h2>
+				<h2 id="ts-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="ys-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="ys-text" class='text'>Your Score</h2>
+			<div id="ys-box" class="text-box">
+				<h2 id="ys-text" class='textL'>Your Score</h2>
 			</div>
 			<div id="ys-progress" class="progress-box">
-				<h2 id="ys-num" class='num'></h2>
+				<h2 id="ys-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="bonus-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="bonus-text" class='text'>Bonus</h2>
+			<div id="bonus-box" class="text-box">
+				<h2 id="bonus-text" class='textL'>Bonus</h2>
 			</div>
 			<div id="bonus-progress" class="progress-box">
 			</div>
@@ -109,22 +109,27 @@
 		<img id="c28b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c29b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
-		<button hidden id="submit">Send</button>
 	</div>
 	<div id="player-area">
 		<h1 id="nameA"></h1>
 		<h1 id="nameB"></h1>
-		<img hidden id="arrow" src="{% static 'arrow.svg' %}">
+		<button hidden id="submit">Send</button>
 		<img id="imgA" src="{% static 'userA.svg' %}">
 		<img id="imgB" src="{% static 'userB.svg' %}">
 		<div id="slider-wrapper">
 			<input hidden type="range" min="0" max="10" value="0" step="1" id="slider">
 		</div>
 		<h1 hidden id="loading">They are thinking...</h1>
-		<h1 hidden id="greedyA"></h1>
-		<h1 hidden id="greedyB"></h1>
+		<h1 hidden id="warning">Please choose a value greater than 0...</h1>
 		<h2 id="sendA"></h2>
 		<h2 id="sendB"></h2>
+		<div id='agent-move-wrapper'>
+			<div hidden id="agentBarGive"></div>
+			<div hidden id="agentThumb"></div>
+			<div hidden id="agentBarKeep"></div>			
+		</div>
+		<h2 id="agentA"></h2>
+		<h2 id="agentB"></h2>
 		<form id="form">{% csrf_token %}</form>
 	</div>
 	<div id="log-area"></div>
@@ -156,7 +161,6 @@
 			<p class='n-text'>Try it now!</p>
 			<p class='n-text'>Use the slider to select how many coins you will <span class="teal">keep</span> and how many you will <span class="pink">give</span> to the trustee</p>
 			<p hidden id="n4-after" class='n-text'>You'll notice that the <span class="pink">trustee</span> gets way more coins than you're giving away ... press <span class="yellow-span">send</span> to learn more</p>			
-			<p hidden id="n4-after2" class='n-text warning'>Please choose a value greater than 0</p>			
 		</div>
 		<div id="n5" class="note">
 			<p class='n-text'>When the <span class='teal'>investor</span> gives away coins, the <span class="pink">trustee</span> always gets <span class='red-span'>3 times</span> that many coins!</p>	

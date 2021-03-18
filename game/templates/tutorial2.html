@@ -12,32 +12,32 @@
 {% block body %}
 	<div id="bar-area">
 		<div id="turn-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="turn-text" class='text'>Turn</h2>
+			<div id="turn-box" class="text-box">
+				<h2 id="turn-text" class='textL'>Turn</h2>
 			</div>
 			<div id="turn-progress" class="progress-box">
-				<h2 id="turn-num" class='num'></h2>
+				<h2 id="turn-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="ts-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="ts-text" class='text'>Their Score</h2>
+			<div id="ts-box" class="text-box">
+				<h2 id="ts-text" class='textL'>Their Score</h2>
 			</div>
 			<div id="ts-progress" class="progress-box">
-				<h2 id="ts-num" class='num'></h2>
+				<h2 id="ts-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="ys-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="ys-text" class='text'>Your Score</h2>
+			<div id="ys-box" class="text-box">
+				<h2 id="ys-text" class='textL'>Your Score</h2>
 			</div>
 			<div id="ys-progress" class="progress-box">
-				<h2 id="ys-num" class='num'></h2>
+				<h2 id="ys-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="bonus-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="bonus-text" class='text'>Bonus</h2>
+			<div id="bonus-box" class="text-box">
+				<h2 id="bonus-text" class='textL'>Bonus</h2>
 			</div>
 			<div id="bonus-progress" class="progress-box">
 			</div>
@@ -109,22 +109,27 @@
 		<img id="c28b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c29b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
-		<button hidden id="submit">Send</button>
 	</div>
 	<div id="player-area">
 		<h1 id="nameA"></h1>
 		<h1 id="nameB"></h1>
-		<img hidden id="arrow" src="{% static 'arrow.svg' %}">
+		<button hidden id="submit">Send</button>
 		<img id="imgA" src="{% static 'userA.svg' %}">
 		<img id="imgB" src="{% static 'userB.svg' %}">
 		<div id="slider-wrapper">
 			<input hidden type="range" min="0" max="10" value="0" step="1" id="slider">
 		</div>
 		<h1 hidden id="loading">They are thinking...</h1>
-		<h1 hidden id="greedyA"></h1>
-		<h1 hidden id="greedyB"></h1>
+		<h1 hidden id="warning"></h1>
 		<h2 id="sendA"></h2>
 		<h2 id="sendB"></h2>
+		<div id='agent-move-wrapper'>
+			<div hidden id="agentBarGive"></div>
+			<div hidden id="agentThumb"></div>
+			<div hidden id="agentBarKeep"></div>			
+		</div>
+		<h2 id="agentA"></h2>
+		<h2 id="agentB"></h2>
 		<form id="form">{% csrf_token %}</form>
 	</div>
 	<div id="log-area"></div>
@@ -133,7 +138,7 @@
 		<div id="n0" class="note">
 			<p class='n-text'>Let's talk strategy!</p>
 			<p class='n-text'>In the Investment Game, there is a tradeoff between <span class="teal">immediate reward</span> and <span class='pink'>long-term reputation</span></p>
-			<p class='n-text'>To demonstrate this, we'll play two mini-games (3 turns)</p>
+			<p class='n-text'>To demonstrate this, we'll play two mini-games (2 turns each)</p>
 			<p class='n-text'>In the first game, you'll be the <span class="teal">investor</span> and we'll force you to make <span class="yellow">generous investments</span></p>
 			<p class='n-text'>In the second game, you'll be the <span class="pink">trustee</span> and we'll for you to make <span class="red">greedy returns</span></p>
 		</div>
@@ -141,7 +146,7 @@
 			<p class='n-text'>You've just finished your first game!</p>
 			<p class='n-text'>By investing generously, both <span class="teal">you</span> and the <span class="pink">trustee</span> have collected a good number of coins</p>
 			<p class='n-text'>Your final score is <span id='s1a' class="teal">X</span> and the instructor's score is <span id='s1b'class="pink">Y</span></p>
-			<p class='n-text'>If, instead, you had chosen to keep <span class="teal">everything</span> and invest <span class="pink">nothing</span>, the final scores would have been <span class="teal">30</span> and <span class="pink">0</span></p>
+			<p class='n-text'>If, instead, you had chosen to keep <span class="teal">everything</span> and invest <span class="pink">nothing</span>, the final scores would have been <span class="teal">20</span> and <span class="pink">0</span></p>
 			<p class='n-text'>This shows that investing <span class="yellow">generously</span> can benefit both players ... but what if the <span class="pink">trustee</span> gets <span class="red">greedy?</span></p>
 		</div>
 		<div id="n2" class="note">
@@ -150,25 +155,25 @@
 		</div>
 		<div id="n3" class="note">
 			<p class='n-text'>When the <span class="pink">trustee</span> is <span class="red">greedy</span>, they can collect many coins on a single turn</p>
-			<p class='n-text'>However, this action may anger the <span class="teal">investor</span>, causing them to give less next turn</p>
-			<p class='n-text'>In this game, the <span class="teal">instructor</span> punished your <span class="red">greedy</span> actions, preventing you from collecting many coins later in the game</p>
-			<p class='n-text'>You can check the <span class="black">Game Log</span> at the bottom to see this for yourself</p>
+			<p class='n-text'>However, this action may anger the <span class="teal">investor</span>, causing them to give less in the future</p>
+			<p class='n-text'>Check the <span class="black">Game Log</span> at the bottom to see this for yourself</p>
 		</div>
 		<div id="n4" class="note">
 			<p class='n-text'>There is no optimal strategy in the Investment Game — you must learn the best way to deal with each opponent through <span class='red'>trial and error</span>!</p>
-			<p class='n-text'>When playing games, you will face a variety of opponents without knowing their identity</p>
-			<p class='n-text'>These opponents might be <span class="black">dumb</span> agents (computers which always make greedy or generous moves), <span class="black">smart</span> agents (computers which respond to your choices or learn over time), or other <span class="black">human players</span>.</p>
+			<p class='n-text'>When playing games, you will face a variety of opponents without knowing their identity. Your opponent might be:</p>
+			<p class='n-text'>
+				a <span class="black">dumb</span> agent (a computer that always make greedy or generous moves)<br>
+				a <span class="black">smart</span> agent (a computer that responds to your choices and learns over time)<br>
+				another <span class="black">human player</span>.</p>
 			<p class='n-text'>Our research study is focused on how <span class="red">you</span> learn over time, so try your best, and earn <span class="yellow">bonus</span> rewards for playing well!</p>
 		</div>
 		<div id="n5" class="note" href='{% url "home" %}'>
-			<p class='n-text'>To complete the study, you must <span id="required-span">complete 10 games. View your progress in the upper left.</span></p>
+			<p class='n-text'>To complete the study, you must <span id="required-span">complete 10 games</span>. View your progress in the upper left.</p>
 			<p class='n-text'>You may also play up to 30 bonus games to earn more <span id="bonus-span">rewards</span>, at a rate of $0.05-$0.25 per game</p>
-			<p class='n-text'>Receive your <span class='black'>HIT code</span> and bonus payment by selecting Cash Out from the upper right</p>
-			<p class='n-text'>You must complete the Survey for <span class="gray">Cash Out</span> to become available. The Survey can be accessed through the Home page.</p>
+			<p class='n-text'>Receive your <span class='black'>HIT code</span> and bonus payment by selecting <span class="pink">Cash Out</span> from the upper right</p>
+			<p class='n-text'>You must complete the Survey for <span class="gray">Cash Out</span> to become available. The <span class="teal">Survey</span> can be accessed through the Home page.</p>
 			<p class='n-text'>You have completed the tutorial and may now start playing games. Happy investing!</p>
 		</div>
-
-		<!-- and happy investing -->
 	</div>
 {% endblock %}
 

@@ -155,5 +155,3 @@ def startTutorial(request):
 @login_required
 def startTutorial2(request):
 	return render(request, "tutorial2.html")
-
-

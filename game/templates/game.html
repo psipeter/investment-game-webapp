@@ -12,32 +12,32 @@
 
 	<div id="bar-area">
 		<div id="turn-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="turn-text" class='text'>Turn</h2>
+			<div id="turn-box" class="text-box">
+				<h2 id="turn-text" class='textL'>Turn</h2>
 			</div>
 			<div id="turn-progress" class="progress-box">
 				<h2 id="turn-num" class='num'>1/5</h2>
 			</div>
 		</div>
 		<div id="ts-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="ts-text" class='text'>Their Score</h2>
+			<div id="ts-box" class="text-box">
+				<h2 id="ts-text" class='textL'>Their Score</h2>
 			</div>
 			<div id="ts-progress" class="progress-box">
 				<h2 id="ts-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="ys-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="ys-text" class='text'>Your Score</h2>
+			<div id="ys-box" class="text-box">
+				<h2 id="ys-text" class='textL'>Your Score</h2>
 			</div>
 			<div id="ys-progress" class="progress-box">
 				<h2 id="ys-num" class='num'>0</h2>
 			</div>
 		</div>
 		<div id="bonus-wrapper" class="bar-wrapper">
-			<div class="text-box">
-				<h2 id="bonus-text" class='text'>Bonus</h2>
+			<div id="bonus-box" class="text-box">
+				<h2 id="bonus-text" class='textL'>Bonus</h2>
 			</div>
 			<div id="bonus-progress" class="progress-box">
 			</div>
@@ -125,8 +125,11 @@
 		<h1 hidden id="loading">They are thinking...</h1>
 		<h2 id="sendA"></h2>
 		<h2 id="sendB"></h2>
-		<div hidden id="agentBarGive"></div>
-		<div hidden id="agentBarKeep"></div>
+		<div id='agent-move-wrapper'>
+			<div hidden id="agentBarGive"></div>
+			<div hidden id="agentThumb"></div>
+			<div hidden id="agentBarKeep"></div>			
+		</div>
 		<h2 id="agentA"></h2>
 		<h2 id="agentB"></h2>
 		<form id="form">{% csrf_token %}</form>

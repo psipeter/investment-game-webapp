@@ -16,6 +16,6 @@ urlpatterns = [
     path('api/updateGame/', api_views.updateGame),
     path('api/startTutorial/', api_views.startTutorial),
     path('api/updateTutorial/', api_views.updateTutorial),
-    path('api/finishTutorial/', api_views.finishTutorial),
     path('api/restartTutorial/', api_views.restartTutorial),
+    path('api/finishTutorial/', api_views.finishTutorial),
 ]

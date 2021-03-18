@@ -181,6 +181,7 @@ def restartTutorial(request):
 
 @login_required
 def finishTutorial(request):
+	print("finishing tutorial")
 	request.user.doneTutorial = datetime.now()
 	request.user.save()
 	return JsonResponse({}, encoder=NpEncoder)

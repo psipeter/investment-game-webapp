@@ -1,10 +1,9 @@
-
 body {
 	text-align: justify;
 }
 
 .main {
-	padding: 2%;
+	padding: 2% 4%;
 	margin-bottom: 2%;
 	height: 50vh;
 	border: 1pt solid black;
@@ -15,4 +14,9 @@ body {
 .center {
 	text-align: center;
 	/*background: var(--myWhite);*/
+}
+
+span {
+	/*text-decoration: underline;*/
+	color: var(--myRed);
 }

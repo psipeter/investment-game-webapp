@@ -33,11 +33,16 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#nameB").css('opacity', '0.5')
         $("#imgB").css('opacity', '0.5')
         $("#ts-progress").css('background-color', 'var(--myPink)');
+        $("#ts-box").css('background-color', 'var(--myPink)');
         $("#ys-progress").css('background-color', 'var(--myTeal)');
+        $("#ys-box").css('background-color', 'var(--myTeal)');
         $(":root").css('--ColorGive', 'var(--myPink');
         $(":root").css('--ColorKeep', 'var(--myTeal');
-        $(":root").css('--ImgGive', 'var(--PinkRight)');
-        // $(":root").css('--ImgKeep', 'var(--TealLeft)');
+        $(":root").css('--UserGive', 'var(--PinkRight)');
+        $(":root").css('--UserKeep', 'var(--TealLeft)');
+        $(":root").css('--AgentGive', 'var(--TealRight');
+        $(":root").css('--AgentKeep', 'var(--PinkLeft');
+        $("#agent-move-wrapper").addClass('flipped');
     }
     else {
         $("#nameA").text(game.agentname);
@@ -47,13 +52,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#nameA").css('opacity', '0.5')
         $("#imgA").css('opacity', '0.5')
         $("#ts-progress").css('background-color', 'var(--myTeal)');
+        $("#ts-box").css('background-color', 'var(--myTeal)');
         $("#ys-progress").css('background-color', 'var(--myPink)');
+        $("#ys-box").css('background-color', 'var(--myPink)');
         $(":root").css('--ColorGive', 'var(--myTeal');
         $(":root").css('--ColorKeep', 'var(--myPink');
-        $(":root").css('--ImgGive', 'var(--TealRight)');
-        // $(":root").css('--ImgKeep', 'var(--PinkLeft)');
-        $(":root").css('--agentAnimate', '20vw');
-        $(":root").css('--agentBackground', 'var(--PinkRight');
+        $(":root").css('--UserGive', 'var(--TealRight)');
+        $(":root").css('--UserKeep', 'var(--PinkLeft)');
+        $(":root").css('--AgentGive', 'var(--PinkRight');
+        $(":root").css('--AgentKeep', 'var(--TealLeft');
         $("#slider").addClass('flipped');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
@@ -109,35 +116,31 @@ initialize("/game/api/startGame/", "POST", (game) => {
     }
     $("#slider").on('change', slideFunction);
     $("#slider").on('input', slideFunction);
+    $("#slider").on('click', slideFunction);
 
 
     // Change view after the user or agent moves
     function switchToAgent(userGive) {
         let agentGive = agentGives[agentGives.length-1];
         let agentKeep = agentKeeps[agentKeeps.length-1];
-        // hideInputs();
         if (userGive==0 & game.userRole=="A") {
-            skipAnimations(game.agentRole, agentKeep);
-        }
-        else if (agentGive==0) {
-            showLoading();
-            setTimeout(function() {
-                hideLoading();
-                skipAnimations(game.agentRole, agentKeep);}, agentTime);
+            updateLog("B", 0, 0);
+            finishTurn();
         }
         else {
+            let skip = (agentGive==0);
             showLoading();
             setTimeout(function() {
                 hideLoading();
                 showAgentMove(agentGive, agentKeep);
-                executeMove(game.agentRole, agentGive, agentKeep);
+                executeMove(game.agentRole, agentGive, agentKeep, skip);
             }, agentTime);
             setTimeout(function() {hideAgentMove();}, animateTime+agentTime+waitTime);
         }
         let wait;
         // if (userGive==0 & game.agentRole=="A") {wait = 5*animateTime;}  // userGive doesn't matter in this case
-        if (userGive==0 & game.agentRole=="B") {wait = 5*animateTime;}  // agent is skipped
-        else if (agentGive==0 & game.agentRole=="A") {wait = agentTime+waitTime;}
+        if (userGive==0 & game.agentRole=="B") {wait = 2*animateTime;}  // agent is skipped
+        else if (agentGive==0 & game.agentRole=="A") {wait = agentTime;}
         else if (agentGive==0 & game.agentRole=="B") {wait = 3*animateTime+agentTime;}
         else if (agentGive>0 & game.agentRole=="A") {wait = animateTime+agentTime+waitTime;}
         else if (agentGive>0 & game.agentRole=="B") {wait = 4*animateTime+agentTime;}
@@ -165,18 +168,11 @@ initialize("/game/api/startGame/", "POST", (game) => {
         userGives.push(userGive);
         userKeeps.push(userKeep);
         if (game.userRole == "A") {maxAgent = userGive * game.match} // update global
-        hideUserInputs();
-        if (userGive==0 & userKeep==0) { //forced skip
-            skipAnimations(game.userRole, userKeep);
-        }
-        else if (userGive==0 & userKeep>0) {
-            skipAnimations(game.userRole, userKeep);
-        }
-        else {
-            // showForm();
-            executeMove(game.userRole, userGive, userKeep);
-            // setTimeout(function() {hideForm();}, animateTime+waitTime);
-        }
+        $("#submit").hide();
+        setTimeout(function() {hideUserInputs();}, animateTime);
+        let skip = (userGive==0);
+        executeMove(game.userRole, userGive, userKeep, skip);
+        // setTimeout(function() {hideForm();}, animateTime+waitTime);
         let form = $("#form");
         let giveData = $('<input type="hidden" name="userGive"/>').val(userGive);
         let keepData = $('<input type="hidden" name="userKeep"/>').val(userKeep);
@@ -202,7 +198,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 if (!complete || game.userRole=="A") {
                     let wait;
                     if (userGive==0 & game.userRole=="A"){wait=0;}
-                    else if (userGive==0 & game.userRole=="B"){wait=4*animateTime;}
+                    else if (userGive==0 & game.userRole=="B"){wait=3*animateTime;}
                     else if (userGive>0 & game.userRole=="A"){wait=animateTime;}
                     else if (userGive>0 & game.userRole=="B") {wait=4*animateTime;}
                     setTimeout(function () {switchToAgent(userGive);}, wait);
@@ -254,7 +250,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             animateCoins(i+di, start, delta, direction, player); // recursive call
         }, animateTime/Math.abs(delta));   
     }    
-    function executeMove(move, give=null, keep=null){
+    function executeMove(move, give=null, keep=null, skip=false){
         if (move=="capital") {
             updateLog("capital", game.capital, 0);
             animateCoins(0, 0, game.capital, 'in', 'a');
@@ -262,29 +258,23 @@ initialize("/game/api/startGame/", "POST", (game) => {
         }
         if (move=="A"){
             updateLog("A", give, keep);
-            animateCoins(0, game.capital, -give, 'out', 'a');
-            animateCoins(0, 0, give*game.match, 'in', 'b');
-            currentA = keep;
-            currentB = game.match*give;
+            if (!skip) {
+                animateCoins(0, game.capital, -give, 'out', 'a');
+                animateCoins(0, 0, give*game.match, 'in', 'b');
+                currentA = keep;
+                currentB = game.match*give;
+            }
         }
         if (move=="B") {
             updateLog("B", give, keep);
-            animateCoins(0, currentB, -give, 'out', 'b');
-            animateCoins(1, currentA, give, 'in', 'a');
-            currentA += give;
-            currentB -= give;
-            setTimeout(()=> {finishTurn();}, animateTime+waitTime);
-        }
-    }
-    // if one player gave zero, skip timing to transfer coins to other player
-    function skipAnimations(player, keep) {
-        if (player=="A") {
-            updateLog("A", 0, keep);
-            hideForm();}
-        else {
-            updateLog("B", 0, keep);
-            hideForm();
-            setTimeout(()=> {finishTurn();}, animateTime+waitTime);
+            if (!skip) {
+                animateCoins(0, currentB, -give, 'out', 'b');
+                animateCoins(1, currentA, give, 'in', 'a');
+                currentA += give;
+                currentB -= give;
+            }
+            let wait = (skip) ? waitTime: animateTime+waitTime
+            setTimeout(()=> {finishTurn();}, wait);
         }
     }
 
@@ -480,6 +470,10 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function showLoading() {$("#loading").fadeIn(quickTime);}
     function hideLoading() {$("#loading").fadeOut(quickTime);}
     function showAgentMove(agentGive, agentKeep){
+        $("#agent-move-wrapper").fadeIn(quickTime);
+        $("#agentBarGive").fadeIn(quickTime);
+        $("#agentThumb").fadeIn(quickTime);
+        $("#agentBarKeep").fadeIn(quickTime);
         if (game.userRole == "A") {
             $("#agentA").text("You get "+agentGive+" coins");
             $("#agentB").text("They keep "+agentKeep);
@@ -488,24 +482,19 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#agentA").text("They keep "+agentKeep+" coins");
             $("#agentB").text("You get " +agentGive*game.match+" coins");
         }
-        $("#agent-wrapper").fadeIn(quickTime);
-        $("#agentBarGive").fadeIn(quickTime);
-        $("#agentBarKeep").fadeIn(quickTime);
-        let widthKeep = agentKeep / (agentGive+agentKeep) * parseInt($("#agentBarGive").css('width'));  //todo: 0
-        let marginLeft = parseInt($("#agentBarGive").css('marginLeft'));
-        if (game.agentRole == "A") {
-            marginLeft += (1.0 - agentKeep / (agentGive+agentKeep)) * parseInt($("#agentBarGive").css('width'));  //todo: 0
-        }            
-        console.log('width', widthKeep, parseInt($("#agentBarGive").css('width')));
-        console.log('margin', marginLeft, parseInt($("#agentBarGive").css('marginLeft')));
+        let widthTotal = parseInt($("#agent-move-wrapper").css('width')) - parseInt($("#agentThumb").css('width'));
+        let widthKeep = agentKeep / (agentGive+agentKeep) * widthTotal;
+        let widthGive = agentGive / (agentGive+agentKeep) * widthTotal;     
+        $("#agentBarGive").css('width', widthGive);
         $("#agentBarKeep").css('width', widthKeep);
-        $("#agentBarKeep").css('marginLeft', marginLeft);
         $("#agentA").fadeIn(quickTime);
         $("#agentB").fadeIn(quickTime);
+        // alert('stop');
     }
     function hideAgentMove(){
         $("#agent-wrapper").fadeOut(quickTime);
         $("#agentBarGive").fadeOut(quickTime);
+        $("#agentThumb").fadeOut(quickTime);
         $("#agentBarKeep").fadeOut(quickTime);
         $("#agentA").fadeOut(quickTime);
         $("#agentB").fadeOut(quickTime);
@@ -523,7 +512,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             thrBar.append(`<div id='thr${i}' class='thr'></div>`);
             $(`#thr${i}`).css("width", widthNew);  
             $(`#thr${i}`).css("height", heightNew);  
-            if (i<game.bonus.length-1) {$(`#thr${i}`).css("borderRight", "1pt solid black");}
+            $(`#thr${i}`).css("borderRight", "1pt solid black");
             $(`#thr${i}`).addClass("thr");  
             $(`#thr${i}`).append(`<h2 class="text">$${reward}</h2>`);
             if (i==1) {$(`#thr${i}`).css('background-color', 'var(--myYellow');}
@@ -543,8 +532,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#aTotal").text("$"+agentScore);
             $("#bTotal").text("$"+userScore);
         }
-        hideLoading()
-        hideInputs();
         $("#playerA").fadeOut(quickTime);
         $("#playerB").fadeOut(quickTime);
         $("#nameA").fadeOut(quickTime);
