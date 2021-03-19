@@ -155,3 +155,7 @@ def startTutorial(request):
 @login_required
 def startTutorial2(request):
 	return render(request, "tutorial2.html")
+
+@login_required
+def slider(request):
+	return render(request, "slider.html")

@@ -1,11 +1,13 @@
 body {
+	margin-top: 5vh;
+	height: 90vh;
 	text-align: justify;
 }
 
 .main {
-	padding: 2% 4%;
-	margin-bottom: 2%;
-	height: 50vh;
+	padding: 2.5vh 4vw;
+	margin: 5vh 0;
+	height: 65vh;
 	border: 1pt solid black;
 	overflow: auto;
 	background-color: var(--myForeground);

@@ -22,3 +22,7 @@ table {
 	padding: 1%;
 	border: 1pt solid black;
 }
+
+.link-wrapper, .button-wrapper {
+	margin: 3vh 0;
+}

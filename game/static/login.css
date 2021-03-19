@@ -1,9 +1,15 @@
+body {
+	height: 80vh;
+	width: 80vw;
+}
+
 #body-wrapper {
 	display: flex-box;
-	background: var(--myWhite);
-	width: 60%;
-	margin-top: 5%;
-	margin-left: 20%;
+	width: 20vw;
+	height: 30vh;
+	margin-top: 20vh;
+	margin-left: 28vw;
+	padding: 2vh 2vw;
 	border: 1pt solid black;
 	background-color: var(--myForeground);
 }
@@ -20,22 +26,24 @@ input, button {
 }
 
 input {
+	width: 15vw;
 	background: var(--myLightGray);
 	border: 1pt solid black;
 }
 
 .error {
+	margin: 2vh 0;
 	font-family: 'Roboto', sans-serif;
 	color: var(--myRed);
 	text-align: center;
 }
 
 .flair {
+	margin: 2vh 0;
 	font-family: 'Roboto', sans-serif;
 	color: var(--myBlue);
 	text-align: center;	
 }
 
-h1 {
-	margin-bottom: 2vh;
-}
+h1 {margin: 2vh 0;}
+.button-wrapper, .link-wrapper {margin: 2vh 0;}

@@ -3,6 +3,7 @@ from . import views
 from . import api_views
 
 urlpatterns = [
+    path('slider', views.slider, name='slider'),
     path('game/', views.startGame, name='game'),
     path('tutorial', views.startTutorial, name="tutorial"),
     path('tutorial2', views.startTutorial2, name="tutorial2"),

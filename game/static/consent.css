@@ -1,4 +1,6 @@
 body {
+	margin-top: 5vh;
+	height: 90vh;
 	text-align: justify;
 }
 
@@ -10,11 +12,10 @@ body {
 #form-wrapper {
 	font-family: inherit;
 	display: flex-box;
-	background: var(--myWhite);
-	width: 60%;
-	margin-top: 5%;
-	margin-bottom: 5%;
-	margin-left: 20%;
+	width: 40vw;
+	height: 25vh;
+	margin: 5vh 18vw;
+	padding: 2vh 2vw;
 	border: 1pt solid black;
 	background-color: var(--myForeground);
 }
@@ -31,6 +32,7 @@ input, button {
 }
 
 input {
+	margin: 0.5vh 0;
 	background: var(--myLightGray);
 	border: 1pt solid black;
 }

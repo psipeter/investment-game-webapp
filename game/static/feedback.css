@@ -9,3 +9,7 @@
 	margin: 1%;
 	text-align: center;
 }
+
+.link-wrapper, .button-wrapper {
+	margin: 3vh 0;
+}
