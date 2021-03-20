@@ -26,7 +26,6 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     let agentRewards = game.agentRewards;
     let isMouseDown = false;
     let startMouseX;
-    let thresholds = false;
     maxUser = game.capital;
     maxAgent = 0;  // updated after user moves
     $("#nameA").text("Investor");
@@ -417,10 +416,16 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
             $("#submit").fadeIn(quickTime);
             $("#slider-wrapper").css('opacity', "1");
             $("#slider-thumb").css('background-color', "var(--myYellow)");
+            $("#slider-left").hover(function() {$(this).css('cursor','pointer');});
+            $("#slider-thumb").hover(function() {$(this).css('cursor','pointer');});
+            $("#slider-right").hover(function() {$(this).css('cursor','pointer');});
         }
         else {
             $("#slider-wrapper").css('opacity', "0.7");
             $("#slider-thumb").css('background-color', "var(--myGray)");
+            $("#slider-left").hover(function() {$(this).css('cursor','not-allowed');});
+            $("#slider-thumb").hover(function() {$(this).css('cursor','not-allowed');});
+            $("#slider-right").hover(function() {$(this).css('cursor','not-allowed');});
         }
         let max = give + keep;
         let f = give / max;

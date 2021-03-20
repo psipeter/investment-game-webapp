@@ -66,6 +66,7 @@
 	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), 0 0 16px 0 rgba(0, 0, 0, 0.75);
 } 
 .inactive {color: var(--myGray); cursor: not-allowed;}
+#slider-wrapper, #submit {z-index: 1;}
 
 
 #n0 {top: 35vh;}
@@ -79,4 +80,3 @@
 #n7 {width: 40vw; top: 15vh; left: 49vw;}
 #n8 {top: 32vh;}
 
-#slider-wrapper, #submit {z-index: 1;}
