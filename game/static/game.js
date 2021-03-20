@@ -25,11 +25,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let agentRewards = game.agentRewards;
     let isMouseDown = false;
     let startMouseX;
-    let widthW = parseInt($("#slider-wrapper").css('width'));
-    let widthT = parseInt($("#slider-thumb").css('width'));
-    // let leftEdge = $("#slider-wrapper").offset().left;
-    let leftEdge = $("#sendB").offset().left - widthT/2;
-    let rightEdge = $("#sendB").offset().left + widthW - widthT/2;
     if (game.userRole == "A") {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
@@ -60,6 +55,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     animateBonus();
     executeMove("capital");
     $("#submit").click(callUpdate);
+    $(window).resize(resizeSlider);
     $(document).mousemove(function(e) {moveSlide(e);});
     $(document).mouseup(function(e) {stopSlide(e);});
 
@@ -90,15 +86,25 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let f = absToRel(x);
     }
     let absToRel = function(x) {
+        let widthD = Number($(window).width());  // in px
+        let widthW = parseInt($(":root").css('--widthSlider'));  // in vw
+        let widthT = parseInt($(":root").css('--widthT'));  // in vw
+        let wW = widthW / 100 * widthD;  // in px
+        let wT = widthT / 100 * widthD;  // in px
+        let leftEdge = $("#sendB").offset().left - wT/2;
+        let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        // console.log(wW, wT);
+        // console.log(leftEdge, rightEdge);
+        // console.log(x);
         if ($("#slider-wrapper").hasClass('flipped')) {
             if (x <= leftEdge) {return 1;}
             else if (x >= rightEdge) {return 0;}
-            else {return 1 - (x-leftEdge)/widthW;}
+            else {return 1 - (x-leftEdge)/wW;}
         }
         else {
             if (x <= leftEdge) {return 0;}
             else if (x >= rightEdge) {return 1;}
-            else {return (x-leftEdge)/widthW;}            
+            else {return (x-leftEdge)/wW;}            
         }
     }
     let updateSliderMouse = function(e) {
@@ -107,11 +113,18 @@ initialize("/game/api/startGame/", "POST", (game) => {
         updateSlider(f, maxUser, game.userRole);
     }
     let updateSlider = function(f, max, player) {
+        let widthD = Number($(window).width());  // in px
+        let widthW = parseInt($(":root").css('--widthSlider'));  // in vw
+        let widthT = parseInt($(":root").css('--widthT'));  // in vw
+        let wW = widthW / 100 * widthD;  // in px
+        let wT = widthT / 100 * widthD;  // in px
+        let leftEdge = $("#sendB").offset().left - wT/2;
+        let rightEdge = $("#sendB").offset().left + wW - wT/2;
         let val = Math.round(f*max);
-        let widthLNew = Math.max(0, f * widthW - widthT);
-        let marginTNew = Math.max(0, f * widthW - widthT);
-        let widthRNew = Math.min((1-f) * widthW, widthW-widthT);
-        let marginRNew = Math.max(widthT, widthLNew+widthT);
+        let widthLNew = Math.max(0, f * wW - wT);
+        let marginTNew = Math.max(0, f * wW - wT);
+        let widthRNew = Math.min((1-f) * wW, wW-wT);
+        let marginRNew = Math.max(wT, widthLNew+wT);
         if (player=="A"){
             let sendA = max-val;
             let sendB = val*game.match;
@@ -156,6 +169,27 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#slider-thumb").css('marginLeft', marginTNew);
         $("#slider-right").css('width', widthRNew);
         $("#slider-right").css('marginLeft', marginRNew);        
+    }
+    // when user resizes window, resize slider appropriately
+    function resizeSlider() {
+        let widthD = Number($(window).width());  // in px
+        let widthW = parseInt($(":root").css('--widthSlider'));  // in vw
+        let widthT = parseInt($(":root").css('--widthT'));  // in vw
+        let wW = widthW / 100 * widthD;  // in px
+        let wT = widthT / 100 * widthD;  // in px
+        let leftEdge = $("#sendB").offset().left - wT/2;
+        let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        let val = Number($("#slider-wrapper").attr('val'));
+        let max = Number($("#slider-wrapper").attr('max'));
+        let f = val / max;
+        let widthLNew = Math.max(0, f * wW - wT);
+        let marginTNew = Math.max(0, f * wW - wT);
+        let widthRNew = Math.min((1-f) * wW, wW-wT);
+        let marginRNew = Math.max(wT, widthLNew+wT);
+        $("#slider-left").css('width', widthLNew);
+        $("#slider-thumb").css('marginLeft', marginTNew);
+        $("#slider-right").css('width', widthRNew);
+        $("#slider-right").css('marginLeft', marginRNew); 
     }
 
     // Change view after the user or agent moves
