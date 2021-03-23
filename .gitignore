@@ -5,8 +5,9 @@ game/RL/plots
 #SQLite database
 .sqlite3
 
-# user plots
-game/static/user-stats
+# RL plots
+.plots
+*.npz
 
 # settings
 IG/settings.py
