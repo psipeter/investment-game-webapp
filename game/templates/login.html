@@ -13,20 +13,18 @@
 		<form method="post">
 			{% csrf_token %}
 			<table>
-				<tr><td>{{ form.username }}</td></tr>
+				<tr><td>{{ form.identifier }}</td></tr>
 				<tr><td>{{ form.password }}</td></tr>
 			</table>
 			<input hidden id="submit" type="submit" />
 			<input type="hidden" name="next" value="{{ next }}" />
 		</form>
-		{% if form.errors.username %}
-			<p class="error">Username incorrect</p>
+		{% if form.errors.identifier %}
+			<p class="error">Username or MTurk ID incorrect</p>
 		{% elif form.errors.password %}
 			<p class="error">Password incorrect</p>
 		{% elif next %}
 			<p class="error">Please login to see this page.</p>
-		{% else %}
-			<p class="flair">*Insert inspirational quote here*</p>
 		{% endif %}
 		<div class="button-wrapper">
 			<button class="button"> <label for="submit">Login</label></button>

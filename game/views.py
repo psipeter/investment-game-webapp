@@ -7,9 +7,10 @@ from django.contrib.messages import error
 from django.http import JsonResponse
 from django.conf import settings
 from django.urls import reverse
+from django.utils import timezone
 from .models import Game, User, Feedback
 from game.forms import LoginForm, CreateForm, ProfileForm, ResetForm, CashForm, FeedbackForm, TutorialForm
-from datetime import datetime
+import pytz
 from .parameters import *
 
 # Authentication
@@ -18,18 +19,21 @@ def login(request):
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():
-			username = request.POST['username']
+			identifier = request.POST['identifier']
 			password = request.POST['password']
-			if User.objects.filter(username=username).exists():
-				user = authenticate(username=username, password=password)
-				if user: # and user.is_active:
-					auth_login(request, user)
-					return redirect(reverse('home'))
-				else:
-					form.add_error('password', "Password incorrect")
-					return render(request, 'login.html', {'form':form})
+			if User.objects.filter(username=identifier).exists():
+				username = identifier
+			elif User.objects.filter(mturk=identifier).exists():
+				username = User.objects.filter(mturk=identifier)[0]
 			else:
-				form.add_error('username', "Username does not exist")
+				form.add_error('identifier', "Username does not exist")
+				return render(request, 'login.html', {'form':form})
+			user = authenticate(username=username, password=password)
+			if user: # and user.is_active:
+				auth_login(request, user)
+				return redirect(reverse('home'))
+			else:
+				form.add_error('password', "Password incorrect")
 				return render(request, 'login.html', {'form':form})
 	else:
 		form = LoginForm()
@@ -50,9 +54,12 @@ def reset(request):
 	if request.method == 'POST':
 		form = ResetForm(request.POST)
 		if form.is_valid():
-			username = request.POST['username']
+			identifier = request.POST['identifier']
 			password = request.POST['password1']
-			user = User.objects.get(username=username)
+			if User.objects.filter(username=identifier).exists():
+				user = User.objects.get(username=identifier)
+			elif User.objects.filter(mturk=identifier).exists():
+				user = User.objects.get(mturk=identifier)
 			user.set_password(password)
 			user.save()
 			return redirect('login')
@@ -76,7 +83,7 @@ def consent(request):
 			user = form.save()
 			user.save()
 			auth_login(request, user)
-			user.doneConsent = datetime.now()
+			user.doneConsent = timezone.now()
 			user.save()
 			return redirect('home')
 	else:
@@ -91,7 +98,7 @@ def survey(request):
 		form = ProfileForm(request.POST, instance=request.user)
 		if form.is_valid():
 			form.save()
-			request.user.doneSurvey = datetime.now()
+			request.user.doneSurvey = timezone.now()
 			request.user.save()
 			return redirect('home')
 	else:
@@ -105,7 +112,7 @@ def cash(request):
 		error(request, 'You must complete the required games before cashing out')
 		return redirect('home')
 	else:
-		request.user.doneHIT = datetime.now()
+		request.user.doneHIT = timezone.now()
 		request.user.save()
 		form = CashForm(request.POST)
 		context = {
@@ -114,7 +121,7 @@ def cash(request):
 			'form': form,
 			}
 		if request.method == 'POST':
-			request.user.doneCash = datetime.now()
+			request.user.doneCash = timezone.now()
 			request.user.save()
 			return redirect('home')
 		else:

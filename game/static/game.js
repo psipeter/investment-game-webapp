@@ -51,6 +51,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
         maxUser = 0;  // updated after agent moves
         setTimeout(function() {switchToAgent(1);}, animateTime);
     }
+    $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
+    setTimeout(function() {$("#loadGame").remove();}, quickTime);
+    $("#bar-area").show().children().fadeIn(quickTime);
+    $("#nameA").fadeIn(quickTime)
+    $("#nameB").fadeIn(quickTime)
+    $("#imgA").fadeIn(quickTime)
+    $("#imgB").fadeIn(quickTime)
+    $("#headerG").text("Games Played — "+game.nGames+" + 1");
+    $(window).on('beforeunload', function(e) {return false;});
     animateTurn();
     animateBonus();
     executeMove("capital");
@@ -570,8 +579,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         for (let i=0; i<game.bonus.length; i++) {
             if (userScore >= game.bonus[i][0]) {bonus = game.bonus[i][1];}
         }
+        $(window).off('beforeunload');
         $("#headerW").text("Winnings — $"+Number(game.winnings).toFixed(2) + " + "+bonus);
-        $("#headerG").text("Games Played — "+game.nGames+" + 1");
         $("#playerA").fadeOut(quickTime);
         $("#playerB").fadeOut(quickTime);
         $("#nameA").fadeOut(quickTime);

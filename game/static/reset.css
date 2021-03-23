@@ -1,16 +1,22 @@
-#form-wrapper {
-	font-family: inherit;
+body {
+	height: 80vh;
+	width: 80vw;
+}
+
+#body-wrapper {
 	display: flex-box;
-	background: var(--myWhite);
-	width: 60%;
-	margin-top: 5%;
-	margin-left: 20%;
-	border: solid black;
+	width: 20vw;
+	margin-top: 20vh;
+	margin-left: 28vw;
+	padding: 2vh 2vw;
+	border: 1pt solid black;
+	background-color: var(--myForeground);
 }
 
 form {
 	display: flex;
 	justify-content: center;
+	font-size: 150%;
 }
 
 input, button {
@@ -19,43 +25,17 @@ input, button {
 }
 
 input {
+	width: 15vw;
 	background: var(--myLightGray);
-	border: solid black;
+	border: 1pt solid black;
 }
 
 .error {
+	margin: 2vh 0;
+	font-family: 'Roboto', sans-serif;
 	color: var(--myRed);
 	text-align: center;
 }
 
-#submit-wrapper {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 2%;
-}
-
-#submit-button {
-	margin-top: 2%;
-	font: inherit;
-	color: var(--myBlue);
-	/*border: solid black;*/
-	/*background: var(--myYellow);*/
-	/*border-radius: 30px;*/
-}
-
-#link-wrapper {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	margin-top: 2%;
-}
-
-#link {
-	width: 10%;
-	text-align: center;
-}
-
-#link:visited, #link:link {
-	color: var(--myBlue);
-}
+h1 {margin: 2vh 0;}
+.button-wrapper, .link-wrapper {margin: 2vh 0;}

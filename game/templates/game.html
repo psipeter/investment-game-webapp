@@ -9,16 +9,23 @@
 {% endblock %}
 
 {% block body %}
+	
+	<div id="loadGame">
+		<div class='w'>
+			<img id="loadCoin" src="{% static 'full-coin.svg' %}">
+			<h1 id='loadText'>Loading Game...</h1>
+		</div>
+	</div>
 
 	<div id="bar-area">
-		<h2 id="turn-text" class='bar-text'>Turn</h2>
-		<h2 id="turn-box" class='bar-box'>0/5</h2>
-		<h2 id="ts-text" class='bar-text'>Their Score</h2>
-		<h2 id="ts-box" class='bar-box'>0</h2>
-		<h2 id="ys-text" class='bar-text'>Your Score</h2>
-		<h2 id="ys-box" class='bar-box'>0</h2>
-		<h2 id="bonus-text" class='bar-text'>Bonus</h2>
-		<h2 id="bonus-box" class='bar-box'>0₵</h2>
+		<h2 hidden id="turn-text" class='bar-text'>Turn</h2>
+		<h2 hidden id="turn-box" class='bar-box'>0/5</h2>
+		<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
+		<h2 hidden id="ts-box" class='bar-box'>0</h2>
+		<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
+		<h2 hidden id="ys-box" class='bar-box'>0</h2>
+		<h2 hidden id="bonus-text" class='bar-text'>Bonus</h2>
+		<h2 hidden id="bonus-box" class='bar-box'>0₵</h2>
 	</div>
 
 	<div id="coin-area">
@@ -84,12 +91,12 @@
 		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
 	</div>
 
-	<div id="player-area">
-		<h1 id="nameA"></h1>
-		<h1 id="nameB"></h1>
+	<div hidden id="player-area">
+		<h1 hidden id="nameA"></h1>
+		<h1 hidden id="nameB"></h1>
 		<button hidden id="submit">Send</button>
-		<img id="imgA" src="{% static 'userA.svg' %}">
-		<img id="imgB" src="{% static 'userB.svg' %}">
+		<img hidden id="imgA" src="{% static 'userA.svg' %}">
+		<img hidden id="imgB" src="{% static 'userB.svg' %}">
 		<div hidden id="slider-wrapper" class="active" min="0" val="0" max="10">
 			<div id="slider-left" class='flipped'></div>
 			<div id="slider-thumb"></div>

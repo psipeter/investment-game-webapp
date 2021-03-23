@@ -30,15 +30,20 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     let agentRewards = game.agentRewards;
     maxUser = game.capital;
     maxAgent = 0;  // updated after user moves
+    $("#loadGame").remove();
+    $("#bar-area").show().children().fadeIn(quickTime);
+    $("#nameA").fadeIn(quickTime)
+    $("#nameB").fadeIn(quickTime)
+    $("#imgA").fadeIn(quickTime)
+    $("#imgB").fadeIn(quickTime)
     $("#nameA").text(game.username);
     $("#nameB").text("Instructor");
-    $("#nameB").css('opacity', '0.5')
-    $("#imgB").css('opacity', '0.5')
     $("#ts-text").css('background-color', 'var(--myPink)');
     $("#ts-box").css('background-color', 'var(--myPink)');
     $("#ys-text").css('background-color', 'var(--myTeal)');
     $("#ys-box").css('background-color', 'var(--myTeal)');
     $(window).resize(resizeSlider);
+    $(window).on('beforeunload', function(e) {return false;});
     $(document).mousemove(function(e) {moveSlide(e);});
     $(document).mouseup(function(e) {stopSlide(e);});
 
@@ -59,11 +64,12 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $(`#n-next4`).click(function() {
         $(`#n5`).fadeIn(quickTime);
         $(`#headerG`).addClass('red');
-        $(`#headerW`).addClass('yellow');
+        $(`#headerW`).addClass('green');
         $(`#cash-link`).addClass('black');
     });
     $(`#n-next5`).text("Finish");
     $(`#n-next5`).click(function() {
+        $(window).off('beforeunload');
         let form = $("#form");
         let sendData = form.serialize();
         $.ajax({
@@ -81,8 +87,8 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         $("#ts-box").fadeIn(quickTime);
         $("#ys-box").fadeIn(quickTime);
         $("#bonus-box").fadeIn(quickTime);
-        $("#nameA").fadeIn(quickTime);
-        $("#nameB").fadeIn(quickTime);
+        $("#nameB").css('opacity', '0.5')
+        $("#imgB").css('opacity', '0.5')
         animateTurn();
         executeMove("capital");
         setTimeout(function() {switchToUser();}, animateTime+waitTime);

@@ -3,8 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_comma_separated_integer_list
 from django.conf import settings
 from django.utils.crypto import get_random_string
-from datetime import datetime
+from django.utils import timezone
 
+import pytz
 import uuid
 import numpy as np
 import random
@@ -100,7 +101,6 @@ class Agent(models.Model):
 
 class Game(models.Model):
 	uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique game ID")
-	date = models.DateTimeField(auto_now_add=True)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 	agent = models.ForeignKey(Agent, on_delete=models.CASCADE, null=True, blank=True)
 	userGives = models.CharField(max_length=50, blank=True, null=True, default=str)
@@ -115,6 +115,8 @@ class Game(models.Model):
 	agentRole = models.CharField(max_length=1, choices=(("A", "A"), ("B", "B")), null=True, blank=True)
 	tutorial = models.BooleanField(default=False)
 	complete = models.BooleanField(default=False)
+	tStart = models.DateTimeField(null=True, blank=True)
+	tEnd = models.DateTimeField(null=True, blank=True)
 	rounds = models.IntegerField(default=ROUNDS)
 	capital = models.IntegerField(default=CAPITAL)
 	match = models.FloatField(default=MATCH)
@@ -133,6 +135,7 @@ class Game(models.Model):
 			self.goAgent(self.capital)
 		self.user.currentGame = self
 		self.user.save()
+		self.tStart = timezone.now()
 		self.save()
 
 	def setAgent(self):
@@ -254,7 +257,7 @@ class User(AbstractUser):
 		return 1 if np.random.rand() < 0.5 else 2
 	def g():
 		return get_random_string(length=32)
-	mturk = models.CharField(max_length=33, null=True, blank=True)
+	mturk = models.CharField(max_length=33, unique=True)
 	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
 	nGames = models.IntegerField(default=0)
 	winnings = models.IntegerField(default=0)
@@ -277,15 +280,18 @@ class User(AbstractUser):
 	altruism = models.CharField(max_length=300, null=True, blank=True)
 
 	def setProgress(self):
-		self.nGames = Game.objects.filter(user=self, complete=True).count()
+		allGames = Game.objects.filter(user=self).exclude(tutorial=True)
+		completeGames = allGames.filter(complete=True)
+		incompleteGames = allGames.filter(complete=False)
+		self.nGames = completeGames.count()
 		self.save()
 		if self.doneRequired == None and self.nGames >= REQUIRED:
-			self.doneRequired = datetime.now()
+			self.doneRequired = timezone.now()()
 		if self.doneMax == None and self.nGames >= MAX:
-			self.doneMax = datetime.now()
+			self.doneMax = timezone.now()()
 		self.save()
 		bonus = 0
-		for game in Game.objects.filter(user=self, complete=True):
+		for game in completeGames:
 			gameBonus = 0
 			score = sum(game.historyToArray("user", "reward"))
 			for i in range(len(BONUS)):

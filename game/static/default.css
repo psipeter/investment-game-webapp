@@ -134,3 +134,7 @@ a, a:visited, a:link {
 #cash-link {
 	color: var(-myGray);
 }
+
+#headerU {color: black;}
+#headerG {color: var(--myRed);}
+#headerW {color: var(--myDarkGreen);}

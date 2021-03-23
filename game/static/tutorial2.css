@@ -8,6 +8,20 @@
 .gray {color: var(--myGray);}
 .black {color: black;}
 
+/*Loading page*/
+#loadGame {
+	grid-row: 1/5;
+	grid-column: 1;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+}
+@keyframes pulse { 0% {opacity: 0.2;} 100% {opacity: 1;}}
+#loadCoin {height: 20vh; width: 20vw; animation: pulse 0.3s alternate infinite;}
+#loadText {margin-top: 5vh;}
+.w {margin-top: 20vh; height: 100%; width: 100%; text-align: center;}
+
+
 #n-area {
 	grid-row: 1/5;
 	grid-column: 1;

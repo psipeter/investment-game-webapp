@@ -10,15 +10,21 @@
 {% endblock %}
 
 {% block body %}
+	<div id="loadGame">
+		<div class='w'>
+			<img id="loadCoin" src="{% static 'full-coin.svg' %}">
+			<h1 id='loadText'>Loading Tutorial Part 1/2...</h1>
+		</div>
+	</div>
 	<div id="bar-area">
-		<h2 id="turn-text" class='bar-text'>Turn</h2>
-		<h2 id="turn-box" hidden class='bar-box'>0/5</h2>
-		<h2 id="ts-text" class='bar-text'>Their Score</h2>
-		<h2 id="ts-box" hidden class='bar-box'>0</h2>
-		<h2 id="ys-text" class='bar-text'>Your Score</h2>
-		<h2 id="ys-box" hidden class='bar-box'>0</h2>
-		<h2 id="bonus-text" class='bar-text'>Bonus</h2>
-		<h2 id="bonus-box" hidden class='bar-box'>0₵</h2>
+		<h2 hidden id="turn-text" class='bar-text'>Turn</h2>
+		<h2 hidden id="turn-box" hidden class='bar-box'>0/5</h2>
+		<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
+		<h2 hidden id="ts-box" hidden class='bar-box'>0</h2>
+		<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
+		<h2 hidden id="ys-box" hidden class='bar-box'>0</h2>
+		<h2 hidden id="bonus-text" class='bar-text'>Bonus</h2>
+		<h2 hidden id="bonus-box" hidden class='bar-box'>0₵</h2>
 	</div>
 	<div id="coin-area">
 		<img id="c1a" class='coin' src="{% static 'full-coin.svg' %}">
@@ -86,8 +92,8 @@
 		<h1 hidden id="nameA"></h1>
 		<h1 hidden id="nameB"></h1>
 		<button hidden id="submit">Send</button>
-		<img id="imgA" src="{% static 'userA.svg' %}">
-		<img id="imgB" src="{% static 'userB.svg' %}">
+		<img hidden id="imgA" src="{% static 'userA.svg' %}">
+		<img hidden id="imgB" src="{% static 'userB.svg' %}">
 		<div hidden id="slider-wrapper" class="active" min="0" val="0" max="10">
 			<div id="slider-left" class='flipped'></div>
 			<div id="slider-thumb"></div>
@@ -144,7 +150,7 @@
 			<p class='n-text'>... and the next turn begins!</p>
 		</div>
 		<div id="n8" class="note">
-			<p class='n-text'>As <span class="teal">your score</span> increases passed score <span class="black">thresholds</span> (e.g. 60 coins), you will unlock <span class="fake_bonus">bonus rewards</span></p>
+			<p class='n-text'>As <span class="teal">your score</span> increases past hidden <span class="black">thresholds</span> (e.g. 60 coins), you will unlock <span class="fake_bonus">bonus rewards</span></p>
 			<p class='n-text'>To add these rewards to your real-money winnings, you must <span class="red">finish the game</span></p>
 			<p id="tut2" href='{% url "tutorial2" %}' class='n-text'>Next, we'll discuss strategy and explain how to complete the HIT</p>
 		</div>

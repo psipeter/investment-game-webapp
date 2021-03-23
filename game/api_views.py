@@ -1,12 +1,12 @@
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from datetime import datetime
+from django.utils import timezone
 
 from .models import Game, User, Feedback
 from .parameters import *
 
-
+import pytz
 import json
 import numpy as np
 
@@ -103,6 +103,8 @@ def updateGame(request):
 	if game.complete:
 		data['complete'] = True
 		request.user.currentGame = None
+		game.tEnd = timezone.now()
+		game.save()
 		request.user.setProgress()
 	else:
 		data['complete'] = False
@@ -121,6 +123,7 @@ def startTutorial(request):
 		game.tutorial = True
 		game.startTutorial(request.user, "A", "B", "T4T")
 		game.save()
+		request.user.setProgress()
 		data = {
 			'username': game.user.username,
 			'agentname': game.agent.name,
@@ -182,6 +185,6 @@ def restartTutorial(request):
 @login_required
 def finishTutorial(request):
 	print("finishing tutorial")
-	request.user.doneTutorial = datetime.now()
+	request.user.doneTutorial = timezone.now()
 	request.user.save()
 	return JsonResponse({}, encoder=NpEncoder)

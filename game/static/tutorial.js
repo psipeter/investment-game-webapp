@@ -28,6 +28,13 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     let startMouseX;
     maxUser = game.capital;
     maxAgent = 0;  // updated after user moves
+    $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
+    setTimeout(function() {$("#loadGame").remove();}, quickTime);
+    $("#bar-area").show().children().fadeIn(quickTime);
+    $("#nameA").fadeIn(quickTime)
+    $("#nameB").fadeIn(quickTime)
+    $("#imgA").fadeIn(quickTime)
+    $("#imgB").fadeIn(quickTime)
     $("#nameA").text("Investor");
     $("#nameB").text("Trustee");
     $("#nameB").css('opacity', '0.5')
@@ -36,6 +43,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $("#ts-box").css('background-color', 'var(--myPink)');
     $("#ys-text").css('background-color', 'var(--myTeal)');
     $("#ys-box").css('background-color', 'var(--myTeal)');
+    $(window).on('beforeunload', function(e) {return false;});
     $(window).resize(resizeSlider);
     $(document).mousemove(function(e) {moveSlide(e);});
     $(document).mouseup(function(e) {stopSlide(e);});
@@ -215,6 +223,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         $("#n-next7").click(function() {
             $("#bonus-box").fadeIn(quickTime);
             animateBonus();
+            $(window).off('beforeunload');
             $("#n-next8").text("Tutorial Part 2");
             $("#n-next8").click(function() {window.location.href=$("#tut2").attr("href");});
         });

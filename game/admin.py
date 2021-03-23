@@ -9,10 +9,10 @@ class Game(admin.ModelAdmin):
 	list_display = ('uuid',
 		'user', 'userRole',
 		'get_agent', 'agentRole',
-		'date',
+		'tStart', 'tEnd',
 		'userGives', 'userKeeps', 'userRewards', 'userTimes',
 		'agentGives', 'agentKeeps', 'agentRewards')
-	ordering = ('-date',)
+	ordering = ('-tStart',)
 	def get_agent(self, obj):
 		return obj.agent.name
 	get_agent.short_description = "Agent"

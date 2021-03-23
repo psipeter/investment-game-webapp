@@ -9,12 +9,12 @@
 
 {% block body %}
 
-	<div id="form-wrapper">
+	<div id="body-wrapper">
 		<h1>Password Reset</h1>
 		<form method="post">
 			{% csrf_token %}
 			<table>
-				<tr><td>{{ form.username }}</td></tr>
+				<tr><td>{{ form.identifier }}</td></tr>
 				<tr><td>{{ form.password1 }}</td></tr>
 				<tr><td>{{ form.password2 }}</td></tr>
 			</table>
@@ -30,7 +30,7 @@
 				<p class="error">{{ error|escape }}</p>
 			{% endfor %}
 		{% endif %}
-		<div id="submit-wrapper">
+		<div class="button-wrapper">
 			<button id=submit-button> <label for="submit" tabindex="0">Submit</label></button>
 		</div>
 	</div>

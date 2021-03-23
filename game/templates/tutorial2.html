@@ -10,15 +10,21 @@
 {% endblock %}
 
 {% block body %}
+	<div id="loadGame">
+		<div class='w'>
+			<img id="loadCoin" src="{% static 'full-coin.svg' %}">
+			<h1 id='loadText'>Loading Tutorial Part 2/2...</h1>
+		</div>
+	</div>
 	<div id="bar-area">
-		<h2 id="turn-text" class='bar-text'>Turn</h2>
-		<h2 id="turn-box" hidden class='bar-box'>0/5</h2>
-		<h2 id="ts-text" class='bar-text'>Their Score</h2>
-		<h2 id="ts-box" hidden class='bar-box'>0</h2>
-		<h2 id="ys-text" class='bar-text'>Your Score</h2>
-		<h2 id="ys-box" hidden class='bar-box'>0</h2>
-		<h2 id="bonus-text" class='bar-text'>Bonus</h2>
-		<h2 id="bonus-box" hidden class='bar-box'>0₵</h2>
+		<h2 hidden id="turn-text" class='bar-text'>Turn</h2>
+		<h2 hidden id="turn-box" hidden class='bar-box'>0/5</h2>
+		<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
+		<h2 hidden id="ts-box" hidden class='bar-box'>0</h2>
+		<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
+		<h2 hidden id="ys-box" hidden class='bar-box'>0</h2>
+		<h2 hidden id="bonus-text" class='bar-text'>Bonus</h2>
+		<h2 hidden id="bonus-box" hidden class='bar-box'>0₵</h2>
 	</div>
 	<div id="coin-area">
 		<img id="c1a" class='coin' src="{% static 'full-coin.svg' %}">
@@ -86,8 +92,8 @@
 		<h1 hidden id="nameA"></h1>
 		<h1 hidden id="nameB"></h1>
 		<button hidden id="submit">Send</button>
-		<img id="imgA" src="{% static 'userA.svg' %}">
-		<img id="imgB" src="{% static 'userB.svg' %}">
+		<img hidden id="imgA" src="{% static 'userA.svg' %}">
+		<img hidden id="imgB" src="{% static 'userB.svg' %}">
 		<div hidden id="slider-wrapper" class="active" min="0" val="0" max="10">
 			<div id="slider-left" class='flipped'></div>
 			<div id="slider-thumb"></div>
@@ -131,7 +137,7 @@
 				a <span class="black">dumb</span> agent (a computer that always make greedy or generous moves)<br>
 				a <span class="black">smart</span> agent (a computer that responds to your choices and learns over time)<br>
 				another <span class="black">human player</span></p>
-			<p class='n-text'>Our research study is focused on how <span class="red">you learn over time</span>, so try your best, and earn <span class="yellow">bonus</span> rewards for playing well!</p>
+			<p class='n-text'>Our research study is focused on how <span class="red">you learn with experience</span>, so try your best, and earn <span class="yellow">bonus</span> rewards for playing well!</p>
 		</div>
 		<div id="n5" class="note" href='{% url "home" %}'>
 			<p class='n-text'>To complete the study, you must <span class="red">complete 10 games</span>. View your progress in the upper left.</p>

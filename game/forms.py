@@ -7,15 +7,15 @@ from . import models
 import numpy as np
 
 class LoginForm(forms.Form):
-	username = forms.CharField(label="Username")
+	identifier = forms.CharField(label="Username or MTurk ID")
 	password = forms.CharField(label='Password', widget=forms.PasswordInput)
-	username.widget.attrs.update({'placeholder':'Username'})	
+	identifier.widget.attrs.update({'placeholder':'Username or MTurk ID'})	
 	password.widget.attrs.update({'placeholder':'Password'})	
-	username.widget.attrs.update({'autocomplete':'username'})	
+	identifier.widget.attrs.update({'autocomplete':'username'})	
 	password.widget.attrs.update({'autocomplete':'password'})	
 	class Meta:
 		model = models.User
-		fields = ('username', 'password')
+		fields = ('identifier', 'password')
 
 class CreateForm(UserCreationForm):
 	username = forms.CharField(label="Username")
@@ -30,25 +30,28 @@ class CreateForm(UserCreationForm):
 	password2.widget.attrs.update({'autocomplete':'password'})	
 	class Meta:
 		model = models.User
-		fields = ('username', 'password1', 'password2')
+		fields = ('username', 'mturk', 'password1', 'password2')
 		labels = {'username': 'Username', 'mturk': 'Mechanical Turk ID', 'password1': "Enter Password", 'password2': 'Confirm Password'}
 		help_texts = {'username': None, 'password1': None, 'password2': None}
 
 class ResetForm(forms.Form):
-	username = forms.CharField(label="Username")
+	identifier = forms.CharField(label="Identifier")
 	password1 = forms.CharField(label='New password', widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
-	username.widget.attrs.update({'placeholder':'Username'})	
+	identifier.widget.attrs.update({'placeholder':'Username or MTurk ID'})	
 	password1.widget.attrs.update({'placeholder':'Enter Password'})	
 	password2.widget.attrs.update({'placeholder':'Confirm Password'})	
 	password1.widget.attrs.update({'autocomplete':'password'})	
 	password2.widget.attrs.update({'autocomplete':'password'})	
-	def clean_username(self):
-		username = self.cleaned_data['username']
-		if models.User.objects.filter(username=username).exists():
-			return self.cleaned_data['username']
+	def clean_identifier(self):
+		identifier = self.cleaned_data['identifier']
+		if models.User.objects.filter(username=identifier).exists():
+			return self.cleaned_data['identifier']
+		elif models.User.objects.filter(mturk=identifier).exists():
+			return self.cleaned_data['identifier']
 		else:
-			raise ValidationError("Username not found")
+			print(self.cleaned_data['identifier'])
+			raise ValidationError("Username or MTurk ID not found")
 	def clean_password2(self):
 		password1 = self.cleaned_data['password1']
 		password2 = self.cleaned_data['password2']

@@ -34,12 +34,12 @@ initialize("/game/api/status/", "GET", (status) => {
     }
     if (doneTutorialBool) {
         if (status.nGames < status.required) {
-            $('#game-text1').text(`Required: ${status.nGames}/${status.required}`)
-            $('#game-text3').text(``)
+            $('#gt1').text(`Required Games: ${status.nGames}/${status.required}`)
+            $('#gt3').text(``)
         }
         else {
-            $('#game-text1').text(`Required: ${status.required}/${status.required}`)            
-            $('#game-text3').text(`Bonus: ${status.nGames-status.required}/${status.max-status.required}`)
+            $('#gt1').text(`Required Games: ${status.required}/${status.required}`)            
+            $('#gt3').text(`Bonus Games: ${status.nGames-status.required}/${status.max-status.required}`)
         }
     }
     // if (doneRequiredBool) {
