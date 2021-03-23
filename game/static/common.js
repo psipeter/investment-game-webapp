@@ -10,10 +10,11 @@ function initialize(url, method, cback) {
     function check_state_machine() {
         if (state.loaded && state.data) {
             $("#headerU").text(state.data.username);
-            $("#headerG").text("Games Played — "+state.data.nGames);
-            $("#headerW").text("Winnings — $"+state.data.winnings);
-            if (state.data.doneRequired === null) {
+            $("#headerG").text("Games Played: "+state.data.nGames +"/" + state.data.required);
+            $("#headerW").text("Winnings: $"+state.data.winnings);
+            if (state.data.doneGames === null) {
                 $('#cash-link').css('color', 'var(--myGray');
+                $('#cash-link').css('cursor', 'not-allowed');
                 $("#cash-link").removeAttr('href');
             }
             cback(state.data);

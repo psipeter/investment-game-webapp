@@ -6,7 +6,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     let startTime = performance.now();
     let endTime = performance.now();
     let giveThrMin = 7;
-    let giveThrMax = 0.3;
+    let giveThrMax = 0.2;
     let maxTurns = 2;
     let tutorialGame = 1;
     let maxAgent;
@@ -117,7 +117,6 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
         giveThrMin = 0;
-        giveThrMax = 0.3;
         // start a new game with the agent going first
         let form = $("#form");
         let sendData = form.serialize();

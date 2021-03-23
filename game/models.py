@@ -52,28 +52,20 @@ class Agent(models.Model):
 		# 	self.blob = Blob.objects.get(name=blobname)
 		# 	self.obj = pickle.loads(self.blob.blob)
 		# else:
-		if name=='Greedy':
-			self.obj = Fixed(player, mean=0.2, E=EPSILON, S=SIGMA)
-		elif name=="Even":
-			self.obj = Fixed(player, mean=0.5, E=EPSILON, S=SIGMA)
-		elif name=="Generous":
-			self.obj = Fixed(player, mean=0.8, E=EPSILON, S=SIGMA)
-		elif name=="T4T":
-			self.obj = T4T(player, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
-		elif name=="Expect":
-			self.obj = Expect(player, X=0.33, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
-		elif name=="Greedy2":
+		if name=='Fixed_M02':
+			self.obj = Fixed(player, M=0.2, E=EPSILON, S=SIGMA)
+		elif name=="Fixed_M05":
+			self.obj = Fixed(player, M=0.5, E=EPSILON, S=SIGMA)
+		elif name=="Fixed_M08":
+			self.obj = Fixed(player, M=0.8, E=EPSILON, S=SIGMA)
+		elif name=="T4T_X02":
+			self.obj = T4T(player, X=0.2, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
+		elif name=="T4T_X04":
+			self.obj = T4T(player, X=0.4, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
+		elif name=="T4T_X06":
+			self.obj = T4T(player, X=0.6, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
+		elif name=="Greedier":
 			self.obj = BecomeGreedy(player, start=0.75, step=0.15, E=EPSILON, S=SIGMA)
-			# elif name=="Bandit":
-			# 	self.obj = Bandit(player, nA)
-			# elif name=="QLearn":
-			# 	self.obj = QLearn(player, nA, nS)
-			# elif name=="Wolf":
-			# 	self.obj = Wolf(player, nA, nS)
-			# elif name=="Hill":
-			# 	self.obj = Hill(player, nA, nS)
-			# elif name=="ModelBased":
-			# 	self.obj = ModelBased(player, nA, nS)
 		else:
 			raise Exception(f'{name} is not a valid agent class')
 		self.blob = Blob.objects.create()
@@ -140,10 +132,10 @@ class Game(models.Model):
 
 	def setAgent(self):
 		idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
-		if self.user.group == "1" and self.userRole == "A": name = AGENTS_F_B[idx]
-		elif self.user.group == "1" and self.userRole == "B": name = AGENTS_F_A[idx]
-		elif self.user.group == "2" and self.userRole == "A": name = AGENTS_P_B[idx]
-		elif self.user.group == "2" and self.userRole == "B": name = AGENTS_P_A[idx]
+		if self.user.group == "1" and self.userRole == "A": name = AGENTS_B_1[idx]
+		elif self.user.group == "1" and self.userRole == "B": name = AGENTS_A_1[idx]
+		elif self.user.group == "2" and self.userRole == "A": name = AGENTS_B_2[idx]
+		elif self.user.group == "2" and self.userRole == "B": name = AGENTS_A_2[idx]
 		else: raise "agent not set"
 		self.agent = Agent.objects.create()
 		self.agent.start(name, self.agentRole)
@@ -264,9 +256,7 @@ class User(AbstractUser):
 	doneConsent = models.DateTimeField(null=True, blank=True)
 	doneSurvey = models.DateTimeField(null=True, blank=True)
 	doneTutorial = models.DateTimeField(null=True, blank=True)
-	doneRequired = models.DateTimeField(null=True, blank=True)
-	doneMax = models.DateTimeField(null=True, blank=True)
-	doneHIT = models.DateTimeField(null=True, blank=True)
+	doneGames = models.DateTimeField(null=True, blank=True)
 	doneCash = models.DateTimeField(null=True, blank=True)
 	group = models.CharField(max_length=300, choices=(("1", "forgive"), ("2", "punish")), default=f)
 	code = models.CharField(max_length=300, help_text="MTurk Confirmation Code", default=g)
@@ -285,18 +275,16 @@ class User(AbstractUser):
 		incompleteGames = allGames.filter(complete=False)
 		self.nGames = completeGames.count()
 		self.save()
-		if self.doneRequired == None and self.nGames >= REQUIRED:
-			self.doneRequired = timezone.now()()
-		if self.doneMax == None and self.nGames >= MAX:
-			self.doneMax = timezone.now()()
+		if self.doneGames == None and self.nGames >= REQUIRED:
+			self.doneGames = timezone.now()()
 		self.save()
-		bonus = 0
+		winnings = 0
 		for game in completeGames:
 			gameBonus = 0
 			score = sum(game.historyToArray("user", "reward"))
 			for i in range(len(BONUS)):
 				if score >= BONUS[i][0]:
 					gameBonus = BONUS[i][1]
-			bonus += gameBonus
-		self.winnings = np.around(bonus, 2)
+			winnings += gameBonus
+		self.winnings = np.around(winnings, 2)
 		self.save()

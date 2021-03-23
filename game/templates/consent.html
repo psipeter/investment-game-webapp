@@ -18,9 +18,6 @@
 			<p id="form-disclaimer">Signed and dated</p>
 			<p id="username">{{ user.username }}</p>
 			<p id="doneConsent">{{ user.doneConsent }}</p>
-			<div class="link-wrapper">
-				<a class="link" href="{% url 'home' %}">Home</a>
-			</div>
 		</div>
 	{% else %}
 		<div id="form-wrapper">
@@ -53,5 +50,10 @@
 
 	<p>This study has been reviewed and received ethics clearance through a University of Waterloo Research Ethics Committee (ORE#42531). If you have questions for the Committee contact the Office of Research Ethics at oreceo@uwaterloo.ca. For all other questions contact Peter Duggins at <a href="mailto:pduggins@uwaterloo.ca?subject=Question%20regarding%20Investment%20Game%20Experiment">pduggins@uwaterloo.ca</a>.</p>
 
+	{% if user.doneConsent %}
+		<div class="link-wrapper">
+			<a class="link" href="{% url 'home' %}">Home</a>
+		</div>
+	{% endif %}
 
 {% endblock %}

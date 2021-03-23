@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import itertools
 import time
+from scipy.special import softmax
 
 
 def plotAll(dfAll, popA, popB, capital, match, rounds, name, endgames=5):
@@ -273,268 +274,41 @@ def plotXFriendliness(df, capital, match, agent, dependent, agent2=None):
 		plt.title(f"Cooperation")
 		fig.savefig(f"plots/FriendlinessFriendliness/{agent}_{agent2}_cooperation.pdf")
 
+def plotPolicy(file, agent, player, group, nS, nA):
+	data = np.load(file)
+	if agent=='Bandit':
+		policy = np.zeros((2+nS, nA))
+		for s in range(2+nS):
+			policy[s] = data['Q']
+	elif agent=='QLearn':
+		policy = data['Q']
+	elif agent=="ModelBased":
+		policy = data['pi']
 
+	xticks = np.arange(0, nA)
+	yticks = np.linspace(0, 1, 2+nS)
+	ytickLabels = []
+	ytickLabels.append("Turn 1")
+	ytickLabels.append("Opponent Skipped")
+	for s in np.linspace(0, 1, nS):
+		ytickLabels.append(np.around(s, 2))
 
-# def plotForgivenessFriendliness(df, capital, match, agent):
-# 	dfMeanA = df.drop(columns=['meanB', 'stdA', 'stdB']).set_index(['F', 'rO'])
-# 	dfMeanB = df.drop(columns=['meanA', 'stdA', 'stdB']).set_index(['F', 'rO'])
-# 	dfStdA = df.drop(columns=['meanA', 'meanB', 'stdB']).set_index(['F', 'rO'])
-# 	dfStdB = df.drop(columns=['meanA', 'meanB', 'stdA']).set_index(['F', 'rO'])
-# 	tableMeanA = dfMeanA.unstack(level=0)
-# 	tableMeanB = dfMeanB.unstack(level=0)
-# 	tableStdA = dfStdA.unstack(level=0)
-# 	tableStdB = dfStdB.unstack(level=0)
-
-# 	xticks = np.array(df.set_index(['F', 'rO']).unstack(level=0).index)
-# 	yticks = np.array(df.set_index(['rO', 'F']).unstack(level=0).index)
-# 	rx = (xticks[1]-xticks[0])/2
-# 	ry = (yticks[1]-yticks[0])/2
-# 	viridis = plt.get_cmap('viridis', 256)
-
-# 	# normalize mean and std 0 to 1
-# 	A = np.array(tableMeanA) / (capital*match)
-# 	B = 1 - np.array(tableStdA) / (capital*match/2)
-# 	# convert means to RGB spectrum and set alpha equal to std
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel(f"{agent} Friendliness")
-# 	plt.ylabel("T4T Forgiveness")
-# 	plt.title("T4T Rewards")
-# 	fig.savefig(f"plots/ForgivenessFriendliness/T4T.pdf")
-
-# 	A = np.array(tableMeanB) / (capital*match)
-# 	B = 1 - np.array(tableStdB) / (capital*match/2)
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel(f"{agent} Friendliness")
-# 	plt.ylabel("T4T Forgiveness")
-# 	plt.title(f"{agent} Rewards")
-# 	fig.savefig(f"plots/ForgivenessFriendliness/{agent}.pdf")
-
-# 	A = (np.array(tableMeanA) + np.array(tableMeanB)) / (2*capital*match)
-# 	B = 1 - (np.array(tableStdA) + np.array(tableStdB)) / (capital*match)
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel(f"{agent} Friendliness")
-# 	plt.ylabel("T4T Forgiveness")
-# 	plt.title("Total Rewards")
-# 	fig.savefig("plots/ForgivenessFriendliness/total.pdf")
-
-
-# def plotPunishmentFriendliness(df, capital, match, agent):
-# 	dfMeanA = df.drop(columns=['meanB', 'stdA', 'stdB']).set_index(['P', 'rO'])
-# 	dfMeanB = df.drop(columns=['meanA', 'stdA', 'stdB']).set_index(['P', 'rO'])
-# 	dfStdA = df.drop(columns=['meanA', 'meanB', 'stdB']).set_index(['P', 'rO'])
-# 	dfStdB = df.drop(columns=['meanA', 'meanB', 'stdA']).set_index(['P', 'rO'])
-# 	tableMeanA = dfMeanA.unstack(level=0)
-# 	tableMeanB = dfMeanB.unstack(level=0)
-# 	tableStdA = dfStdA.unstack(level=0)
-# 	tableStdB = dfStdB.unstack(level=0)
-
-# 	xticks = np.array(df.set_index(['P', 'rO']).unstack(level=0).index)
-# 	yticks = np.array(df.set_index(['rO', 'P']).unstack(level=0).index)
-# 	rx = (xticks[1]-xticks[0])/2
-# 	ry = (yticks[1]-yticks[0])/2
-# 	viridis = plt.get_cmap('viridis', 256)
-
-# 	# normalize mean and std 0 to 1
-# 	A = np.array(tableMeanA) / (capital*match)
-# 	B = 1 - np.array(tableStdA) / (capital*match/2)
-# 	# convert means to RGB spectrum and set alpha equal to std
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel(f"{agent} Friendliness")
-# 	plt.ylabel("T4T Punishment")
-# 	plt.title("T4T Rewards")
-# 	fig.savefig("plots/PunishmentFriendliness/T4T.pdf")
-
-# 	A = np.array(tableMeanB) / (capital*match)
-# 	B = 1 - np.array(tableStdB) / (capital*match/2)
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel(f"{agent} Friendliness")
-# 	plt.ylabel("T4T Punishment")
-# 	plt.title(f"{agent} Rewards")
-# 	fig.savefig(f"plots/PunishmentFriendliness/{agent}.pdf")
-
-# 	A = (np.array(tableMeanA) + np.array(tableMeanB)) / (2*capital*match)
-# 	B = 1 - (np.array(tableStdA) + np.array(tableStdB)) / (capital*match)
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel(f"{agent} Friendliness")
-# 	plt.ylabel("T4T Punishment")
-# 	plt.title("Total Rewards")
-# 	fig.savefig("plots/PunishmentFriendliness/total.pdf")
-
-
-# def plotMagnitudeFriendliness(df, capital, match, agent):
-# 	dfMeanA = df.drop(columns=['meanB', 'stdA', 'stdB']).set_index(['F,P', 'rO'])
-# 	dfMeanB = df.drop(columns=['meanA', 'stdA', 'stdB']).set_index(['F,P', 'rO'])
-# 	dfStdA = df.drop(columns=['meanA', 'meanB', 'stdB']).set_index(['F,P', 'rO'])
-# 	dfStdB = df.drop(columns=['meanA', 'meanB', 'stdA']).set_index(['F,P', 'rO'])
-# 	tableMeanA = dfMeanA.unstack(level=0)
-# 	tableMeanB = dfMeanB.unstack(level=0)
-# 	tableStdA = dfStdA.unstack(level=0)
-# 	tableStdB = dfStdB.unstack(level=0)
-
-# 	xticks = np.array(df.set_index(['F,P', 'rO']).unstack(level=0).index)
-# 	yticks = np.array(df.set_index(['rO', 'F,P']).unstack(level=0).index)
-# 	rx = (xticks[1]-xticks[0])/2
-# 	ry = (yticks[1]-yticks[0])/2
-# 	viridis = plt.get_cmap('viridis', 256)
-
-# 	# normalize mean and std 0 to 1
-# 	A = np.array(tableMeanA) / (capital*match)
-# 	B = 1 - np.array(tableStdA) / (capital*match/2)
-# 	# convert means to RGB spectrum and set alpha equal to std
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("Agent Friendliness")
-# 	plt.ylabel("T4T Magnitude")
-# 	plt.title("T4T Rewards")
-# 	fig.savefig("plots/MagnitudeFriendliness/A.pdf")
-
-# 	A = np.array(tableMeanB) / (capital*match)
-# 	B = 1 - np.array(tableStdB) / (capital*match/2)
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("Agent Friendliness")
-# 	plt.ylabel("T4T Magnitude")
-# 	plt.title("Agent Rewards")
-# 	fig.savefig("plots/MagnitudeFriendliness/B.pdf")
-
-# 	A = (np.array(tableMeanA) + np.array(tableMeanB)) / (2*capital*match)
-# 	B = 1 - (np.array(tableStdA) + np.array(tableStdB)) / (capital*match)
-# 	RGBA = viridis(A.T)
-# 	RGBA[...,-1] = B.T
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(RGBA,
-# 		vmin=0, vmax=1,
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		origin='lower',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("Agent Friendliness")
-# 	plt.ylabel("T4T Magnitude")
-# 	plt.title("Total Rewards")
-# 	fig.savefig("plots/MagnitudeFriendliness/total.pdf")
-
-def plotFriendlinessFriendliness(df, capital, match):
-	dfMeanA = df.drop(columns=['meanB', 'stdA', 'stdB']).set_index(['rOA', 'rOB'])
-	dfMeanB = df.drop(columns=['meanA', 'stdA', 'stdB']).set_index(['rOA', 'rOB'])
-	dfStdA = df.drop(columns=['meanA', 'meanB', 'stdB']).set_index(['rOA', 'rOB'])
-	dfStdB = df.drop(columns=['meanA', 'meanB', 'stdA']).set_index(['rOA', 'rOB'])
-	tableMeanA = dfMeanA.unstack(level=0)
-	tableMeanB = dfMeanB.unstack(level=0)
-	tableStdA = dfStdA.unstack(level=0)
-	tableStdB = dfStdB.unstack(level=0)
-
-	xticks = np.array(df.set_index(['rOA', 'rOB']).unstack(level=0).index)
-	yticks = np.array(df.set_index(['rOB', 'rOA']).unstack(level=0).index)
 	rx = (xticks[1]-xticks[0])/2
 	ry = (yticks[1]-yticks[0])/2
 	viridis = plt.get_cmap('viridis', 256)
 
-	# normalize mean and std 0 to 1
-	A = np.array(tableMeanA) / (capital*match)
-	B = 1 - np.array(tableStdA) / (capital*match/2)
-	# convert means to RGB spectrum and set alpha equal to std
-	RGBA = viridis(A.T)
-	RGBA[...,-1] = B.T
-	fig, ax = plt.subplots()
-	c = ax.imshow(RGBA,
+	# normalize by dividing by max Q value in each state
+	# rowMax = np.max(policy, axis=1)
+	# for r in range(2+nS):
+	# 	if rowMax[r]==0: rowMax[r] = 1;
+	# policy /= rowMax[:, np.newaxis]
+
+	# normalize with softmax
+	policy = softmax(policy/0.01, axis=1)
+
+	RGB = viridis(policy)
+	fig, ax = plt.subplots(figsize=((16, 8)))
+	c = ax.imshow(RGB,
 		vmin=0, vmax=1,
 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
 		interpolation='nearest',
@@ -544,265 +318,10 @@ def plotFriendlinessFriendliness(df, capital, match):
 	plt.colorbar(c)
 	ax.set_xticks(xticks)
 	ax.set_yticks(yticks)
-	plt.xlabel("Agent B Friendliness")
-	plt.ylabel("Agent A Friendliness")
-	plt.title("Agent A Rewards")
-	fig.savefig("plots/FriendlinessFriendliness_A.pdf")
-
-	A = np.array(tableMeanB) / (capital*match)
-	B = 1 - np.array(tableStdB) / (capital*match/2)
-	RGBA = viridis(A.T)
-	RGBA[...,-1] = B.T
-	fig, ax = plt.subplots()
-	c = ax.imshow(RGBA,
-		vmin=0, vmax=1,
-		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-		interpolation='nearest',
-		origin='lower',
-		cmap='viridis')
-	ax.set_aspect('auto')
-	plt.colorbar(c)
-	ax.set_xticks(xticks)
-	ax.set_yticks(yticks)
-	plt.xlabel("Agent B Friendliness")
-	plt.ylabel("Agent A Friendliness")
-	plt.title("Agent B Rewards")
-	fig.savefig("plots/FriendlinessFriendliness_B.pdf")
-
-
-
-# def plotForgiveness2D(df):
-# 	dfMeanA = df.drop(columns=['meanB', 'stdA', 'stdB']).set_index(['FA', 'FB'])
-# 	dfMeanB = df.drop(columns=['meanA', 'stdA', 'stdB']).set_index(['FA', 'FB'])
-# 	dfStdA = df.drop(columns=['meanA', 'meanB', 'stdB']).set_index(['FA', 'FB'])
-# 	dfStdB = df.drop(columns=['meanB', 'meanB', 'stdA']).set_index(['FA', 'FB'])
-# 	tableMeanA = dfMeanA.unstack(level=0)
-# 	tableMeanB = dfMeanB.unstack(level=0)
-# 	tableStdA = dfStdA.unstack(level=0)
-# 	tableStdB = dfStdB.unstack(level=0)
-
-# 	xticks = np.array(df.set_index(['FB', 'FA']).unstack(level=0).index)
-# 	yticks = np.array(df.set_index(['FA', 'FB']).unstack(level=0).index)
-# 	rx = (xticks[1]-xticks[0])/2
-# 	ry = (yticks[1]-yticks[0])/2
-
-
-# 	fig, ax = plt.subplots()
-# 	# sns.heatmap(tableMeanA, cmap='viridis')  # breaks ticks and labels
-# 	c = ax.imshow(np.array(tableMeanA),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("T4T B Forgiveness")
-# 	plt.ylabel("T4T A Forgiveness")
-# 	plt.title("Mean A Rewards")
-# 	fig.savefig("plots/forgiveness2d_meanA.pdf")
-
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(np.array(tableMeanB),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("T4T B Forgiveness")
-# 	plt.ylabel("T4T A Forgiveness")
-# 	plt.title("Mean B Rewards")
-# 	fig.savefig("plots/forgiveness2d_meanB.pdf")
-
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(np.array(tableStdA),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("T4T B Forgiveness")
-# 	plt.ylabel("T4T A Forgiveness")
-# 	plt.title("Std A Rewards")
-# 	fig.savefig("plots/forgiveness2d_stdA.pdf")
-
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(np.array(tableStdB),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("T4T B Forgiveness")
-# 	plt.ylabel("T4T A Forgiveness")
-# 	plt.title("Std B Rewards")
-# 	fig.savefig("plots/forgiveness2d_stdB.pdf")
-
-
-# def plotFriendliness2D(df):
-# 	dfMeanA = df.drop(columns=['meanB', 'stdA', 'stdB']).set_index(['rOA', 'rOB'])
-# 	dfMeanB = df.drop(columns=['meanA', 'stdA', 'stdB']).set_index(['rOA', 'rOB'])
-# 	dfStdA = df.drop(columns=['meanA', 'meanB', 'stdB']).set_index(['rOA', 'rOB'])
-# 	dfStdB = df.drop(columns=['meanB', 'meanB', 'stdA']).set_index(['rOA', 'rOB'])
-# 	tableMeanA = dfMeanA.unstack(level=0)
-# 	tableMeanB = dfMeanB.unstack(level=0)
-# 	tableStdA = dfStdA.unstack(level=0)
-# 	tableStdB = dfStdB.unstack(level=0)
-
-# 	xticks = np.array(df.set_index(['rOB', 'rOA']).unstack(level=0).index)
-# 	yticks = np.array(df.set_index(['rOA', 'rOB']).unstack(level=0).index)
-# 	rx = (xticks[1]-xticks[0])/2
-# 	ry = (yticks[1]-yticks[0])/2
-
-
-# 	fig, ax = plt.subplots()
-# 	# sns.heatmap(tableMeanA, cmap='viridis')  # breaks ticks and labels
-# 	c = ax.imshow(np.array(tableMeanA),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("RL B Friendliness")
-# 	plt.ylabel("RL A Friendliness")
-# 	plt.title("Mean A Rewards")
-# 	fig.savefig("plots/friendliness2d_meanA.pdf")
-
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(np.array(tableMeanB),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("RL B Friendliness")
-# 	plt.ylabel("RL A Friendliness")
-# 	plt.title("Mean B Rewards")
-# 	fig.savefig("plots/friendliness2d_meanB.pdf")
-
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(np.array(tableStdA),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("RL B Friendliness")
-# 	plt.ylabel("RL A Friendliness")
-# 	plt.title("Std A Rewards")
-# 	fig.savefig("plots/friendliness2d_stdA.pdf")
-
-# 	fig, ax = plt.subplots()
-# 	c = ax.imshow(np.array(tableStdB),
-# 		extent=[xticks[0]-rx, xticks[-1]+rx, yticks[0]-ry, yticks[-1]+ry],
-# 		interpolation='nearest',
-# 		cmap='viridis')
-# 	ax.set_aspect('auto')
-# 	plt.colorbar(c)
-# 	ax.set_xticks(xticks)
-# 	ax.set_yticks(yticks)
-# 	plt.xlabel("RL B Friendliness")
-# 	plt.ylabel("RL A Friendliness")
-# 	plt.title("Std B Rewards")
-# 	fig.savefig("plots/friendliness2d_stdB.pdf")
-
-
-
-
-# def makeFigs(self):
-# 	gamesAAll = Game.objects.filter(userRole="A", complete=True)
-# 	gamesBAll = Game.objects.filter(userRole="B", complete=True)
-# 	gamesAUser = Game.objects.filter(user=self, userRole="A", complete=True)
-# 	gamesBUser = Game.objects.filter(user=self, userRole="B", complete=True)
-
-# 	dfsAll = []
-# 	columns = ('player', 'turn', 'score', 'generosity')
-# 	for game in gamesAAll:
-# 		for t in range(game.rounds):
-# 			give = game.historyToArray("user", "give")
-# 			keep = game.historyToArray("user", "keep")
-# 			reward = game.historyToArray("user", "reward")
-# 			dfsAll.append(pd.DataFrame([["A", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-# 	for game in gamesBAll:
-# 		for t in range(game.rounds):
-# 			give = game.historyToArray("user", "give")
-# 			keep = game.historyToArray("user", "keep")
-# 			reward = game.historyToArray("user", "reward")
-# 			dfsAll.append(pd.DataFrame([["B", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-# 	dfAll = pd.concat([df for df in dfsAll], ignore_index=True)
-
-# 	dfsUser = []
-# 	columns = ('player', 'turn', 'score', 'generosity')
-# 	for game in gamesAUser:
-# 		for t in range(game.rounds):
-# 			give = game.historyToArray("user", "give")
-# 			keep = game.historyToArray("user", "keep")
-# 			reward = game.historyToArray("user", "reward")
-# 			dfsUser.append(pd.DataFrame([["A", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-# 	for game in gamesBUser:
-# 		for t in range(game.rounds):
-# 			give = game.historyToArray("user", "give")
-# 			keep = game.historyToArray("user", "keep")
-# 			reward = game.historyToArray("user", "reward")
-# 			dfsUser.append(pd.DataFrame([["B", t, reward[t], give[t]/(give[t]+keep[t])]], columns=columns))
-# 	dfUser = pd.concat([df for df in dfsUser], ignore_index=True)
-
-# 	ylim = ((0, 1))
-# 	binsG = np.linspace(0, 1, game.capital+1)
-# 	binsS = np.arange(0, game.match*game.capital+1, 2)
-# 	color_dict = {'A': "#66c3d2ff", 'B': '#d8388bff'}
-
-# 	figScoreAll = f"Score_All.svg"
-# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-# 	sns.histplot(data=dfAll, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player', palette=color_dict)  
-# 	ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="All Players' Scores")
-# 	# leg = ax.legend(loc='upper right')
-# 	fig.tight_layout()
-# 	fig.savefig(f'game/static/user-stats/{figScoreAll}')
-# 	plt.close()
-
-# 	figGenAll = f"Generosity_All.svg"
-# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-# 	sns.histplot(data=dfAll, x='generosity', ax=ax, stat="probability", bins=binsG, element="step", hue='player', palette=color_dict)  
-# 	ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="All Players' Generosity")
-# 	# leg = ax.legend(loc='upper right')
-# 	fig.tight_layout()
-# 	fig.savefig(f'game/static/user-stats/{figGenAll}')
-# 	plt.close()
-
-# 	figScoreUser = f"Score_{self.username}.svg"
-# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-# 	sns.histplot(data=dfUser, x='score', ax=ax, stat="probability", bins=binsS, element="step", hue='player', palette=color_dict)  
-# 	ax.set(xlabel="Score", ylabel="Frequency", xticks=((binsS)), ylim=ylim, title="Your Scores")
-# 	# leg = ax.legend(loc='upper right')
-# 	fig.tight_layout()
-# 	fig.savefig(f'game/static/user-stats/{figScoreUser}')
-# 	plt.close()
-
-# 	figGenUser = f"Generosity_{self.username}.svg"
-# 	fig, ax = plt.subplots(nrows=1, ncols=1, figsize=((6,6)))
-# 	sns.histplot(data=dfUser, x='generosity', ax=ax, stat="probability", bins=binsG, element="step", hue='player', palette=color_dict)  
-# 	ax.set(xlabel="Generosity", ylabel="Frequency", xticks=((binsG)), ylim=ylim, title="Your Generosity")
-# 	# leg = ax.legend(loc='upper right')
-# 	fig.tight_layout()
-# 	fig.savefig(f'game/static/user-stats/{figGenUser}')
-# 	plt.close()
-
-# 	return {
-# 		'figScoreUser': figScoreUser,
-# 		'figGenUser': figGenUser,
-# 		'figScoreAll': figScoreAll,
-# 		'figGenAll': figGenAll,
-# 	}
+	ax.set_yticklabels(ytickLabels)
+	posx = np.linspace(start=xticks[0]-rx, stop=xticks[-1]+rx, num=nA, endpoint=False)
+	posy = np.linspace(start=yticks[0]-ry, stop=yticks[-1]+ry, num=2+nS, endpoint=False)
+	plt.xlabel("Action")
+	plt.ylabel("State (Opponent Generosity)")
+	plt.title(f"{agent} {player} {group} Policy")
+	fig.savefig(f"plots/{agent}_{player}_{group}_Policy")

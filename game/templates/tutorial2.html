@@ -140,9 +140,9 @@
 			<p class='n-text'>Our research study is focused on how <span class="red">you learn with experience</span>, so try your best, and earn <span class="yellow">bonus</span> rewards for playing well!</p>
 		</div>
 		<div id="n5" class="note" href='{% url "home" %}'>
-			<p class='n-text'>To complete the study, you must <span class="red">complete 10 games</span>. View your progress in the upper left.</p>
-			<p class='n-text'>You may also play up to 30 bonus games to earn more <span class="yellow">rewards</span> , at a rate of <span class="green">$0.05-$0.25</span> per game</p>
-			<p class='n-text'>Receive your <span class='black'>HIT code</span> and bonus payment by selecting <span class="pink">Cash Out</span> from the upper right</p>
+			<p class='n-text'>To complete the study, you must <span class="red">complete {{required}} games</span>. View your progress in the upper left.</p>
+			<p class='n-text'>Each game will earn you <span class="green">${{minBonus}} - ${{maxBonus}}</span>, depending on your score</p>
+			<p class='n-text'>Receive your <span class='black'>HIT code</span> by selecting <span class="pink">Cash Out</span> from the upper right</p>
 			<p class='n-text'>You must complete the Survey for <span class="gray">Cash Out</span> to become available. The <span class="teal">Survey</span> can be accessed through the Home page.</p>
 			<p class='n-text'>You have completed the tutorial and may now start playing games. Happy investing!</p>
 		</div>

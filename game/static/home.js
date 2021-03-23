@@ -4,8 +4,7 @@ initialize("/game/api/status/", "GET", (status) => {
     let doneConsentBool = (status.doneConsent !== null);
     let doneSurveyBool = (status.doneSurvey !== null);
     let doneTutorialBool = (status.doneTutorial !== null);
-    let doneRequiredBool = (status.doneRequired !== null);
-    let doneMax = (status.doneMax !== null);
+    let doneGamesBool = (status.doneGames !== null);
     let doneCashBool = (status.doneCash !== null);
 
     $("#ID").text(status.username);
@@ -32,16 +31,16 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#game-box').off('click');
         $('#game-box').click(function(e) {alert("To play games, first complete the tutorial");});
     }
-    if (doneTutorialBool) {
-        if (status.nGames < status.required) {
-            $('#gt1').text(`Required Games: ${status.nGames}/${status.required}`)
-            $('#gt3').text(``)
-        }
-        else {
-            $('#gt1').text(`Required Games: ${status.required}/${status.required}`)            
-            $('#gt3').text(`Bonus Games: ${status.nGames-status.required}/${status.max-status.required}`)
-        }
-    }
+    // if (doneTutorialBool) {
+    //     if (status.nGames < status.required) {
+    //         $('#gt1').text(`Required Games: ${status.nGames}/${status.required}`)
+    //         $('#gt3').text(``)
+    //     }
+    //     else {
+    //         $('#gt1').text(`Required Games: ${status.required}/${status.required}`)            
+    //         $('#gt3').text(`Bonus Games: ${status.nGames-status.required}/${status.max-status.required}`)
+    //     }
+    // }
     // if (doneRequiredBool) {
     //     $('#games-text2').text('Games [Required ✔]');
     //     $('#games-box').addClass('inactive');
@@ -54,13 +53,13 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#cash-text').text('HIT Code / Cash Out [✔]');
     }
     else {
-        if (doneSurveyBool & doneTutorialBool & doneRequiredBool) {
+        if (doneSurveyBool & doneTutorialBool & doneGamesBool) {
             $('#cash-text').text('HIT Code / Cash Out');
         }
         else {
             $('#cash-box').addClass('inactive');
             $('#cash-box').off('click');
-            $('#cash-box').click(function(e) {alert("To cash out, first complete the survey and the "+status.required+" required games");});
+            $('#cash-box').click(function(e) {alert("Complete the survey and the "+status.required+" required games");});
         }
     }
 });

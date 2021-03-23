@@ -108,7 +108,7 @@ def survey(request):
 @login_required
 def cash(request):
 	request.user.setProgress()
-	if not (request.user.doneConsent and request.user.doneRequired):
+	if not (request.user.doneConsent and request.user.doneGames):
 		error(request, 'You must complete the required games before cashing out')
 		return redirect('home')
 	else:
@@ -161,7 +161,12 @@ def startTutorial(request):
 
 @login_required
 def startTutorial2(request):
-	return render(request, "tutorial2.html")
+	context = {
+		'required': REQUIRED,
+		'minBonus': f'{BONUS[0][1]:.2f}',
+		'maxBonus': f'{BONUS[-1][1]:.2f}',
+	}
+	return render(request, "tutorial2.html", context=context)
 
 @login_required
 def slider(request):

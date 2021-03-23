@@ -25,7 +25,7 @@ class Agent(admin.ModelAdmin):
 @admin.register(User)
 class User(UserAdmin):
 	list_display = ('username', 'mturk', 'group', 'nGames', 'code',
-		'doneConsent',  'doneTutorial', 'doneHIT', 'doneCash', 
+		'doneConsent',  'doneTutorial', 'doneCash', 
 		'age', 'gender', 'income', 'education', 'veteran', 'empathy', 'risk', 'altruism')
 
 @admin.register(Blob)

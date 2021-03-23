@@ -31,13 +31,10 @@ def status(request):
 		'path': request.path,
 		'nGames': request.user.nGames,
 		'required': REQUIRED,
-		'max': MAX,
 		'doneConsent': request.user.doneConsent,
 		'doneSurvey': request.user.doneSurvey,
 		'doneTutorial': request.user.doneTutorial,
-		'doneRequired': request.user.doneRequired,
-		'doneMax': request.user.doneMax,
-		'doneHIT': request.user.doneCash,
+		'doneGames': request.user.doneGames,
 		'doneCash': request.user.doneCash,
 		'winnings': f"{request.user.winnings:.2f}",
 		}
@@ -69,7 +66,7 @@ def startGame(request):
 			'match': game.match,
 			'bonus': BONUS,
 			'required': REQUIRED,
-			'doneRequired': game.user.doneRequired,
+			'doneGames': game.user.doneGames,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),
@@ -121,7 +118,7 @@ def startTutorial(request):
 	else:
 		game = Game.objects.create()
 		game.tutorial = True
-		game.startTutorial(request.user, "A", "B", "T4T")
+		game.startTutorial(request.user, "A", "B", "T4T_X06")
 		game.save()
 		request.user.setProgress()
 		data = {
@@ -137,7 +134,7 @@ def startTutorial(request):
 			'match': game.match,
 			'bonus': BONUS,
 			'required': REQUIRED,
-			'doneRequired': game.user.doneRequired,
+			'doneGames': game.user.doneGames,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),
@@ -170,7 +167,7 @@ def updateTutorial(request):
 def restartTutorial(request):
 	game = Game.objects.create()
 	game.tutorial = True
-	game.startTutorial(request.user, "B", "A", "T4T")
+	game.startTutorial(request.user, "B", "A", "T4T_X06")
 	game.save()
 	data = {
 		'userGives': list(game.historyToArray("user", "give")),
@@ -184,7 +181,6 @@ def restartTutorial(request):
 
 @login_required
 def finishTutorial(request):
-	print("finishing tutorial")
 	request.user.doneTutorial = timezone.now()
 	request.user.save()
 	return JsonResponse({}, encoder=NpEncoder)
