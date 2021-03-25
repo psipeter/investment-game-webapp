@@ -69,15 +69,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let sliderLeft = document.getElementById("slider-left");
     let sliderThumb = document.getElementById("slider-thumb");
     let sliderRight = document.getElementById("slider-right");
-    sliderLeft.addEventListener("touchstart", function(e) {startSlide(e);}, false);
-    sliderLeft.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
-    sliderLeft.addEventListener("touchend", function(e) {stopSlide(e);}, false);
-    sliderThumb.addEventListener("touchstart", function(e) {startSlide(e);}, false);
-    sliderThumb.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
-    sliderThumb.addEventListener("touchend", function(e) {stopSlide(e);}, false);
-    sliderRight.addEventListener("touchstart", function(e) {startSlide(e);}, false);
-    sliderRight.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
-    sliderRight.addEventListener("touchend", function(e) {stopSlide(e);}, false);
 
     // Functions
 
@@ -249,7 +240,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         }
         else {
             startTime = performance.now();
-            $("#slider-wrapper").attr('val', 0); callUpdate();
+            $("#slider-wrapper").attr('val', 0);
+            callUpdate();
         }
     }
 
@@ -263,6 +255,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         userKeeps.push(userKeep);
         if (game.userRole == "A") {maxAgent = userGive * game.match} // update global
         $("#submit").hide();
+        $("#slider-thumb").off();  // unbinds mouse and touch event handler
+        $("#slider-left").off();
+        $("#slider-right").off();
         setTimeout(function() {hideSlider();}, animateTime);
         let skip = (userGive==0);
         executeMove(game.userRole, userGive, userKeep, skip);
@@ -377,6 +372,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#slider-thumb").mousedown(startSlide);
             $("#slider-left").mousedown(startSlide);
             $("#slider-right").mousedown(startSlide);
+            sliderLeft.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+            sliderLeft.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+            sliderLeft.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+            sliderThumb.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+            sliderThumb.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+            sliderThumb.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+            sliderRight.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+            sliderRight.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+            sliderRight.addEventListener("touchend", function(e) {stopSlide(e);}, false);
             $("#submit").fadeIn(quickTime);
             $("#slider-wrapper").css('opacity', "1");
             $("#slider-thumb").css('background-color', "var(--myYellow)");
@@ -405,7 +409,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     }
     function hideSlider() {
         $("#submit").prop('disabled', true);
-        $("#slider-thumb").off();  // unbinds mousedown event handler
+        $("#slider-thumb").off();  // unbinds mouse and touch event handler
         $("#slider-left").off();
         $("#slider-right").off();
         $("#slider-wrapper").fadeOut(quickTime);
