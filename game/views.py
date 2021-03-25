@@ -112,20 +112,10 @@ def cash(request):
 		error(request, 'You must complete the required games before cashing out')
 		return redirect('home')
 	else:
-		request.user.doneHIT = timezone.now()
+		request.user.doneCash = timezone.now()
 		request.user.save()
-		form = CashForm(request.POST)
-		context = {
-			'winnings': f"{request.user.winnings:.2f}",
-			'FIXED_REWARD': FIXED_REWARD,
-			'form': form,
-			}
-		if request.method == 'POST':
-			request.user.doneCash = timezone.now()
-			request.user.save()
-			return redirect('home')
-		else:
-			return render(request, "cash.html", context=context)
+		context = {'winnings': f"{request.user.winnings:.2f}",}
+		return render(request, "cash.html", context=context)
 
 @login_required
 def feedback(request):

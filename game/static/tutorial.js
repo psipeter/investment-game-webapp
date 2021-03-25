@@ -24,8 +24,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     let agentGives = game.agentGives;
     let agentKeeps = game.agentKeeps;
     let agentRewards = game.agentRewards;
-    let isMouseDown = false;
-    let startMouseX;
+    let isSliding = false;
     maxUser = game.capital;
     maxAgent = 0;  // updated after user moves
     $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
@@ -47,6 +46,18 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $(window).resize(resizeSlider);
     $(document).mousemove(function(e) {moveSlide(e);});
     $(document).mouseup(function(e) {stopSlide(e);});
+    let sliderLeft = document.getElementById("slider-left");
+    let sliderThumb = document.getElementById("slider-thumb");
+    let sliderRight = document.getElementById("slider-right");
+    sliderLeft.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+    sliderLeft.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+    sliderLeft.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+    sliderThumb.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+    sliderThumb.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+    sliderThumb.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+    sliderRight.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+    sliderRight.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+    sliderRight.addEventListener("touchend", function(e) {stopSlide(e);}, false);
 
     // Add navigation
     linkNotes();
@@ -89,10 +100,10 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $("#submit").click(function () {
         userGive = Number($("#slider-wrapper").attr('val'));
         userKeep = maxUser - userGive;
-        if (userGive<=0){
-            $("#submit").fadeOut(quickTime);
+        if (userGive==0){
+            hideSlider();
             $("#warning").fadeIn(quickTime);
-            setTimeout(function() {$("#warning").fadeOut(quickTime); $("#submit").fadeIn(quickTime);}, waitTime);
+            setTimeout(function() {$("#warning").fadeOut(quickTime); showSlider(game.userRole, 0, maxUser, true);}, waitTime);
         }
         else {
             $("#submit").hide();
@@ -233,27 +244,24 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     // Functions
 
     // slider 
-    let getMouseX = function(e) {
-        let event = e;
-        if (!e) {event = window.event;}
-        if (event.pageX) {return event.pageX;}
-        // else if (event.clientX) {return event.clientX;}
-        // return e.pageX;       
+    let getX = function(e) {
+        if (!e) {e = window.event;}
+        e.preventDefault();
+        if (e.type=='mousemove' || e.type=='mouseup' || e.type=='mousedown') {return e.pageX;}
+        if (e.type=='touchmove' || e.type=='touchstart') {return e.touches[0].clientX;}
+        if (e.type=='touchend'){return e.changedTouches[0].clientX;}
     }
     let startSlide = function(e) {
-        isMouseDown = true;
+        isSliding = true;
         $("#submit").prop('disabled', false);
-        $("#n4_2").fadeIn(quickTime);
-        startMouseX = getMouseX(e);
         updateSliderMouse();
-        return false;
     }
     let moveSlide = function(e) {
-        if (isMouseDown) {updateSliderMouse(e); return false;}
+        if (isSliding) {updateSliderMouse(e); return false;}
     }
     let stopSlide = function(e) {
-        isMouseDown = false;
-        let x = getMouseX(e);
+        isSliding = false;
+        let x = getX(e);
         let f = absToRel(x);
     }
     let absToRel = function(x) {
@@ -264,6 +272,9 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let wT = widthT / 100 * widthD;  // in px
         let leftEdge = $("#sendB").offset().left - wT/2;
         let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        // console.log(wW, wT);
+        // console.log(leftEdge, rightEdge);
+        // console.log(x);
         if ($("#slider-wrapper").hasClass('flipped')) {
             if (x <= leftEdge) {return 1;}
             else if (x >= rightEdge) {return 0;}
@@ -276,7 +287,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         }
     }
     let updateSliderMouse = function(e) {
-        let x = getMouseX(e);
+        let x = getX(e);
         let f = absToRel(x);
         updateSlider(f, maxUser, game.userRole);
     }

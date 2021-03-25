@@ -45,6 +45,16 @@ body {
 	color: var(--myBlue);
 }
 
+@media (max-width: 900px), (max-height: 900px) {
+	body {font-size: 9pt;}
+}
+
+@media (max-width: 600px), (max-height: 600px) {
+	body {font-size: 6pt;}
+}
+
+
+
 h1 {
 	margin: 0;
 	font-size: 250%;

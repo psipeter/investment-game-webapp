@@ -29,7 +29,7 @@
 #information-box {grid-row: 1; grid-column: 1; display: grid; grid-template-rows: 20% 80%;}
 #consent-box {grid-row: 1; grid-column: 2; display: grid; grid-template-rows: 20% 80%;}
 #tutorial-box {grid-row: 1; grid-column: 3; display: grid; grid-template-rows: 20% 80%;}
-#game-box {grid-row: 2; grid-column: 1/4; display: grid; grid-template-rows: 80% 20%;}
+#game-box {grid-row: 2; grid-column: 1/4; display: grid; grid-template-rows: 5% 75% 20%;}
 #survey-box {grid-row: 3; grid-column: 1; display: grid; grid-template-rows: 80% 20%;}
 #cash-box {grid-row: 3; grid-column: 2; display: grid; grid-template-rows: 80% 20%;}
 #feedback-box {grid-row: 3; grid-column: 3; display: grid; grid-template-rows: 80% 20%;}
@@ -37,10 +37,13 @@
 #information-img, #consent-img, #tutorial-img {grid-row: 2;}
 #information-text, #consent-text, #tutorial-text {grid-row: 1;}
 
-#game-img, #survey-img, #cash-img, #feedback-img {grid-row: 1;}
-#game-text, #survey-text, #cash-text, #feedback-text {grid-row: 2;}
+#survey-img, #cash-img, #feedback-img {grid-row: 1;}
+#survey-text, #cash-text, #feedback-text {grid-row: 2;}
 
-#game-img {height: 24vh; width: 50vw;}
+#game-img {grid-row: 2;} 
+#game-text {grid-row: 3;}
+
+#game-img {height: 18vh; width: 50vw;}
 #game-text {font-size: 250%;}
 
 #logout-link:link, #logout-link:visited {text-decoration: none; color: var(--myBlue);}

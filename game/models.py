@@ -276,7 +276,7 @@ class User(AbstractUser):
 		self.nGames = completeGames.count()
 		self.save()
 		if self.doneGames == None and self.nGames >= REQUIRED:
-			self.doneGames = timezone.now()()
+			self.doneGames = timezone.now()
 		self.save()
 		winnings = 0
 		for game in completeGames:

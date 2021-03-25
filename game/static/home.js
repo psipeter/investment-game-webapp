@@ -31,24 +31,11 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#game-box').off('click');
         $('#game-box').click(function(e) {alert("To play games, first complete the tutorial");});
     }
-    // if (doneTutorialBool) {
-    //     if (status.nGames < status.required) {
-    //         $('#gt1').text(`Required Games: ${status.nGames}/${status.required}`)
-    //         $('#gt3').text(``)
-    //     }
-    //     else {
-    //         $('#gt1').text(`Required Games: ${status.required}/${status.required}`)            
-    //         $('#gt3').text(`Bonus Games: ${status.nGames-status.required}/${status.max-status.required}`)
-    //     }
-    // }
-    // if (doneRequiredBool) {
-    //     $('#games-text2').text('Games [Required ✔]');
-    //     $('#games-box').addClass('inactive');
-    //     $('#games-box').off('click');
-    // }
-    // else if (doneTutorialBool) {
-    //     $('#required-text').text("Required Games ["+status.nGames+"/"+status.required+"]");
-    // }
+    if (doneGamesBool) {
+        $('#game-text').text('Play Games [✔]');
+        $('#game-box').addClass('inactive');
+        $('#game-box').off('click');
+    }
     if (doneCashBool) {
         $('#cash-text').text('HIT Code / Cash Out [✔]');
     }

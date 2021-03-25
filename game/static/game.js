@@ -23,8 +23,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let agentGives = game.agentGives;
     let agentKeeps = game.agentKeeps;
     let agentRewards = game.agentRewards;
-    let isMouseDown = false;
-    let startMouseX;
+    let isSliding = false;
     if (game.userRole == "A") {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
@@ -67,31 +66,40 @@ initialize("/game/api/startGame/", "POST", (game) => {
     $(window).resize(resizeSlider);
     $(document).mousemove(function(e) {moveSlide(e);});
     $(document).mouseup(function(e) {stopSlide(e);});
-
+    let sliderLeft = document.getElementById("slider-left");
+    let sliderThumb = document.getElementById("slider-thumb");
+    let sliderRight = document.getElementById("slider-right");
+    sliderLeft.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+    sliderLeft.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+    sliderLeft.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+    sliderThumb.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+    sliderThumb.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+    sliderThumb.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+    sliderRight.addEventListener("touchstart", function(e) {startSlide(e);}, false);
+    sliderRight.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
+    sliderRight.addEventListener("touchend", function(e) {stopSlide(e);}, false);
 
     // Functions
 
     // slider 
-    let getMouseX = function(e) {
-        let event = e;
-        if (!e) {event = window.event;}
-        if (event.pageX) {return event.pageX;}
-        // else if (event.clientX) {return event.clientX;}
-        // return e.pageX;       
+    let getX = function(e) {
+        if (!e) {e = window.event;}
+        e.preventDefault();
+        if (e.type=='mousemove' || e.type=='mouseup' || e.type=='mousedown') {return e.pageX;}
+        if (e.type=='touchmove' || e.type=='touchstart') {return e.touches[0].clientX;}
+        if (e.type=='touchend'){return e.changedTouches[0].clientX;}
     }
     let startSlide = function(e) {
-        isMouseDown = true;
+        isSliding = true;
         $("#submit").prop('disabled', false);
-        startMouseX = getMouseX(e);
         updateSliderMouse();
-        return false;
     }
     let moveSlide = function(e) {
-        if (isMouseDown) {updateSliderMouse(e); return false;}
+        if (isSliding) {updateSliderMouse(e); return false;}
     }
     let stopSlide = function(e) {
-        isMouseDown = false;
-        let x = getMouseX(e);
+        isSliding = false;
+        let x = getX(e);
         let f = absToRel(x);
     }
     let absToRel = function(x) {
@@ -117,7 +125,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         }
     }
     let updateSliderMouse = function(e) {
-        let x = getMouseX(e);
+        let x = getX(e);
         let f = absToRel(x);
         updateSlider(f, maxUser, game.userRole);
     }
@@ -589,8 +597,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#imgB").fadeOut(quickTime);
         $("#game-over-area").fadeIn(quickTime);
         $("#flair-text").fadeIn(quickTime);
-        if (game.nGames+1 == game.required) {$("#flair-text").text("Required games complete!");}
         $("#game-over-text").fadeIn(quickTime);
-        $("#play-again-text").fadeIn(quickTime);
+        if (game.nGames+1 >= game.required) {
+            $("#flair-text").text("Required games complete! You may now Cash Out");
+        }
+        else {
+            $("#play-again-text").fadeIn(quickTime);
+        }
     }
 });

@@ -5,9 +5,9 @@ body {
 
 #body-wrapper {
 	display: flex-box;
-	width: 20vw;
+	width: 30vw;
 	margin-top: 20vh;
-	margin-left: 28vw;
+	margin-left: 23vw;
 	padding: 2vh 2vw;
 	border: 1pt solid black;
 	background-color: var(--myForeground);
@@ -46,3 +46,8 @@ input {
 
 h1 {margin: 2vh 0;}
 .button-wrapper, .link-wrapper {margin: 2vh 0;}
+
+@media (max-width: 1600px) {
+	input {font-size: 9pt;}
+	h1 {font-size: 200%;}
+}

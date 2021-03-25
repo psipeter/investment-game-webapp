@@ -115,7 +115,7 @@
 	grid-row: 2;
 	grid-column: 1;
 	display: grid;
-	grid-template-rows: 3;
+	grid-template-rows: repeat(3, 33.3%);
 	grid-template-columns: repeat(25, 1fr);
 	justify-content: space-between;
 	align-items: center;
@@ -129,7 +129,7 @@
 	text-align: center;
 	border: 2pt solid var(--myRed);
 }
-.coin {width: 95%; margin-right: 5%; opacity: 0;}
+.coin {height: 8vh; width: 95%; margin-right: 5%; opacity: 0;}
 #c1a {grid-row: 1; grid-column: 1;}
 #c2a {grid-row: 1; grid-column: 2;}
 #c3a {grid-row: 1; grid-column: 3;}
@@ -419,4 +419,20 @@
 	color: var(--myTeal);
 	width: 100%;
 	margin: 0;
+}
+
+@media (max-height: 600px) {
+	body {font-size: 4pt;}
+}
+
+@media (max-width: 1300px) {
+	body {font-size: 6pt;}
+}
+
+@media (max-height: 400px) {
+	body {font-size: 3pt;}
+}
+
+@media (max-width: 600px) {
+	body {font-size: 3pt;}
 }

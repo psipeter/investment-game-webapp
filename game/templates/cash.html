@@ -11,36 +11,15 @@
 {% block body %}
 	<h1>Thanks for playing the Investment Game!</h1>
 	<div class='space'></div>
-	{% if not user.doneCash %}
-		<h2>Your HIT code is</h2>
-		<div class="wrapper">
-			<p class="highlight">{{user.code}}</p>
-		</div>
-		<h2>Please paste this code into the Mechanical Turk browser tab to earn <strong>${{FIXED_REWARD}}</strong> for completing the required games</h2>
-		<div class='space'></div>
-		<h1>You may continue playing bonus games to earn high-paying bonus rewards</h1>
-		<div class='space'></div>
-		<h2>Your current winnings are</h2>
-		<div class="wrapper">
-			<p class="highlight">${{winnings}}</p>
-		</div>
-		<h2>To receive this additional payment, press the button below.</h2>
-		<!-- Doing so will prevent you from earning any additional bonus.</p> -->
-		<div class='space'></div>
-		<form method="post">
-			{% csrf_token %} 
-			<input hidden id="submit" type="submit" />
-		</form>
-		<div class="button-wrapper">
-			<button class="button"> <label for="submit">Cash Out</label></button>
-		</div>
-	{% else %}
-		<p>Your HIT code was</p>
-		<p class="code">{{user.code}}</p>
-		<p>and you earned</p>
-		<p class="code">${{winnings}}</p>
-		<p>in bonus rewards</p>
-	{% endif %}
+	<h2>Your total winnings are</h2>
+	<div class="wrapper">
+		<p class="highlight">${{winnings}}</p>
+	</div>
+	<h2>Your HIT code is</h2>
+	<div class="wrapper">
+		<p class="highlight">{{user.code}}</p>
+	</div>
+	<h2>Please paste this code into the Mechanical Turk browser tab to finish the task</h2>
 
 	<div class='space'></div>
 	<div class="appreciation">
