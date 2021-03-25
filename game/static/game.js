@@ -258,6 +258,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#slider-thumb").off();  // unbinds mouse and touch event handler
         $("#slider-left").off();
         $("#slider-right").off();
+        sliderLeft.removeEventListener("touchstart", startSlide);
+        sliderLeft.removeEventListener("touchmove", moveSlide);
+        sliderLeft.removeEventListener("touchend", stopSlide);
+        sliderThumb.removeEventListener("touchstart", startSlide);
+        sliderThumb.removeEventListener("touchmove", moveSlide);
+        sliderThumb.removeEventListener("touchend", stopSlide);
+        sliderRight.removeEventListener("touchstart", startSlide);
+        sliderRight.removeEventListener("touchmove", moveSlide);
+        sliderRight.removeEventListener("touchend", stopSlide);
         setTimeout(function() {hideSlider();}, animateTime);
         let skip = (userGive==0);
         executeMove(game.userRole, userGive, userKeep, skip);
@@ -372,15 +381,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#slider-thumb").mousedown(startSlide);
             $("#slider-left").mousedown(startSlide);
             $("#slider-right").mousedown(startSlide);
-            sliderLeft.addEventListener("touchstart", function(e) {startSlide(e);}, false);
-            sliderLeft.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
-            sliderLeft.addEventListener("touchend", function(e) {stopSlide(e);}, false);
-            sliderThumb.addEventListener("touchstart", function(e) {startSlide(e);}, false);
-            sliderThumb.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
-            sliderThumb.addEventListener("touchend", function(e) {stopSlide(e);}, false);
-            sliderRight.addEventListener("touchstart", function(e) {startSlide(e);}, false);
-            sliderRight.addEventListener("touchmove", function(e) {moveSlide(e);}, false);
-            sliderRight.addEventListener("touchend", function(e) {stopSlide(e);}, false);
+            sliderLeft.addEventListener("touchstart", startSlide, false);
+            sliderLeft.addEventListener("touchmove", moveSlide, false);
+            sliderLeft.addEventListener("touchend", stopSlide, false);
+            sliderThumb.addEventListener("touchstart", startSlide, false);
+            sliderThumb.addEventListener("touchmove", moveSlide, false);
+            sliderThumb.addEventListener("touchend", stopSlide, false);
+            sliderRight.addEventListener("touchstart", startSlide, false);
+            sliderRight.addEventListener("touchmove", moveSlide, false);
+            sliderRight.addEventListener("touchend", stopSlide, false);
             $("#submit").fadeIn(quickTime);
             $("#slider-wrapper").css('opacity', "1");
             $("#slider-thumb").css('background-color', "var(--myYellow)");
@@ -412,6 +421,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#slider-thumb").off();  // unbinds mouse and touch event handler
         $("#slider-left").off();
         $("#slider-right").off();
+        sliderLeft.removeEventListener("touchstart", startSlide);
+        sliderLeft.removeEventListener("touchmove", moveSlide);
+        sliderLeft.removeEventListener("touchend", stopSlide);
+        sliderThumb.removeEventListener("touchstart", startSlide);
+        sliderThumb.removeEventListener("touchmove", moveSlide);
+        sliderThumb.removeEventListener("touchend", stopSlide);
+        sliderRight.removeEventListener("touchstart", startSlide);
+        sliderRight.removeEventListener("touchmove", moveSlide);
+        sliderRight.removeEventListener("touchend", stopSlide);
         $("#slider-wrapper").fadeOut(quickTime);
         $("#submit").fadeOut(quickTime);
         $("#sendA").fadeOut(quickTime);
