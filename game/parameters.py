@@ -1,7 +1,7 @@
 ROUNDS = 5  # rounds per game
 CAPITAL = 10  # don't change this - money available to A 
 MATCH = 3  # don't change this  - multiplication of A's investment to B
-REQUIRED = 3  # number of required games
+REQUIRED = 20  # number of required games
 EPSILON = 0.0  # probability agent will move randomly
 SIGMA = 0.0  # standard deviation added to agent move
 BONUS = [  # thresholds for bonus winnings based on performance, [threshold, money]
