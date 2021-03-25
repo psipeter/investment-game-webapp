@@ -48,12 +48,12 @@ AGENTS_A_1 = [  # learn to be generous group
 	"T4T_X06",
 ]
 AGENTS_B_1 = [
-	"T4T",
+	"T4T_04",
 	"Fixed_M05",
-	"T4T",
+	"T4T_04",
 	"Fixed_M08",
-	"T4T",
-	"T4T",
+	"T4T_04",
+	"T4T_04",
 	"Fixed_M05",
 	"Fixed_M08",
 	"T4T",
