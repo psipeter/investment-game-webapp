@@ -57,7 +57,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     $("#nameB").fadeIn(quickTime)
     $("#imgA").fadeIn(quickTime)
     $("#imgB").fadeIn(quickTime)
-    $("#headerG").text("Games Played — "+game.nGames+" + 1");
     $(window).on('beforeunload', function(e) {return false;});
     animateTurn();
     animateBonus();
@@ -610,6 +609,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
             if (userScore >= game.bonus[i][0]) {bonus = game.bonus[i][1];}
         }
         $(window).off('beforeunload');
+        $("#headerG").text("Games Played — "+game.nGames+"/" + game.required + " + 1");
         $("#headerW").text("Winnings — $"+Number(game.winnings).toFixed(2) + " + "+bonus);
         $("#playerA").fadeOut(quickTime);
         $("#playerB").fadeOut(quickTime);
