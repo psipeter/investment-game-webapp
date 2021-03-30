@@ -56,7 +56,7 @@ AGENTS_B_1 = [
 	"T4T_X04",
 	"Fixed_M05",
 	"Fixed_M08",
-	"T4T",
+	"T4T_X04",
 	"Fixed_M05",
 ]
 AGENTS_A_2 = [  # learn to be greedy group
