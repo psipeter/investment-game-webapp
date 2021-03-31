@@ -17,14 +17,24 @@
 		</div>
 	</div>
 	<div id="bar-area">
-		<h2 hidden id="turn-text" class='bar-text'>Turn</h2>
-		<h2 hidden id="turn-box" hidden class='bar-box'>0/5</h2>
-		<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
-		<h2 hidden id="ts-box" hidden class='bar-box'>0</h2>
-		<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
-		<h2 hidden id="ys-box" hidden class='bar-box'>0</h2>
-		<h2 hidden id="bonus-text" class='bar-text'>Bonus</h2>
-		<h2 hidden id="bonus-box" hidden class='bar-box'>0₵</h2>
+		<div id='turn-box'>
+			<div hidden id="turn-box1" class='turn-box'><h2 id="turn-text" class='bar-text'>Turn</h2></div>
+			<div hidden id="turn-box2" class='turn-box'></div>
+			<div hidden id="turn-box3" class='turn-box'></div>
+			<div hidden id="turn-box4" class='turn-box'></div>
+			<div hidden id="turn-box5" class='turn-box'></div>
+		</div>
+		<div id="ts-box">
+			<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
+			<h2 hidden id="ts-num" class='bar-num'>0</h2>			
+		</div>
+		<div hidden id="ys-box">
+			<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
+			<h2 hidden id="ys-num" class='bar-num'>0</h2>			
+		</div>
+		<div hidden id="bonus-box">
+			<h2 hidden id="bonus-num" class='bar-num'>0₵</h2>			
+		</div>
 	</div>
 	<div id="coin-area">
 		<img id="c1a" class='coin' src="{% static 'full-coin.svg' %}">
@@ -105,7 +115,15 @@
 		<h2 id="sendB"></h2>
 		<form id="form">{% csrf_token %}</form>
 	</div>
-	<div id="log-area"></div>
+	<div id="log-area">
+		<p id='c1r1' class='lr1 lc1'></p>
+		<p id='c1r2' class='lr2 lc1'><span id='c1r2a'></span> <span id='c1r2b'></span> <span id='c1r2c'></span></p>
+		<p id='c1r3' class='lr3 lc1'><span id='c1r3a'></span> <span id='c1r3b'></span> <span id='c1r3c'></span> <span id='c1r3d'></span></p>
+		<p id='c1r4' class='lr4 lc1'><span id='c1r4a'></span> <span id='c1r4b'></span> <span id='c1r4c'></span></p>
+		<p id='c1r5' class='lr5 lc1'><span id='c1r5a'></span> <span id='c1r5b'></span> <span id='c1r5c'></span> <span id='c1r5d'></span></p>
+		<p id='c1r6' class='lr6 lc1'><span id='c1r6a'></span> <span id='c1r6b'></span></p>
+		<p id='c1r7' class='lr7 lc1'><span id='c1r7a'></span> <span id='c1r7b'></span></p>
+	</div>
 	<div id="game-over-area">
 		<h1 hidden id="flair-text">Isn't this fun!</h1>
 		<div id="play-again-wrapper"><a hidden id="play-again-text" href="{% url 'game' %}">New Game</a></div>
@@ -151,7 +169,7 @@
 			<p class='n-text'>... and the next turn begins!</p>
 		</div>
 		<div id="n8" class="note">
-			<p class='n-text'>As <span class="teal">your score</span> increases past hidden <span class="black">thresholds</span> (e.g. 60 coins), you will unlock <span class="fake_bonus">bonus rewards</span></p>
+			<p class='n-text'>As <span class="teal">your score</span> increases, you will earn <span class="fake_bonus">bonus rewards</span></p>
 			<p class='n-text'>To add these rewards to your real-money winnings, you must <span class="red">finish the game</span></p>
 			<p id="tut2" href='{% url "tutorial2" %}' class='n-text'>Next, we'll discuss strategy and explain how to complete the HIT</p>
 		</div>

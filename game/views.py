@@ -154,7 +154,7 @@ def startTutorial2(request):
 	context = {
 		'required': REQUIRED,
 		'minBonus': f'{BONUS_MIN:.2f}',
-		'maxBonus': f'{BONUS_MIN+BONUS_RATE*game.capital*game.match*game.rounds:.2f}',
+		'maxBonus': f'{BONUS_MIN+BONUS_RATE*CAPITAL*MATCH*ROUNDS:.2f}',
 	}
 	return render(request, "tutorial2.html", context=context)
 

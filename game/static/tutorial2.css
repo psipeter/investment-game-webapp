@@ -1,5 +1,3 @@
-#ys-box, #ys-progress {background-color: var(--myTeal);}
-#ts-box, #ts-progress {background-color: var(--myPink);}
 .teal {color: var(--myTeal);}
 .pink {color: var(--myPink);}
 .red {color: var(--myRed);}
@@ -21,6 +19,9 @@
 #loadText {margin-top: 5vh;}
 .w {margin-top: 20vh; height: 100%; width: 100%; text-align: center;}
 
+#turn-box3 {visibility: hidden;}
+#turn-box4 {visibility: hidden;}
+#turn-box5 {visibility: hidden;}
 
 #n-area {
 	grid-row: 1/5;
