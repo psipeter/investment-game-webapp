@@ -31,9 +31,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#nameA").text(game.username);
         $("#nameB").css('opacity', '0.5')
         $("#imgB").css('opacity', '0.5')
-        $("#ts-text").css('background-color', 'var(--myPink)');
         $("#ts-box").css('background-color', 'var(--myPink)');
-        $("#ys-text").css('background-color', 'var(--myTeal)');
         $("#ys-box").css('background-color', 'var(--myTeal)');
         setTimeout(function() {switchToUser();}, animateTime);
     }
@@ -42,9 +40,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#nameA").text("Investor");
         $("#nameA").css('opacity', '0.5')
         $("#imgA").css('opacity', '0.5')
-        $("#ts-text").css('background-color', 'var(--myTeal)');
         $("#ts-box").css('background-color', 'var(--myTeal)');
-        $("#ys-text").css('background-color', 'var(--myPink)');
         $("#ys-box").css('background-color', 'var(--myPink)');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
@@ -52,7 +48,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
     }
     $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
     setTimeout(function() {$("#loadGame").remove();}, quickTime);
-    $("#bar-area").show().children().fadeIn(quickTime);
+    $("#turn-box1").css('visibility', 'visible');
+    $("#bonus-box").css('visibility', 'visible');
+    $("#turn-box").show().children().fadeIn(quickTime);
+    $("#ys-box").show().children().fadeIn(quickTime);
+    $("#ts-box").show().children().fadeIn(quickTime);
+    $("#bonus-box").show().children().fadeIn(quickTime);
     $("#nameA").fadeIn(quickTime)
     $("#nameB").fadeIn(quickTime)
     $("#imgA").fadeIn(quickTime)
@@ -459,144 +460,104 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let currentUser = (game.userRole=="A") ? give : keep;
         let currentAgent = (game.userRole=="A") ? keep : give;
         if (stage=="capital") {
-            $("#log-area").append(`<div hidden id='l${turn}w1' class='lc${turn} lr1'></div>`);
-            $(`#l${turn}w1`).append(`<p hidden id='l${turn}t' class='log-turn-text'></p>`);
-            $("#log-area").append(`<div hidden id='l${turn}w2' class='lc${turn} lr2'></div>`);
-            $(`#l${turn}w2`).append(`<p hidden id='l${turn}a1' class='log-text'></p>`);
-            $(`#l${turn}w2`).append(`<p hidden id='l${turn}a2' class='log-text'></p>`);
-            $(`#l${turn}w2`).append(`<p hidden id='l${turn}a3' class='log-text'></p>`);
-            $(`#l${turn}t`).text("Turn "+turn);
-            $(`#l${turn}a1`).text(pronoun1a).append("&nbsp;");
-            $(`#l${turn}a2`).text("received "+give).append("&nbsp;");
-            $(`#l${turn}a2`).addClass("teal");
-            $(`#l${turn}a3`).text("coins to start");
-            $(`#l${turn}t`).fadeIn(quickTime);
-            $(`#l${turn}a1`).fadeIn(quickTime);
-            $(`#l${turn}a2`).fadeIn(quickTime);
-            $(`#l${turn}a3`).fadeIn(quickTime);
+            $(`#c${turn}r1`).text(`Turn ${turn}`);
+            $(`#c${turn}r2a`).text(pronoun1a).append("&nbsp;");
+            $(`#c${turn}r2b`).text("received "+give).append("&nbsp;");
+            $(`#c${turn}r2b`).addClass("teal");
+            $(`#c${turn}r2c`).text("coins to start");
+            $(`#l${turn}r1`).fadeIn(quickTime);
+            $(`#c${turn}r2`).fadeIn(quickTime);
         }
         else if (stage=="A") {
-            $("#log-area").append(`<div id='l${turn}w3' class='lc${turn} lr3'></div>`);
-            $("#log-area").append(`<div id='l${turn}w4' class='lc${turn} lr4'></div>`);
-            $(`#l${turn}w3`).append(`<p hidden id='l${turn}b1' class='log-text'></p>`);
-            $(`#l${turn}w3`).append(`<p hidden id='l${turn}b2' class='log-text'></p>`);
-            $(`#l${turn}w3`).append(`<p hidden id='l${turn}b3' class='log-text'></p>`);
-            $(`#l${turn}w3`).append(`<p hidden id='l${turn}b4' class='log-text'></p>`);
-            $(`#l${turn}w4`).append(`<p hidden id='l${turn}c1' class='log-text'></p>`);
-            $(`#l${turn}w4`).append(`<p hidden id='l${turn}c2' class='log-text'></p>`);
-            $(`#l${turn}w4`).append(`<p hidden id='l${turn}c3' class='log-text'></p>`);
-            $(`#l${turn}b1`).text(pronoun1a).append("&nbsp;");
-            $(`#l${turn}b2`).text("gave "+give).append("&nbsp;");
-            $(`#l${turn}b2`).addClass("pink");
-            $(`#l${turn}b3`).text("coins and").append("&nbsp;");
-            $(`#l${turn}b4`).text("kept "+keep).append("&nbsp;");
-            $(`#l${turn}b4`).addClass("teal");
-            $(`#l${turn}c1`).text(pronoun1b).append("&nbsp;");
-            $(`#l${turn}c2`).text("received "+give*game.match).append("&nbsp;");
-            $(`#l${turn}c2`).addClass("pink");
-            $(`#l${turn}c3`).text("coins from").append("&nbsp;").append(pronoun2);
-            $(`#l${turn}b1`).fadeIn(quickTime);
-            $(`#l${turn}b2`).fadeIn(quickTime);
-            $(`#l${turn}b3`).fadeIn(quickTime);
-            $(`#l${turn}b4`).fadeIn(quickTime);
-            $(`#l${turn}c1`).fadeIn(quickTime);
-            $(`#l${turn}c2`).fadeIn(quickTime);
-            $(`#l${turn}c3`).fadeIn(quickTime);
+            $(`#c${turn}r3a`).text(pronoun1a).append("&nbsp;");
+            $(`#c${turn}r3b`).text("gave "+give).append("&nbsp;");
+            $(`#c${turn}r3b`).addClass("pink");
+            $(`#c${turn}r3c`).text("coins and").append("&nbsp;");
+            $(`#c${turn}r3d`).text("kept "+keep).append("&nbsp;");
+            $(`#c${turn}r3d`).addClass("teal");
+            $(`#c${turn}r4a`).text(pronoun1b).append("&nbsp;");
+            $(`#c${turn}r4b`).text("received "+give*game.match).append("&nbsp;");
+            $(`#c${turn}r4b`).addClass("pink");
+            $(`#c${turn}r4c`).text("coins from").append("&nbsp;").append(pronoun2);
+            $(`#c${turn}r3`).fadeIn(quickTime);
+            $(`#c${turn}r4`).fadeIn(quickTime);
         }
         else if (stage=="B") {
-            $("#log-area").append(`<div id='l${turn}w5' class='lc${turn} lr5'></div>`);
-            $(`#l${turn}w5`).append(`<p hidden id='l${turn}d1' class='log-text'></p>`);
-            $(`#l${turn}w5`).append(`<p hidden id='l${turn}d2' class='log-text'></p>`);
-            $(`#l${turn}w5`).append(`<p hidden id='l${turn}d3' class='log-text'></p>`);
-            $(`#l${turn}w5`).append(`<p hidden id='l${turn}d4' class='log-text'></p>`);
-            $(`#l${turn}d1`).text(pronoun1b).append("&nbsp;");
-            $(`#l${turn}d2`).text("gave "+give).append("&nbsp;");
-            $(`#l${turn}d2`).addClass("teal");
-            $(`#l${turn}d3`).text("coins and").append("&nbsp;");
-            $(`#l${turn}d4`).text("kept "+keep);
-            $(`#l${turn}d4`).addClass("pink");
-            $(`#l${turn}d1`).fadeIn(quickTime);
-            $(`#l${turn}d2`).fadeIn(quickTime);
-            $(`#l${turn}d3`).fadeIn(quickTime);
-            $(`#l${turn}d4`).fadeIn(quickTime);
+            $(`#c${turn}r5a`).text(pronoun1b).append("&nbsp;");
+            $(`#c${turn}r5b`).text("gave "+give).append("&nbsp;");
+            $(`#c${turn}r5b`).addClass("teal");
+            $(`#c${turn}r5c`).text("coins and").append("&nbsp;");
+            $(`#c${turn}r5d`).text("kept "+keep);
+            $(`#c${turn}r5d`).addClass("pink");
+            $(`#c${turn}r5`).fadeIn(quickTime);
         }
         else if (stage=="score") {
-            $("#log-area").append(`<div id='l${turn}w6' class='lc${turn} lr6'></div>`);
-            $("#log-area").append(`<div id='l${turn}w7' class='lc${turn} lr7'></div>`);
-            $(`#l${turn}w6`).append(`<p hidden id='l${turn}e1' class='log-text'></p>`);
-            $(`#l${turn}w6`).append(`<p hidden id='l${turn}e2' class='log-text'></p>`);
-            $(`#l${turn}w7`).append(`<p hidden id='l${turn}f1' class='log-text'></p>`);
-            $(`#l${turn}w7`).append(`<p hidden id='l${turn}f2' class='log-text'></p>`);
-            $(`#l${turn}e1`).text("Their score increased by").append("&nbsp;");
-            $(`#l${turn}e2`).text(currentAgent);
-            if (game.userRole=="A") {$(`#l${turn}e2`).addClass("pink");}
-            else {$(`#l${turn}e2`).addClass("teal");}
-            $(`#l${turn}f1`).text("Your score increased by").append("&nbsp;");
-            $(`#l${turn}f2`).text(currentUser);
-            if (game.userRole=="A") {$(`#l${turn}f2`).addClass("teal");}
-            else {$(`#l${turn}f2`).addClass("pink");}
-            $(`#l${turn}e1`).fadeIn(quickTime);
-            $(`#l${turn}e2`).fadeIn(quickTime);
-            $(`#l${turn}f1`).fadeIn(quickTime);
-            $(`#l${turn}f2`).fadeIn(quickTime);
+            $(`#c${turn}r6a`).text("Their score increased by").append("&nbsp;");
+            $(`#c${turn}r6b`).text(currentAgent);
+            if (game.userRole=="A") {$(`#c${turn}r6b`).addClass("pink");}
+            else {$(`#c${turn}r6b`).addClass("teal");}
+            $(`#c${turn}r7a`).text("Your score increased by").append("&nbsp;");
+            $(`#c${turn}r7b`).text(currentUser);
+            if (game.userRole=="A") {$(`#c${turn}r7b`).addClass("teal");}
+            else {$(`#c${turn}r7b`).addClass("pink");}
+            $(`#c${turn}r6`).fadeIn(quickTime);
+            $(`#c${turn}r7`).fadeIn(quickTime);
         }
     }
 
     // Animate top bars increasing width and counting up
     function animateTurn() {
-        let box = $("#turn-box");
-        let f = turn / game.rounds;
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
-        setTimeout(function() {box.text(turn+"/"+game.rounds)}, animateTime);
+        let box = $("#turn-box"+turn);
+        box.animate({'opacity': "1"}, animateTime);
     }
     function animateScoreA() {
         let box = (game.userRole=="A") ? $("#ys-box") : $("#ts-box");
+        let num = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
         let f = scoreA / (game.rounds*game.capital*game.match);
         let w = f * parseInt($(":root").css('--barBoxWidth'))
         let wMin = parseInt($(":root").css('--barBoxWidthMin'));
         if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
-        $({count: box.text()}).animate(
+        $({count: num.text()}).animate(
                 {count: scoreA},
-                {duration: animateTime, step: function () {box.text(Number(this.count).toFixed());}}
+                {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
         );
-        setTimeout(function() {box.text(scoreA)}, animateTime); // fallback
+        setTimeout(function() {num.text(scoreA)}, animateTime); // fallback
     }
     function animateScoreB() {
         let box = (game.userRole=="B") ? $("#ys-box") : $("#ts-box");
+        let num = (game.userRole=="B") ? $("#ys-num") : $("#ts-num");
         let f = scoreB / (game.rounds*game.capital*game.match);
         let w = f * parseInt($(":root").css('--barBoxWidth'))
         let wMin = parseInt($(":root").css('--barBoxWidthMin'));
         if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
-        $({count: box.text()}).animate(
+        $({count: num.text()}).animate(
                 {count: scoreB},
-                {duration: animateTime, step: function () {box.text(Number(this.count).toFixed());}}
+                {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
         );
-        setTimeout(function() {box.text(scoreB)}, animateTime); // fallback
+        setTimeout(function() {num.text(scoreB)}, animateTime); // fallback
     }
     function animateBonus() {
         let box = $("#bonus-box");
-        let f = 0;
-        let bonus = 0;
+        let num = $("#bonus-num");
+        let oldBonus = parseInt(num.text());
         let score = (game.userRole == "A") ? scoreA : scoreB;
-        for (let i=0; i<game.bonus.length; i++) {
-            if (score>=game.bonus[i][0]) {
-                f = game.bonus[i][0] / (game.rounds*game.capital*game.match);
-                bonus = game.bonus[i][1];
-            }
-        }
+        let newBonus = parseInt(Number(100*(game.bonus_min + score * game.bonus_rate)).toFixed());
+        let f = score / (game.rounds*game.capital*game.match);
         let w = f * parseInt($(":root").css('--barBoxWidth'))
         let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
-        setTimeout(function() {box.text(Number(100*bonus).toFixed()+"₵")}, animateTime); // fallback
+        if (w>wMin) {box.animate({'marginLeft': w+"vw"}, animateTime);}
+        $({count: oldBonus}).animate(
+                {count: newBonus},
+                {duration: animateTime, step: function () {num.text(Number(this.count).toFixed()+"₵");}}
+        );
+        setTimeout(function() {num.text(newBonus+"₵")}, animateTime); // fallback
     }
 
     // Final page after game is complete
     function finishGame() {
-        let bonus;
         let userScore = userRewards.reduce((a, b) => a + b, 0);
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
+        let bonus = parseInt(Number(100*(game.bonus_min + userScore * game.bonus_rate)).toFixed());
         if (game.userRole == "A") {
             $("#aTotal").text("$"+userScore);
             $("#bTotal").text("$"+agentScore);
@@ -605,12 +566,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
             $("#aTotal").text("$"+agentScore);
             $("#bTotal").text("$"+userScore);
         }
-        for (let i=0; i<game.bonus.length; i++) {
-            if (userScore >= game.bonus[i][0]) {bonus = game.bonus[i][1];}
-        }
         $(window).off('beforeunload');
         $("#headerG").text("Games Played — "+game.nGames+"/" + game.required + " + 1");
-        $("#headerW").text("Winnings — $"+Number(game.winnings).toFixed(2) + " + "+bonus);
+        $("#headerW").text("Winnings — $"+Number(game.winnings).toFixed(2) + " + 0."+bonus);
         $("#playerA").fadeOut(quickTime);
         $("#playerB").fadeOut(quickTime);
         $("#nameA").fadeOut(quickTime);

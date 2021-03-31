@@ -4,14 +4,9 @@ MATCH = 3  # don't change this  - multiplication of A's investment to B
 REQUIRED = 20  # number of required games
 EPSILON = 0.0  # probability agent will move randomly
 SIGMA = 0.0  # standard deviation added to agent move
-BONUS = [  # thresholds for bonus winnings based on performance, [threshold, money]
-	[0, 0.10],
-	[60, 0.15],
-	[80, 0.20],
-	[100, 0.25],
-	[120, 0.30],
-	[150, 0.30],
-]
+BONUS_MIN = 0.10  # money for playing one game
+BONUS_RATE = 0.001  # money per point scored
+
 PLAYERS = [  # ["userRole", "agentRole"],
 	["A", "B"],
 	["B", "A"],

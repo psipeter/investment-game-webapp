@@ -252,7 +252,7 @@ class User(AbstractUser):
 	mturk = models.CharField(max_length=33, unique=True)
 	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
 	nGames = models.IntegerField(default=0)
-	winnings = models.IntegerField(default=0)
+	winnings = models.FloatField(default=0.00)
 	doneConsent = models.DateTimeField(null=True, blank=True)
 	doneSurvey = models.DateTimeField(null=True, blank=True)
 	doneTutorial = models.DateTimeField(null=True, blank=True)
@@ -278,13 +278,21 @@ class User(AbstractUser):
 		if self.doneGames == None and self.nGames >= REQUIRED:
 			self.doneGames = timezone.now()
 		self.save()
-		winnings = 0
+		winnings = 0.0
 		for game in completeGames:
-			gameBonus = 0
 			score = sum(game.historyToArray("user", "reward"))
-			for i in range(len(BONUS)):
-				if score >= BONUS[i][0]:
-					gameBonus = BONUS[i][1]
-			winnings += gameBonus
+			winnings += BONUS_MIN + score*BONUS_RATE
 		self.winnings = np.around(winnings, 2)
 		self.save()
+		print(self.winnings)
+
+	def show_winnings(self):
+		allGames = Game.objects.filter(user=self).exclude(tutorial=True)
+		completeGames = allGames.filter(complete=True)
+		winnings = 0.0
+		for game in completeGames:
+			score = sum(game.historyToArray("user", "reward"))
+			winnings += BONUS_MIN + score*BONUS_RATE
+		self.winnings = np.around(winnings, 2)
+		self.save()
+		return self.winnings

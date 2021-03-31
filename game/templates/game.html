@@ -18,14 +18,24 @@
 	</div>
 
 	<div id="bar-area">
-		<h2 hidden id="turn-text" class='bar-text'>Turn</h2>
-		<h2 hidden id="turn-box" class='bar-box'>0/5</h2>
-		<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
-		<h2 hidden id="ts-box" class='bar-box'>0</h2>
-		<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
-		<h2 hidden id="ys-box" class='bar-box'>0</h2>
-		<h2 hidden id="bonus-text" class='bar-text'>Bonus</h2>
-		<h2 hidden id="bonus-box" class='bar-box'>0₵</h2>
+		<div id='turn-box'>
+			<div hidden id="turn-box1" class='turn-box'><h2 id="turn-text" class='bar-text'>Turn</h2></div>
+			<div hidden id="turn-box2" class='turn-box'></div>
+			<div hidden id="turn-box3" class='turn-box'></div>
+			<div hidden id="turn-box4" class='turn-box'></div>
+			<div hidden id="turn-box5" class='turn-box'></div>
+		</div>
+		<div id="ts-box">
+			<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
+			<h2 hidden id="ts-num" class='bar-num'>0</h2>			
+		</div>
+		<div hidden id="ys-box">
+			<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
+			<h2 hidden id="ys-num" class='bar-num'>0</h2>			
+		</div>
+		<div hidden id="bonus-box">
+			<h2 hidden id="bonus-num" class='bar-num'>0₵</h2>			
+		</div>
 	</div>
 
 	<div id="coin-area">
@@ -108,7 +118,47 @@
 		<form id="form">{% csrf_token %}</form>
 	</div>
 
-	<div id="log-area"></div>
+	<div id="log-area">
+		<p id='c1r1' class='lr1 lc1'></p>
+		<p id='c1r2' class='lr2 lc1'><span id='c1r2a'></span> <span id='c1r2b'></span> <span id='c1r2c'></span></p>
+		<p id='c1r3' class='lr3 lc1'><span id='c1r3a'></span> <span id='c1r3b'></span> <span id='c1r3c'></span> <span id='c1r3d'></span></p>
+		<p id='c1r4' class='lr4 lc1'><span id='c1r4a'></span> <span id='c1r4b'></span> <span id='c1r4c'></span></p>
+		<p id='c1r5' class='lr5 lc1'><span id='c1r5a'></span> <span id='c1r5b'></span> <span id='c1r5c'></span> <span id='c1r5d'></span></p>
+		<p id='c1r6' class='lr6 lc1'><span id='c1r6a'></span> <span id='c1r6b'></span></p>
+		<p id='c1r7' class='lr7 lc1'><span id='c1r7a'></span> <span id='c1r7b'></span></p>
+
+		<p id='c2r1' class='lr1 lc2'></p>
+		<p id='c2r2' class='lr2 lc2'><span id='c2r2a'></span> <span id='c2r2b'></span> <span id='c2r2c'></span></p>
+		<p id='c2r3' class='lr3 lc2'><span id='c2r3a'></span> <span id='c2r3b'></span> <span id='c2r3c'></span> <span id='c2r3d'></span></p>
+		<p id='c2r4' class='lr4 lc2'><span id='c2r4a'></span> <span id='c2r4b'></span> <span id='c2r4c'></span></p>
+		<p id='c2r5' class='lr5 lc2'><span id='c2r5a'></span> <span id='c2r5b'></span> <span id='c2r5c'></span> <span id='c2r5d'></span></p>
+		<p id='c2r6' class='lr6 lc2'><span id='c2r6a'></span> <span id='c2r6b'></span></p>
+		<p id='c2r7' class='lr7 lc2'><span id='c2r7a'></span> <span id='c2r7b'></span></p>
+
+		<p id='c3r1' class='lr1 lc3'></p>
+		<p id='c3r2' class='lr2 lc3'><span id='c3r2a'></span> <span id='c3r2b'></span> <span id='c3r2c'></span></p>
+		<p id='c3r3' class='lr3 lc3'><span id='c3r3a'></span> <span id='c3r3b'></span> <span id='c3r3c'></span> <span id='c3r3d'></span></p>
+		<p id='c3r4' class='lr4 lc3'><span id='c3r4a'></span> <span id='c3r4b'></span> <span id='c3r4c'></span></p>
+		<p id='c3r5' class='lr5 lc3'><span id='c3r5a'></span> <span id='c3r5b'></span> <span id='c3r5c'></span> <span id='c3r5d'></span></p>
+		<p id='c3r6' class='lr6 lc3'><span id='c3r6a'></span> <span id='c3r6b'></span></p>
+		<p id='c3r7' class='lr7 lc3'><span id='c3r7a'></span> <span id='c3r7b'></span></p>
+
+		<p id='c4r1' class='lr1 lc4'></p>
+		<p id='c4r2' class='lr2 lc4'><span id='c4r2a'></span> <span id='c4r2b'></span> <span id='c4r2c'></span></p>
+		<p id='c4r3' class='lr3 lc4'><span id='c4r3a'></span> <span id='c4r3b'></span> <span id='c4r3c'></span> <span id='c4r3d'></span></p>
+		<p id='c4r4' class='lr4 lc4'><span id='c4r4a'></span> <span id='c4r4b'></span> <span id='c4r4c'></span></p>
+		<p id='c4r5' class='lr5 lc4'><span id='c4r5a'></span> <span id='c4r5b'></span> <span id='c4r5c'></span> <span id='c4r5d'></span></p>
+		<p id='c4r6' class='lr6 lc4'><span id='c4r6a'></span> <span id='c4r6b'></span></p>
+		<p id='c4r7' class='lr7 lc4'><span id='c4r7a'></span> <span id='c4r7b'></span></p>
+
+		<p id='c5r1' class='lr1 lc5'></p>
+		<p id='c5r2' class='lr2 lc5'><span id='c5r2a'></span> <span id='c5r2b'></span> <span id='c5r2c'></span></p>
+		<p id='c5r3' class='lr3 lc5'><span id='c5r3a'></span> <span id='c5r3b'></span> <span id='c5r3c'></span> <span id='c5r3d'></span></p>
+		<p id='c5r4' class='lr4 lc5'><span id='c5r4a'></span> <span id='c5r4b'></span> <span id='c5r4c'></span></p>
+		<p id='c5r5' class='lr5 lc5'><span id='c5r5a'></span> <span id='c5r5b'></span> <span id='c5r5c'></span> <span id='c5r5d'></span></p>
+		<p id='c5r6' class='lr6 lc5'><span id='c5r6a'></span> <span id='c5r6b'></span></p>
+		<p id='c5r7' class='lr7 lc5'><span id='c5r7a'></span> <span id='c5r7b'></span></p>
+	</div>
 
 	<div id="game-over-area">
 		<h1 hidden id="flair-text">Isn't this fun!</h1>

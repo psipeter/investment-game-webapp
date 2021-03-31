@@ -6,12 +6,7 @@ from .models import Game, Agent, User, Blob, Feedback
 # admin.site.register(Game)
 @admin.register(Game)
 class Game(admin.ModelAdmin):
-	list_display = ('uuid',
-		'user', 'userRole',
-		'get_agent', 'agentRole',
-		'tStart', 'tEnd',
-		'userGives', 'userKeeps', 'userRewards', 'userTimes',
-		'agentGives', 'agentKeeps', 'agentRewards')
+	list_display = ('uuid', 'user', 'userRole', 'get_agent', 'agentRole', 'tStart', 'tEnd', 'userGives', 'userKeeps', 'userRewards', 'userTimes', 'agentGives', 'agentKeeps', 'agentRewards')
 	ordering = ('-tStart',)
 	def get_agent(self, obj):
 		return obj.agent.name
@@ -24,9 +19,7 @@ class Agent(admin.ModelAdmin):
 
 @admin.register(User)
 class User(UserAdmin):
-	list_display = ('username', 'mturk', 'group', 'nGames', 'code',
-		'doneConsent',  'doneTutorial', 'doneCash', 
-		'age', 'gender', 'income', 'education', 'veteran', 'empathy', 'risk', 'altruism')
+	list_display = ('username', 'mturk', 'group', 'nGames', 'show_winnings', 'code', 'doneConsent',  'doneTutorial', 'doneCash')
 
 @admin.register(Blob)
 class Blob(admin.ModelAdmin):

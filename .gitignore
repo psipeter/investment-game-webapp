@@ -2,6 +2,9 @@
 game/RL/data
 game/RL/plots
 
+# Migrations
+game/migrations
+
 #SQLite database
 .sqlite3
 

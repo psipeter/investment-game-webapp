@@ -36,7 +36,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $("#imgA").fadeIn(quickTime)
     $("#imgB").fadeIn(quickTime)
     $("#nameA").text(game.username);
-    $("#nameB").text("Instructor");
+    $("#nameB").text("Trustee");
     $("#ts-text").css('background-color', 'var(--myPink)');
     $("#ts-box").css('background-color', 'var(--myPink)');
     $("#ys-text").css('background-color', 'var(--myTeal)');
@@ -140,7 +140,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
             }
         });
         // reposition and recolor elements
-        $("#nameA").text("Instructor");
+        $("#nameA").text("Investor");
         $("#nameB").text(game.username);
         $("#nameB").css('opacity', '1');
         $("#imgB").css('opacity', '1');
@@ -342,7 +342,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let userKeep = maxUser - userGive;
         if (userGive<giveThrMin & tutorialGame==1) {
             hideSlider();
-            $("#warning").text(`Please give at least ${giveThrMin}`);
+            $("#warning").text(`Please give at least ${giveThrMin*game.match}`);
             $("#warning").fadeIn(quickTime);
             setTimeout(function(){
                 fastCoins(game.capital, "a");
