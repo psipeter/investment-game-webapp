@@ -22,6 +22,12 @@ class CreateForm(UserCreationForm):
 	mturk = forms.CharField(label="Mechanical Turk ID")
 	password1 = forms.CharField(label='Enter password', widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+	avatarChoices = (
+		('1', 'Avatar 1'),
+		('2', 'Avatar 2'),
+		('3', 'Avatar 3'),
+		('4', 'Avatar 4'))
+	avatar = forms.ChoiceField(choices=avatarChoices)
 	username.widget.attrs.update({'placeholder':'Username'})
 	mturk.widget.attrs.update({'placeholder':'Mechanical Turk ID'})
 	password1.widget.attrs.update({'placeholder':'Enter Password'})	
@@ -30,9 +36,9 @@ class CreateForm(UserCreationForm):
 	password2.widget.attrs.update({'autocomplete':'password'})	
 	class Meta:
 		model = models.User
-		fields = ('username', 'mturk', 'password1', 'password2')
-		labels = {'username': 'Username', 'mturk': 'Mechanical Turk ID', 'password1': "Enter Password", 'password2': 'Confirm Password'}
-		help_texts = {'username': None, 'password1': None, 'password2': None}
+		fields = ('username', 'mturk', 'password1', 'password2', 'avatar')
+		labels = {'username': 'Username', 'mturk': 'Mechanical Turk ID', 'password1': "Enter Password", 'password2': 'Confirm Password', 'avatar': 'Choose Avatar'}
+		help_texts = {'username': None, 'password1': None, 'password2': None, 'avatar': None}
 
 class ResetForm(forms.Form):
 	identifier = forms.CharField(label="Identifier")

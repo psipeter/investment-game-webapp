@@ -139,6 +139,9 @@ def home(request):
 
 @login_required
 def startGame(request):
+	if request.user.nGames > REQUIRED:
+		error(request, 'You have already played the maximum number of games')
+		return redirect('home')		
 	if request.user.doneConsent and request.user.doneTutorial:
 		return render(request, "game.html")
 	else:

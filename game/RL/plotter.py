@@ -21,74 +21,68 @@ def plotAll(dfAll, popA, popB, capital, match, rounds, name, endgames=5):
 		AID = A.ID
 		dfEnd = dfAll.query('game >= @end & A==@AID')
 		gen = dfEnd['aGives'] / (dfEnd['aGives'] + dfEnd['aKeeps']) # plot ignores nan's
-		rew = dfEnd['aRewards']
-		rew2 = dfEnd['bRewards']
-		meanGen = np.mean(gen)
-		stdGen = np.std(gen)
-		meanRew = np.mean(rew)
-		stdRew = np.std(rew)
+		score = dfEnd['aScore']
 
 		fig, ax = plt.subplots()
 		sns.histplot(data=gen, ax=ax, stat="probability", bins=binsAG)  
-		ax.set(xlabel="Generosity Ratio", ylabel="Probability", xticks=((binsAG)), title=f"{AID} (A) Generosity \nMean={meanGen:.2f}, Std={stdGen:.2f}")
+		ax.set(xlabel="Generosity Ratio", ylabel="Probability", xticks=((binsAG)),
+			title=f"{AID} (A) Generosity \nMean={np.mean(gen):.2f}, Std={np.std(gen):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
 		fig.savefig(f"plots/{name}_{AID}A_generosity.pdf")
 
 		fig, ax = plt.subplots()
-		sns.histplot(data=rew, ax=ax, stat="probability", bins=binsAR)  
-		ax.set(xlabel="Rewards", ylabel="Probability", xticks=((binsAR)), title=f"{AID} (A) Rewards \nMean={meanRew:.2f}, Std={stdRew:.2f}")
+		sns.histplot(data=score, ax=ax, stat="probability", bins=binsAR)  
+		ax.set(xlabel="Scores", ylabel="Probability", xticks=((binsAR)),
+			title=f"{AID} (A) Scores \nMean={np.mean(score):.2f}, Std={np.std(score):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
-		fig.savefig(f"plots/{name}_{AID}A_rewards.pdf")
+		fig.savefig(f"plots/{name}_{AID}A_scores.pdf")
 		plt.close('all')
 
 	for B in popB:
 		BID = B.ID
 		dfEnd = dfAll.query('game >= @end & B==@BID')
 		gen = dfEnd['bGives'] / (dfEnd['bGives'] + dfEnd['bKeeps']) # plot ignores nan's
-		rew = dfEnd['bRewards']
-		rew2 = dfEnd['aRewards']
-		meanGen = np.mean(gen)
-		stdGen = np.std(gen)
-		meanRew = np.mean(rew)
-		stdRew = np.std(rew)
+		score = dfEnd['bScore']
 
 		fig, ax = plt.subplots()
 		sns.histplot(data=gen, ax=ax, stat="probability", bins=binsBG)  
-		ax.set(xlabel="Generosity Ratio", ylabel="Probability", xticks=((binsBG)), title=f"{BID} (B) Generosity \nMean={meanGen:.2f}, Std={stdGen:.2f}")
+		ax.set(xlabel="Generosity Ratio", ylabel="Probability", xticks=((binsBG)),
+			title=f"{BID} (B) Generosity \nMean={np.mean(gen):.2f}, Std={np.std(gen):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
 		fig.savefig(f"plots/{name}_{BID}B_generosity.pdf")
 
 		fig, ax = plt.subplots()
-		sns.histplot(data=rew, ax=ax, stat="probability", bins=binsBR)  
-		ax.set(xlabel="Rewards", ylabel="Probability", xticks=((binsBR)), title=f"{BID} (B) Rewards \nMean={meanRew:.2f}, Std={stdRew:.2f}")
+		sns.histplot(data=score, ax=ax, stat="probability", bins=binsBR)  
+		ax.set(xlabel="Score", ylabel="Probability", xticks=((binsBR)),
+			title=f"{BID} (B) Score \nMean={np.mean(score):.2f}, Std={np.std(score):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
-		fig.savefig(f"plots/{name}_{BID}B_rewards.pdf")
+		fig.savefig(f"plots/{name}_{BID}B_scores.pdf")
 		plt.close('all')
 
-	for A in popA:
-		for B in popB:
-			AID = A.ID
-			BID = B.ID
-			df = dfAll.query('A==@AID & B==@BID')
-			fig, ax = plt.subplots()
-			sns.lineplot(data=df, x='game', y='aRewards', ax=ax, label=f"A: {AID}", ci="sd")
-			sns.lineplot(data=df, x='game', y='bRewards', ax=ax, label=f"B: {BID}", ci="sd")
-			ax.set(xlabel="Episode", ylabel="Rewards", ylim=ylim, yticks=yticks, title=f"{AID} (A) vs {BID} (B) Learning")
-			ax.grid(True, axis='y')
-			leg = ax.legend(loc='upper left')
-			fig.tight_layout()
-			fig.savefig(f"plots/{name}_{AID}A_{BID}B_learning.pdf")
-			plt.close('all')
+	# for A in popA:
+	# 	for B in popB:
+	# 		AID = A.ID
+	# 		BID = B.ID
+	# 		df = dfAll.query('A==@AID & B==@BID')
+	# 		fig, ax = plt.subplots()
+	# 		sns.lineplot(data=df, x='game', y='aScore', ax=ax, label=f"A: {AID}", ci="sd")
+	# 		sns.lineplot(data=df, x='game', y='bScore', ax=ax, label=f"B: {BID}", ci="sd")
+	# 		ax.set(xlabel="Episode", ylabel="Score", ylim=ylim, yticks=yticks, title=f"{AID} (A) vs {BID} (B) Learning")
+	# 		ax.grid(True, axis='y')
+	# 		leg = ax.legend(loc='upper left')
+	# 		fig.tight_layout()
+	# 		fig.savefig(f"plots/{name}_{AID}A_{BID}B_learning.pdf")
+	# 		plt.close('all')
 
 	fig, (ax, ax2) = plt.subplots(nrows=2, ncols=1, sharex=True)
-	sns.lineplot(data=dfAll, x='game', y='aRewards', hue="A", ax=ax, ci="sd")
-	sns.lineplot(data=dfAll, x='game', y='bRewards', hue="B", ax=ax2, ci="sd")
-	ax.set(ylabel="Rewards (A)", ylim=ylim, yticks=yticks, title=f"Overall Learning")
-	ax2.set(xlabel="Episode", ylabel="Rewards (B)", ylim=ylim, yticks=yticks)
+	sns.lineplot(data=dfAll, x='game', y='aScore', hue="A", ax=ax, ci="sd")
+	sns.lineplot(data=dfAll, x='game', y='bScore', hue="B", ax=ax2, ci="sd")
+	ax.set(ylabel="Score (A)", ylim=ylim, yticks=yticks, title=f"Overall Learning")
+	ax2.set(xlabel="Episode", ylabel="Score (B)", ylim=ylim, yticks=yticks)
 	ax.grid(True, axis='y')
 	ax2.grid(True, axis='y')
 	leg = ax.legend(loc='upper left')
@@ -103,10 +97,10 @@ def plotForgiveness(dfAll, popA, popB, capital, match, rounds, endgames=5):
 	end = rounds-endgames
 	df = dfAll.query('game >= @end')
 	fig, (ax, ax2) = plt.subplots(nrows=2, ncols=1, sharex=True)
-	sns.lineplot(data=df, x='A', y='aRewards', hue="B", ax=ax, ci="sd")
-	sns.lineplot(data=df, x='A', y='bRewards', hue="B", ax=ax2, ci="sd")
-	ax.set(ylabel="Agent Rewards", ylim=ylim, yticks=yticks, title=f"Final Score vs. T4T Forgiveness")
-	ax2.set(xlabel="Forgiveness", ylabel="T4T Rewards", ylim=ylim, yticks=yticks)
+	sns.lineplot(data=df, x='A', y='aScore', hue="B", ax=ax, ci="sd")
+	sns.lineplot(data=df, x='A', y='bScore', hue="B", ax=ax2, ci="sd")
+	ax.set(ylabel="Agent Score", ylim=ylim, yticks=yticks, title=f"Final Score vs. T4T Forgiveness")
+	ax2.set(xlabel="Forgiveness", ylabel="T4T Score", ylim=ylim, yticks=yticks)
 	ax.grid(True, axis='y')
 	ax2.grid(True, axis='y')
 	leg = ax.legend(loc='upper left')
@@ -170,12 +164,12 @@ def plotXFriendliness(df, capital, match, agent, dependent, agent2=None):
 	if not agent2:
 		plt.xlabel(f"{agent} Friendliness")
 		plt.ylabel(f"T4T {dependent}")
-		plt.title("T4T Rewards")
+		plt.title("T4T Score")
 		fig.savefig(f"plots/{dependent}Friendliness/{agent}_T4T.pdf")
 	else:
 		plt.xlabel(f"{agent} Friendliness")
 		plt.ylabel(f"{agent2} Friendliness")
-		plt.title(f"{agent2} Rewards")
+		plt.title(f"{agent2} Score")
 		fig.savefig(f"plots/FriendlinessFriendliness/{agent}_{agent2}_B.pdf")
 
 
@@ -205,12 +199,12 @@ def plotXFriendliness(df, capital, match, agent, dependent, agent2=None):
 	if not agent2:
 		plt.xlabel(f"{agent} Friendliness")
 		plt.ylabel(f"T4T {dependent}")
-		plt.title(f"{agent} Rewards")
+		plt.title(f"{agent} Score")
 		fig.savefig(f"plots/{dependent}Friendliness/{agent}_agent.pdf")
 	else:
 		plt.xlabel(f"{agent} Friendliness")
 		plt.ylabel(f"{agent2} Friendliness")
-		plt.title(f"{agent} Rewards")
+		plt.title(f"{agent} Score")
 		fig.savefig(f"plots/FriendlinessFriendliness/{agent}_{agent2}_A.pdf")
 
 	A = (np.array(tableMeanA) + np.array(tableMeanB)) / (capital*match)
@@ -239,12 +233,12 @@ def plotXFriendliness(df, capital, match, agent, dependent, agent2=None):
 	if not agent2:
 		plt.xlabel(f"{agent} Friendliness")
 		plt.ylabel(f"T4T {dependent}")
-		plt.title("Total Rewards")
+		plt.title("Total Score")
 		fig.savefig(f"plots/{dependent}Friendliness/{agent}_total.pdf")
 	else:
 		plt.xlabel(f"{agent} Friendliness")
 		plt.ylabel(f"{agent2} Friendliness")
-		plt.title(f"Total Rewards")
+		plt.title(f"Total Score")
 		fig.savefig(f"plots/FriendlinessFriendliness/{agent}_{agent2}_total.pdf")
 
 	if agent2:
@@ -304,7 +298,7 @@ def plotPolicy(file, agent, player, group, nS, nA):
 	# policy /= rowMax[:, np.newaxis]
 
 	# normalize with softmax
-	policy = softmax(policy/0.01, axis=1)
+	policy = softmax(policy/10, axis=1)
 
 	RGB = viridis(policy)
 	fig, ax = plt.subplots(figsize=((16, 8)))

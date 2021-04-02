@@ -1,24 +1,22 @@
 body {
-	margin-top: 5vh;
-	height: 90vh;
+	margin: 5vh 10vw;
+	height: 80vh;
 	text-align: justify;
 }
 
 .main {
 	padding: 2.5vh 4vw;
 	margin: 5vh 0;
-	height: 65vh;
+	height: 60vh;
 	border: 1pt solid black;
 	overflow: auto;
 	background-color: var(--myForeground);
 }
 
-.center {
-	text-align: center;
-	/*background: var(--myWhite);*/
-}
+.c0 {color: var(--myRed); text-align: center; font-size: 150%;}
+.c1 {color: var(--myPink); text-align: center; font-size: 180%;}
+.c2 {color: var(--myTeal); text-align: center; font-size: 180%;}
 
-span {
-	/*text-decoration: underline;*/
-	color: var(--myRed);
-}
+span {color: var(--myRed);}
+p {font-size: 120%;}
+.link {font-size: 150%;}

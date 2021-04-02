@@ -37,6 +37,7 @@ def status(request):
 		'doneGames': request.user.doneGames,
 		'doneCash': request.user.doneCash,
 		'winnings': f"{request.user.winnings:.2f}",
+		'avatar': request.user.avatar,
 		}
 	return JsonResponse(data)
 
@@ -68,6 +69,7 @@ def startGame(request):
 			'bonus_rate': BONUS_RATE,
 			'required': REQUIRED,
 			'doneGames': game.user.doneGames,
+			'avatar': request.user.avatar,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),
@@ -119,7 +121,7 @@ def startTutorial(request):
 	else:
 		game = Game.objects.create()
 		game.tutorial = True
-		game.startTutorial(request.user, "A", "B", "T4T_X06")
+		game.startTutorial(request.user, "A", "B", "tutorial")
 		game.save()
 		request.user.setProgress()
 		data = {
@@ -136,7 +138,7 @@ def startTutorial(request):
 			'bonus_min': BONUS_MIN,
 			'bonus_rate': BONUS_RATE,
 			'required': REQUIRED,
-			'doneGames': game.user.doneGames,
+			'avatar': request.user.avatar,
 			'userGives': list(game.historyToArray("user", "give")),
 			'userKeeps': list(game.historyToArray("user", "keep")),
 			'userRewards': list(game.historyToArray("user", "reward")),
@@ -169,7 +171,7 @@ def updateTutorial(request):
 def restartTutorial(request):
 	game = Game.objects.create()
 	game.tutorial = True
-	game.startTutorial(request.user, "B", "A", "T4T_X06")
+	game.startTutorial(request.user, "B", "A", "tutorial")
 	game.save()
 	data = {
 		'userGives': list(game.historyToArray("user", "give")),

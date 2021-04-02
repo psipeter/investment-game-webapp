@@ -45,14 +45,14 @@ body {
 	color: var(--myBlue);
 }
 
-@media (max-width: 900px), (max-height: 900px) {
+/*@media (max-width: 900px), (max-height: 900px) {
 	body {font-size: 9pt;}
 }
 
 @media (max-width: 600px), (max-height: 600px) {
 	body {font-size: 6pt;}
 }
-
+*/
 
 
 h1 {
@@ -80,6 +80,17 @@ input, button, form {
 	color: var(--myBlue);	
 }
 
+button {
+	font-size: 150%;
+	font-family: inherit;
+	padding: 1vh 1vw;
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
+	border: 1pt solid black;
+}
+button:hover:enabled {
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+}
+
 .link-wrapper, .button-wrapper {
 	margin: 2% 0;
 	width: 100%;
@@ -94,10 +105,10 @@ a, a:visited, a:link {
 .header {
 	display: grid;
 	grid-template-rows: 33% 33% 33%;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 5vw 28.3vw 33.3vw 33.4vw;
 	height: 7vh;
-	width: 98vw;
-	padding: 1.5vh 1vw;
+	width: 100vw;
+	padding: 1.5vh 0;
 	margin-top: 0;
 	margin-bottom: 5vh;
 	margin-left: -10vw;
@@ -112,21 +123,32 @@ a, a:visited, a:link {
 	margin-top: 5vh;
 }
 
-.headerL {
+.headerI {
 	grid-column: 1;
+	grid-row: 1/4;
+	display: grid;
+	justify-content: center;
+}
+#imgI {
+	height: 100%;
+	z-index: 10;
+}
+.headerL {
+	grid-column: 2;
 	text-align: left;
 }
 
 .headerC {
 	/*font-family: 'Jaldi', sans-serif;*/
-	grid-column: 2;
+	grid-column: 3;
 	grid-row: 1;
 	text-align: center;
 }
 
 .headerR {
-	grid-column: 3;
+	grid-column: 4;
 	text-align: right;
+	padding-right: 1vw;
 }
 
 .headerT {

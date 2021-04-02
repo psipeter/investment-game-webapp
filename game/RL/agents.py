@@ -66,37 +66,41 @@ class BecomeGreedy(HardcodedAgent):
 		self.state = self.start
 
 class T4T(HardcodedAgent):
-	def __init__(self, player, X=0.5, F=1.0, P=1.0, E=0, S=0, ID="T4T"):
+	def __init__(self, player, O=1, X=0.5, F=1.0, P=1.0, E=0, S=0, C=0.2, ID="T4T"):
 		self.player = player
 		self.ID = ID
-		self.X = X  # when playing A, expected return as a percentage of what B could give
+		self.O = O  # initial state of the agent
+		self.X = X  # expected generosity of opponent (fraction of capital given, fraction of available money returned)
 		self.F = F  # rate of forgiveness (state increase with opponent generosity)
 		self.P = P  # rate of punishment (state decrease with opponent greed)
+		self.C = C  # comeback rate (state change if opponent had a forced skip last turn)
 		assert F >= 0, "forgiveness rate must be positive or zero"
 		assert P >= 0, "punishment rate must be positive or zero"
-		self.E = E
-		self.S = S
-		self.state = 1.0 if self.player=="A" else 0.5
+		self.E = E  # epsilon (random action)
+		self.S = S  # noise added to chosen action (standard deviation of state-based mean)
+		self.state = self.O if self.player=="A" else self.O/2
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 	def update(self, history):
-		if len(history['aGives'])==0 or len(history['bGives'])==0:
-			return
 		if self.player == "A":
+			if len(history['bGives'])==0: return
 			otherGive = history['bGives'][-1]
 			otherKeep = history['bKeeps'][-1]
-			# delta proportional to give minus keep
-			# unless no information (because A gave 0), in which case forgive a bit
-			delta = otherGive/(otherGive+otherKeep) - self.X if otherGive+otherKeep>0 else self.F
+			if otherGive+otherKeep==0:
+				# if opponent was skipped last turn, agent state goes from zero to self.C (*self.F)
+				delta = self.C
+			else:
+				# delta proportional to generosity fraction minus expected generosity (self.X)
+				delta = otherGive/(otherGive+otherKeep) - self.X
 		else:
 			otherGive = history['aGives'][-1]
 			otherKeep = history['aKeeps'][-1]
-			# delta positive if A invested maximum
-			# otherwise negative depending on the amount kept
-			delta = 1 if otherKeep==0 else -otherKeep/(otherGive+otherKeep)
+			# delta proportional to generosity fraction minus expected generosity (self.X)
+			delta = otherGive/(otherGive+otherKeep) - self.X
+			# delta = self.maxGive if otherKeep==0 else -otherKeep/(otherGive+otherKeep)
 		self.state += delta*self.F if delta>0 else delta*self.P
 		self.state = np.clip(self.state, 0, self.maxGive)
 	def reset(self):
-		self.state = 1.0 if self.player=="A" else 0.5
+		self.state = self.O if self.player=="A" else self.O/2
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 
 
@@ -131,7 +135,7 @@ class RLAgent(AgentBase):
 		self.state = 0
 
 class Bandit(RLAgent):
-	def __init__(self, player, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.9, ID="Bandit"):
+	def __init__(self, player, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
 		self.player = player
 		self.nA = nA
 		self.state = 0
@@ -197,7 +201,7 @@ class Bandit(RLAgent):
 
 
 class QLearn(RLAgent):
-	def __init__(self, player, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.9, ID="QLearn"):
+	def __init__(self, player, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
 		self.player = player
 		self.ID = ID
 		self.nA = nA
@@ -467,7 +471,7 @@ class Hill(RLAgent):
 
 
 class ModelBased(RLAgent):
-	def __init__(self, player, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.9, ID="ModelBased"):
+	def __init__(self, player, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
 		self.player = player
 		self.ID = ID
 		self.state = 0

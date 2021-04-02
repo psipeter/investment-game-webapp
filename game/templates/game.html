@@ -19,22 +19,22 @@
 
 	<div id="bar-area">
 		<div id='turn-box'>
-			<div hidden id="turn-box1" class='turn-box'><h2 id="turn-text" class='bar-text'>Turn</h2></div>
+			<div hidden id="turn-box1" class='turn-box'><h1 id="turn-text" class='bar-text'>Turn</h1></div>
 			<div hidden id="turn-box2" class='turn-box'></div>
 			<div hidden id="turn-box3" class='turn-box'></div>
 			<div hidden id="turn-box4" class='turn-box'></div>
 			<div hidden id="turn-box5" class='turn-box'></div>
 		</div>
 		<div id="ts-box">
-			<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
-			<h2 hidden id="ts-num" class='bar-num'>0</h2>			
+			<h1 hidden id="ts-text" class='bar-text'>Their Score</h1>
+			<h1 hidden id="ts-num" class='bar-num'>0</h1>			
 		</div>
 		<div hidden id="ys-box">
-			<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
-			<h2 hidden id="ys-num" class='bar-num'>0</h2>			
+			<h1 hidden id="ys-text" class='bar-text'>Your Score</h1>
+			<h1 hidden id="ys-num" class='bar-num'>0</h1>			
 		</div>
 		<div hidden id="bonus-box">
-			<h2 hidden id="bonus-num" class='bar-num'>0₵</h2>			
+			<h1 hidden id="bonus-num" class='bar-num'>0₵</h1>			
 		</div>
 	</div>
 
@@ -100,22 +100,21 @@
 		<img id="c29b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
 	</div>
-
-	<div hidden id="player-area">
-		<h1 hidden id="nameA"></h1>
-		<h1 hidden id="nameB"></h1>
+	<div hidden id="send-area">
 		<button hidden id="submit">Send</button>
-		<img hidden id="imgA" src="{% static 'userA.svg' %}">
-		<img hidden id="imgB" src="{% static 'userB.svg' %}">
+		<h1 id="sendA"></h1>
+		<h1 id="sendB"></h1>
+	</div>
+	<div hidden id="player-area">
+		<img hidden id="imgA" src="{% static 'user1A.svg' %}">
+		<img hidden id="imgB" src="{% static 'user1B.svg' %}">
 		<div hidden id="slider-wrapper" class="active" min="0" val="0" max="10">
 			<div id="slider-left" class='flipped'></div>
 			<div id="slider-thumb"></div>
 			<div id="slider-right"></div>
 		</div>
 		<h1 hidden id="loading">They are thinking...</h1>
-		<h2 id="sendA"></h2>
-		<h2 id="sendB"></h2>
-		<form id="form">{% csrf_token %}</form>
+		<form hidden id="form">{% csrf_token %}</form>
 	</div>
 
 	<div id="log-area">
@@ -161,9 +160,11 @@
 	</div>
 
 	<div id="game-over-area">
-		<h1 hidden id="flair-text">Isn't this fun!</h1>
-		<div id="play-again-wrapper"><a hidden id="play-again-text" href="{% url 'game' %}">New Game</a></div>
-		<h1 hidden id="game-over-text">Game Over</h1>
+		<!-- <h1 hidden id="flair-text">Isn't this fun!</h1> -->
+		<!-- <div id="play-again-wrapper"> -->
+		<a hidden id="play-again-text" href="{% url 'game' %}" href2="{% url 'cash' %}">New Game</a>
+		<!-- </div> -->
+		<!-- <h1 hidden id="game-over-text">Game Over</h1> -->
 	</div>
 
 	<div id='testChrome'>

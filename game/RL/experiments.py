@@ -36,7 +36,8 @@ class Game():
 			self.history['aRewards'].append(aKeep+bGive)
 			self.history['bRewards'].append(bKeep)
 	def historyToDataframe(self, game):
-		columns = ('A', 'B', 'game', 'turn', 'aGives', 'aKeeps', 'aRewards', 'aStates', 'bGives', 'bKeeps', 'bRewards', 'bStates')
+		columns = ('A', 'B', 'game', 'turn',
+			'aGives', 'aKeeps', 'aRewards', 'aStates', 'bGives', 'bKeeps', 'bRewards', 'bStates', 'aScore', 'bScore')
 		dfs = []
 		for t in range(self.turns):
 			dfs.append(pd.DataFrame([[
@@ -51,7 +52,9 @@ class Game():
 				self.history['bGives'][t],
 				self.history['bKeeps'][t],
 				self.history['bRewards'][t],
-				self.history['bStates'][t]
+				self.history['bStates'][t],
+				np.mean(self.history['aRewards']),
+				np.mean(self.history['bRewards']),
 			]], columns=columns))
 		df = pd.concat([df for df in dfs], ignore_index=True)
 		return df
@@ -153,10 +156,10 @@ def XFriendliness(T4TAs, rlBs, capital, match, turns, avg, rounds, games, seed, 
 					rl.reduceExploration(r)
 			data = pd.concat([df for df in dfs], ignore_index=True)
 			dataEnd = data.query("game >= @end")
-			meanA = np.mean(dataEnd['aRewards'])
-			meanB = np.mean(dataEnd['bRewards'])
-			stdA = np.std(dataEnd['aRewards'])
-			stdB = np.std(dataEnd['bRewards'])
+			meanA = np.mean(dataEnd['aScore'])
+			meanB = np.mean(dataEnd['bScore'])
+			stdA = np.std(dataEnd['aScore'])
+			stdB = np.std(dataEnd['bScore'])
 			if dependent == "Forgiveness":
 				DV = t4t.F
 			if dependent == "Punishment":
@@ -197,10 +200,10 @@ def FriendlinessFriendliness(rlAs, rlBs, capital, match, turns, avg, rounds, gam
 					rlB.reduceExploration(r)
 			data = pd.concat([df for df in dfs], ignore_index=True)
 			dataEnd = data.query("game >= @end")
-			meanA = np.mean(dataEnd['aRewards'])
-			meanB = np.mean(dataEnd['bRewards'])
-			stdA = np.std(dataEnd['aRewards'])
-			stdB = np.std(dataEnd['bRewards'])
+			meanA = np.mean(dataEnd['aScore'])
+			meanB = np.mean(dataEnd['bScore'])
+			stdA = np.std(dataEnd['aScore'])
+			stdB = np.std(dataEnd['bScore'])
 			dfsAll.append(pd.DataFrame([[rlA.rO, rlB.rO, meanA, meanB, stdA, stdB]], columns=columns))
 	dfFinal = pd.concat([df for df in dfsAll], ignore_index=True)
 	return dfFinal

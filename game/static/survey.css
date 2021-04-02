@@ -6,7 +6,8 @@ h2 {margin: 2% 0; text-align: center;}
 
 .f1 {width: 60%; padding: 0 0 1% 0;}
 .f2 {width: 20%; padding: 0 0 1% 5%;}
-
+#t1 {color: var(--myPink); font-size: 180%;}
+#t2 {color: var(--myTeal); font-size: 180%;}
 input, select {
 	width: 100%;
 	height: 100%;
@@ -14,6 +15,7 @@ input, select {
 	font-size: inherit;
 	background: var(--myLightGray);
 	border: 1pt solid black;
+	font-size: 150%;
 }
 
 table {
@@ -21,6 +23,7 @@ table {
 	background-color: var(--myForeground);
 	padding: 1%;
 	border: 1pt solid black;
+	font-size: 150%;
 }
 
 .link-wrapper, .button-wrapper {

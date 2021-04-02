@@ -18,22 +18,22 @@
 	</div>
 	<div id="bar-area">
 		<div id='turn-box'>
-			<div hidden id="turn-box1" class='turn-box'><h2 id="turn-text" class='bar-text'>Turn</h2></div>
+			<div hidden id="turn-box1" class='turn-box'><h1 id="turn-text" class='bar-text'>Turn</h1></div>
 			<div hidden id="turn-box2" class='turn-box'></div>
 			<div hidden id="turn-box3" class='turn-box'></div>
 			<div hidden id="turn-box4" class='turn-box'></div>
 			<div hidden id="turn-box5" class='turn-box'></div>
 		</div>
 		<div id="ts-box">
-			<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
-			<h2 hidden id="ts-num" class='bar-num'>0</h2>			
+			<h1 hidden id="ts-text" class='bar-text'>Their Score</h1>
+			<h1 hidden id="ts-num" class='bar-num'>0</h1>			
 		</div>
 		<div hidden id="ys-box">
-			<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
-			<h2 hidden id="ys-num" class='bar-num'>0</h2>			
+			<h1 hidden id="ys-text" class='bar-text'>Your Score</h1>
+			<h1 hidden id="ys-num" class='bar-num'>0</h1>			
 		</div>
 		<div hidden id="bonus-box">
-			<h2 hidden id="bonus-num" class='bar-num'>0₵</h2>			
+			<h1 hidden id="bonus-num" class='bar-num'>0₵</h1>			
 		</div>
 	</div>
 	<div id="coin-area">
@@ -98,22 +98,22 @@
 		<img id="c29b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
 	</div>
-	<div id="player-area">
-		<h1 hidden id="nameA"></h1>
-		<h1 hidden id="nameB"></h1>
+	<div hidden id="send-area">
 		<button hidden id="submit">Send</button>
-		<img hidden id="imgA" src="{% static 'userA.svg' %}">
-		<img hidden id="imgB" src="{% static 'userB.svg' %}">
+		<h1 id="sendA"></h1>
+		<h1 id="sendB"></h1>
+	</div>
+	<div hidden id="player-area">
+		<img hidden id="imgA" src="">
+		<img hidden id="imgB" src="{% static 'robotB.svg' %}">
 		<div hidden id="slider-wrapper" class="active" min="0" val="0" max="10">
 			<div id="slider-left" class='flipped'></div>
 			<div id="slider-thumb"></div>
 			<div id="slider-right"></div>
 		</div>
 		<h1 hidden id="loading">They are thinking...</h1>
-		<h1 hidden id="warning" class="red"></h1>
-		<h2 id="sendA"></h2>
-		<h2 id="sendB"></h2>
-		<form id="form">{% csrf_token %}</form>
+		<h1 hidden id="warning"></h1>
+		<form hidden id="form">{% csrf_token %}</form>
 	</div>
 	<div id="log-area">
 		<p id='c1r1' class='lr1 lc1'></p>
@@ -156,11 +156,7 @@
 		</div>
 		<div id="n4" class="note">
 			<p class='n-text'>There is no optimal strategy in the Investment Game — you must learn the best way to deal with each opponent through <span class='red'>trial and error</span>!</p>
-			<p class='n-text'>When playing games, you will face a variety of opponents without knowing their identity. Your opponent might be:</p>
-			<p class='n-text'>
-				a <span class="black">dumb</span> agent (a computer that always make greedy or generous moves)<br>
-				a <span class="black">smart</span> agent (a computer that responds to your choices and learns over time)<br>
-				another <span class="black">human player</span></p>
+			<p class='n-text'>When playing games, you will face a variety of opponents without knowing their identity</p>
 			<p class='n-text'>Our research study is focused on how <span class="red">you learn with experience</span>, so try your best, and earn <span class="green">bonus</span> rewards for playing well!</p>
 		</div>
 		<div id="n5" class="note" href='{% url "home" %}'>

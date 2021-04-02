@@ -1,16 +1,11 @@
 .teal {color: var(--myTeal);}
 .pink {color: var(--myPink);}
 .red {color: var(--myRed);}
+.green {color: var(--myDarkGreen);}
 .black {color: black;}
 .fake_bonus {
 	color: var(--myBlue);
 	background-color: var(--myYellow);
-	padding: 0 1vw;
-	font-family: 'Roboto', sans-serif;
-}
-.fake_send {
-	color: var(--myYellow);
-	background-color: var(--myBlue);
 	padding: 0 1vw;
 	font-family: 'Roboto', sans-serif;
 }
@@ -83,10 +78,10 @@
 #n2 {top: 20vh;}
 #n3 {width: 40vw; top: 30vh; left: 50vw;}
 #n4 {top: 80vh;}
-#n4_2 {width: 40vw; top: 15vh; left: 50vw;}
-#n5 {top: 60vh;}
-#n6 {top: 13vh;}
-#n7 {width: 35vw; top: 15vh; left: 55vw;}
+#n4_2 {width: 40vw; top: 20vh; left: 50vw;}
+#n5 {top: 15vh;}
+#n6 {top: 15vh;}
+#n7 {width: 40vw; top: 60vh; left: 30vw;}
 #n8 {top: 32vh;}
 
 #warning {grid-row: 2; grid-column: 2; width: 100%; text-align: center;}

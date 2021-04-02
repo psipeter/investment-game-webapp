@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block body %}
-	<h2>Please complete the survey. All responses are optional</h2>
+	<h2 id='t1'>Please complete the survey. All responses are optional</h2>
 	<form method="POST">
 		{% csrf_token %}
 		<table>
@@ -36,7 +36,7 @@
 		</table>
 		<br>
 
-		<h2>Rate how strongly you agree or disagree with the following statement</h2>
+		<h2 id='t2'>Rate how strongly you agree or disagree with the following statement</h2>
 
 		<table>
 			<tr>
@@ -56,10 +56,6 @@
 		<input hidden id="submit" type="submit" />
 		<div class="button-wrapper">
 			<button class="button"> <label for="submit">Submit</label></button>
-		</div>
-
-		<div class="link-wrapper">
-			<a class="link" href="{% url 'home' %}">Home</a>
 		</div>
 
 	</form>

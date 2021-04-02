@@ -30,14 +30,10 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
     setTimeout(function() {$("#loadGame").remove();}, quickTime);
     $("#bar-area").show().children().fadeIn(quickTime);
-    $("#nameA").fadeIn(quickTime)
-    $("#nameB").fadeIn(quickTime)
     $("#imgA").fadeIn(quickTime)
     $("#imgB").fadeIn(quickTime)
-    $("#nameA").text("Investor");
-    $("#nameB").text("Trustee");
-    $("#nameB").css('opacity', '0.5')
-    $("#imgB").css('opacity', '0.5')
+    $("#imgA").attr('src', `/static/user${game.avatar}A.svg`);
+    // $("#imgB").css('opacity', '0.5')
     $("#ts-box").css('background-color', 'var(--myPink)');
     $("#ys-box").css('background-color', 'var(--myTeal)');
     $(window).on('beforeunload', function(e) {return false;});
@@ -80,7 +76,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $("#n-area").show();
     $("#n4_2").hide();
     $("#n0").fadeIn(quickTime);
-    $("#n-next0").click(function() {$("#nameA").fadeIn(quickTime); $("#nameB").fadeIn(quickTime);});
+    $("#n-next0").click(function() {$("#sendA").text("Investor").fadeIn(quickTime); $("#sendB").text("Trustee").fadeIn(quickTime);});
     $("#n-next1").click(function() {
         $("#turn-box").show().children().fadeIn(quickTime);
         $("#turn-box1").css('visibility', 'visible');
@@ -242,6 +238,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     // Functions
 
     // slider 
+    // slider 
     let getX = function(e) {
         if (!e) {e = window.event;}
         e.preventDefault();
@@ -268,8 +265,8 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let widthT = parseInt($(":root").css('--widthT'));  // in vw
         let wW = widthW / 100 * widthD;  // in px
         let wT = widthT / 100 * widthD;  // in px
-        let leftEdge = $("#sendB").offset().left - wT/2;
-        let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        let leftEdge = $("#slider-wrapper").offset().left - wT/2;
+        let rightEdge = $("#slider-wrapper").offset().left + wW - wT/2;
         // console.log(wW, wT);
         // console.log(leftEdge, rightEdge);
         // console.log(x);
@@ -296,8 +293,8 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let widthT = parseInt($(":root").css('--widthT'));  // in vw
         let wW = widthW / 100 * widthD;  // in px
         let wT = widthT / 100 * widthD;  // in px
-        let leftEdge = $("#sendB").offset().left - wT/2;
-        let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        let leftEdge = $("#slider-wrapper").offset().left - wT/2;
+        let rightEdge = $("#slider-wrapper").offset().left + wW - wT/2;
         let val = Math.round(f*max);
         let widthLNew = Math.max(0, f * wW - wT);
         let marginTNew = Math.max(0, f * wW - wT);
@@ -313,12 +310,12 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
                 if (i<=sendB) {$("#c"+i+"b").css('opacity', '0.3');}
                 else {$("#c"+i+"b").css('opacity', '0');}
                 if (game.userRole=="A"){
-                    $("#sendA").text("You keep "+sendA+" coins");
-                    $("#sendB").text("They get "+sendB+" coins");
+                    $("#sendA").text("Keep "+sendA);
+                    $("#sendB").text("Send "+sendB);
                 }
                 else {
-                    $("#sendA").text("They keep "+sendA+" coins");
-                    $("#sendB").text("You get "+sendB+" coins");
+                    $("#sendA").text("Keep "+sendA);
+                    $("#sendB").text("Send "+sendB);
                 }
             }            
         }
@@ -333,12 +330,12 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
                 else if (i<=currentB){$("#c"+(currentB-i)+"b").css('opacity', '1');}
                 else {$("#c"+i+"b").css('opacity', '0');}
                 if (game.userRole=="B"){
-                    $("#sendA").text("They get "+sendA+" coins");
-                    $("#sendB").text("You keep "+sendB+" coins");
+                    $("#sendA").text("Send "+sendA);
+                    $("#sendB").text("Keep "+sendB);
                 }
                 else {
-                    $("#sendA").text("You get "+sendA+" coins");
-                    $("#sendB").text("They keep "+sendB+" coins");
+                    $("#sendA").text("Send "+sendA);
+                    $("#sendB").text("Keep "+sendB);
                 }
             }
         }  
@@ -346,7 +343,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         $("#slider-left").css('width', widthLNew);
         $("#slider-thumb").css('marginLeft', marginTNew);
         $("#slider-right").css('width', widthRNew);
-        $("#slider-right").css('marginLeft', marginRNew);        
+        $("#slider-right").css('marginLeft', marginRNew);
     }
     // when user resizes window, resize slider appropriately
     function resizeSlider() {
@@ -564,10 +561,13 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     function animateScoreA() {
         let box = (game.userRole=="A") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
-        let f = scoreA / (game.rounds*game.capital*game.match);
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
+        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        let f = scoreA / (30);
+        let w = f * parseInt($(":root").css('--boxWidth'))
+        let wMin = parseInt($(":root").css('--boxWidthMin'));
+        let wMax = parseInt($(":root").css('--boxWidth'));
+        if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
+        else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
                 {count: scoreA},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
@@ -577,10 +577,13 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     function animateScoreB() {
         let box = (game.userRole=="B") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="B") ? $("#ys-num") : $("#ts-num");
-        let f = scoreB / (game.rounds*game.capital*game.match);
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
+        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        let f = scoreB / (30);
+        let w = f * parseInt($(":root").css('--boxWidth'))
+        let wMin = parseInt($(":root").css('--boxWidthMin'));
+        let wMax = parseInt($(":root").css('--boxWidth'));
+        if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
+        else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
                 {count: scoreB},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
@@ -593,15 +596,18 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let oldBonus = parseInt(num.text());
         let score = (game.userRole == "A") ? scoreA : scoreB;
         let newBonus = parseInt(Number(100*(game.bonus_min + score * game.bonus_rate)).toFixed());
-        let f = score / (game.rounds*game.capital*game.match);
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'marginLeft': w+"vw"}, animateTime);}
+        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        let f = score / (30);
+        let w = f * parseInt($(":root").css('--boxWidth'))
+        let wMin = parseInt($(":root").css('--boxWidthMin'));
+        let wMax = parseInt($(":root").css('--boxWidth'));
+        box.css('marginLeft', w+"vw");
         $({count: oldBonus}).animate(
                 {count: newBonus},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed()+"₵");}}
         );
         setTimeout(function() {num.text(newBonus+"₵")}, animateTime); // fallback
     }
+
 
 });

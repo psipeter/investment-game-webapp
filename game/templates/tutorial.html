@@ -18,22 +18,22 @@
 	</div>
 	<div id="bar-area">
 		<div id='turn-box'>
-			<div hidden id="turn-box1" class='turn-box'><h2 id="turn-text" class='bar-text'>Turn</h2></div>
+			<div hidden id="turn-box1" class='turn-box'><h1 id="turn-text" class='bar-text'>Turn</h1></div>
 			<div hidden id="turn-box2" class='turn-box'></div>
 			<div hidden id="turn-box3" class='turn-box'></div>
 			<div hidden id="turn-box4" class='turn-box'></div>
 			<div hidden id="turn-box5" class='turn-box'></div>
 		</div>
 		<div id="ts-box">
-			<h2 hidden id="ts-text" class='bar-text'>Their Score</h2>
-			<h2 hidden id="ts-num" class='bar-num'>0</h2>			
+			<h1 hidden id="ts-text" class='bar-text'>Their Score</h1>
+			<h1 hidden id="ts-num" class='bar-num'>0</h1>			
 		</div>
 		<div hidden id="ys-box">
-			<h2 hidden id="ys-text" class='bar-text'>Your Score</h2>
-			<h2 hidden id="ys-num" class='bar-num'>0</h2>			
+			<h1 hidden id="ys-text" class='bar-text'>Your Score</h1>
+			<h1 hidden id="ys-num" class='bar-num'>0</h1>			
 		</div>
 		<div hidden id="bonus-box">
-			<h2 hidden id="bonus-num" class='bar-num'>0₵</h2>			
+			<h1 hidden id="bonus-num" class='bar-num'>0₵</h1>			
 		</div>
 	</div>
 	<div id="coin-area">
@@ -98,22 +98,21 @@
 		<img id="c29b" class='coin' src="{% static 'full-coin.svg' %}">
 		<img id="c30b" class='coin' src="{% static 'full-coin.svg' %}">
 	</div>
-	<div id="player-area">
-		<h1 hidden id="nameA"></h1>
-		<h1 hidden id="nameB"></h1>
+	<div hidden id="send-area">
 		<button hidden id="submit">Send</button>
-		<img hidden id="imgA" src="{% static 'userA.svg' %}">
-		<img hidden id="imgB" src="{% static 'userB.svg' %}">
+		<h1 id="sendA"></h1>
+		<h1 id="sendB"></h1>
+	</div>
+	<div hidden id="player-area">
+		<img hidden id="imgA" src="">
+		<img hidden id="imgB" src="{% static 'robotB.svg' %}">
 		<div hidden id="slider-wrapper" class="active" min="0" val="0" max="10">
 			<div id="slider-left" class='flipped'></div>
 			<div id="slider-thumb"></div>
 			<div id="slider-right"></div>
 		</div>
 		<h1 hidden id="loading">They are thinking...</h1>
-		<h1 hidden id="warning" class="red">Please give at least 1</h1>
-		<h2 id="sendA"></h2>
-		<h2 id="sendB"></h2>
-		<form id="form">{% csrf_token %}</form>
+		<form hidden id="form">{% csrf_token %}</form>
 	</div>
 	<div id="log-area">
 		<p id='c1r1' class='lr1 lc1'></p>
@@ -124,13 +123,8 @@
 		<p id='c1r6' class='lr6 lc1'><span id='c1r6a'></span> <span id='c1r6b'></span></p>
 		<p id='c1r7' class='lr7 lc1'><span id='c1r7a'></span> <span id='c1r7b'></span></p>
 	</div>
-	<div id="game-over-area">
-		<h1 hidden id="flair-text">Isn't this fun!</h1>
-		<div id="play-again-wrapper"><a hidden id="play-again-text" href="{% url 'game' %}">New Game</a></div>
-		<h1 hidden id="game-over-text">Game Over</h1>
-	</div>
+
 	<div hidden id="n-area">
-	<!-- <div id="n-area"> -->
 		<div id="n0" class="note">
 			<p class='n-text'>Welcome to the Investment Game Tutorial!</p>
 		</div>
@@ -146,14 +140,15 @@
 		</div>
 		<div id="n3" class="note">
 			<p class='n-text'>First, the <span class='teal'>investor</span> will get 10 coins</p>
-			<p class='n-text'>These coins represent money that the player may "invest" in the <span class="pink">trustee</span> or keep for <span class='teal'>themselves</span></p>
+			<p class='n-text'>Coins represent money that you may "invest" in the <span class="pink">trustee</span> or keep for <span class='teal'>yourself</span></p>
 		</div>
 		<div id="n4" class="note">
 			<p class='n-text'>Try it now!</p>
 			<p class='n-text'>Use the slider to select how many coins you will <span class="teal">keep</span> and how many you will <span class="pink">give</span> to the trustee</p>
 		</div>
 		<div id="n4_2" class="note-ex">
-			<p class='n-text'>You'll notice that the <span class="pink">trustee</span> gets <span class="red">more</span> coins than you're giving away ... press <span class="fake_send">Send</span> to learn more</p>			
+			<p class='n-text'>You'll notice that the <span class="pink">trustee</span> gets <span class="red">more</span> coins than you're giving away</p>
+			<p class='n-text'>Press send to learn more</p>			
 		</div>
 		<div id="n5" class="note">
 			<p class='n-text'>When the <span class='teal'>investor</span> gives away coins, the <span class="pink">trustee</span> always gets <span class='red'>3 times</span> that many coins!</p>	
@@ -169,13 +164,13 @@
 			<p class='n-text'>... and the next turn begins!</p>
 		</div>
 		<div id="n8" class="note">
-			<p class='n-text'>As <span class="teal">your score</span> increases, you will earn <span class="fake_bonus">bonus rewards</span></p>
-			<p class='n-text'>To add these rewards to your real-money winnings, you must <span class="red">finish the game</span></p>
-			<p id="tut2" href='{% url "tutorial2" %}' class='n-text'>Next, we'll discuss strategy and explain how to complete the HIT</p>
+			<p class='n-text'>As <span class="teal">your score</span> increases, you will earn more <span class="fake_bonus">bonus</span> money</p>
+			<p class='n-text'>This bonus encourages you to play <span class='pink'>strategically</span> rather than <span class='teal'>quickly</span></p>
+			<p class='n-text'>To add this bonus to your <span class='green'>winnings</span>, you must <span class="red">finish the game</span></p>
+			<p id="tut2" href='{% url "tutorial2" %}' class='n-text'>Next, we'll discuss <span class='black'>strategy</span> and explain how to complete the HIT</p>
 		</div>
 	</div>
 
-	<!-- Let's talk strategy -->
 {% endblock %}
 
 

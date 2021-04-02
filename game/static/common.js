@@ -9,6 +9,11 @@ function initialize(url, method, cback) {
     };
     function check_state_machine() {
         if (state.loaded && state.data) {
+            if (state.data.avatar==1){$("#imgI").attr('src', '/static/user1C.svg');}
+            if (state.data.avatar==2){$("#imgI").attr('src', '/static/user2C.svg');}
+            if (state.data.avatar==3){$("#imgI").attr('src', '/static/user3C.svg');}
+            if (state.data.avatar==4){$("#imgI").attr('src', '/static/user4C.svg');}
+
             $("#headerU").text(state.data.username);
             $("#headerG").text("Games Played: "+state.data.nGames +"/" + state.data.required);
             $("#headerW").text("Winnings: $"+state.data.winnings);

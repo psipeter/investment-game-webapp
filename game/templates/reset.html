@@ -9,33 +9,39 @@
 
 {% block body %}
 
-	<div id="body-wrapper">
-		<h1>Password Reset</h1>
-		<form method="post">
-			{% csrf_token %}
-			<table>
-				<tr><td>{{ form.identifier }}</td></tr>
-				<tr><td>{{ form.password1 }}</td></tr>
-				<tr><td>{{ form.password2 }}</td></tr>
-			</table>
-			<input hidden id="submit" type="submit" />
-		</form>
-		{% if form.errors %}
-			{% for field in form %}
-				{% for error in field.errors %}
-					<p class="error">{{ error|escape }}</p>
-				{% endfor %}
-			{% endfor %}
-			{% for error in form.non_field_errors %}
-				<p class="error">{{ error|escape }}</p>
-			{% endfor %}
-		{% endif %}
-		<div class="button-wrapper">
-			<button id=submit-button> <label for="submit" tabindex="0">Submit</label></button>
+	<div id='body-wrapper'>
+		<div id="box">
+			<div id='title-wrapper'><h1>Password Reset</h1></div>
+			<div id='form-wrapper'>
+				<form method="post">
+					{% csrf_token %}
+					<table>
+						<tr><td>{{ form.identifier }}</td></tr>
+						<tr><td>{{ form.password1 }}</td></tr>
+						<tr><td>{{ form.password2 }}</td></tr>
+					</table>
+					<input hidden id="submit" type="submit" />
+				</form>
+			</div>
+			<div id='error-wrapper'>
+				{% if form.errors %}
+					{% for field in form %}
+						{% for error in field.errors %}
+							<p class="error">{{ error|escape }}</p>
+						{% endfor %}
+					{% endfor %}
+					{% for error in form.non_field_errors %}
+						<p class="error">{{ error|escape }}</p>
+					{% endfor %}
+				{% endif %}
+			</div>
+			<div id="button-wrapper">
+				<button id=submit-button> <label for="submit" tabindex="0">Submit</label></button>
+			</div>
+			<div id="link-wrapper">
+				<a class="link" href="{% url 'login' %}">Back</a>
+			</div>
 		</div>
-	</div>
-	<div class="link-wrapper">
-		<a class="link" href="{% url 'login' %}">Back</a>
 	</div>
 
 {% endblock %}

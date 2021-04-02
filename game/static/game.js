@@ -4,7 +4,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     "use strict";
     let maxUser;
     let maxAgent;
-    let agentTime = 2000;
+    let agentTime;
     let animateTime = 1000;
     let quickTime = 500;
     let waitTime = 1000;
@@ -23,29 +23,30 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let agentGives = game.agentGives;
     let agentKeeps = game.agentKeeps;
     let agentRewards = game.agentRewards;
+    let agentAvatar = 1+Math.floor(Math.random() * 4);
     let isSliding = false;
     if (game.userRole == "A") {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
-        $("#nameB").text("Trustee");
-        $("#nameA").text(game.username);
-        $("#nameB").css('opacity', '0.5')
-        $("#imgB").css('opacity', '0.5')
+        $("#imgB").css('opacity', '0.4')
+        $("#imgB").css('border', 'none')
+        $("#imgB").attr('src', `/static/user${agentAvatar}B.svg`)
         $("#ts-box").css('background-color', 'var(--myPink)');
         $("#ys-box").css('background-color', 'var(--myTeal)');
         setTimeout(function() {switchToUser();}, animateTime);
     }
     else {
-        $("#nameB").text(game.username);
-        $("#nameA").text("Investor");
-        $("#nameA").css('opacity', '0.5')
-        $("#imgA").css('opacity', '0.5')
+        $("#imgA").css('opacity', '0.4')
+        $("#imgA").css('border', 'none')
+        $("#imgA").attr('src', `/static/user${agentAvatar}A.svg`)
         $("#ts-box").css('background-color', 'var(--myTeal)');
         $("#ys-box").css('background-color', 'var(--myPink)');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
         setTimeout(function() {switchToAgent(1);}, animateTime);
     }
+    $("#game-over-area").fadeIn(quickTime);
+    $("#game-over-text").fadeIn(quickTime);
     $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
     setTimeout(function() {$("#loadGame").remove();}, quickTime);
     $("#turn-box1").css('visibility', 'visible');
@@ -99,8 +100,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let widthT = parseInt($(":root").css('--widthT'));  // in vw
         let wW = widthW / 100 * widthD;  // in px
         let wT = widthT / 100 * widthD;  // in px
-        let leftEdge = $("#sendB").offset().left - wT/2;
-        let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        let leftEdge = $("#slider-wrapper").offset().left - wT/2;
+        let rightEdge = $("#slider-wrapper").offset().left + wW - wT/2;
         // console.log(wW, wT);
         // console.log(leftEdge, rightEdge);
         // console.log(x);
@@ -126,8 +127,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let widthT = parseInt($(":root").css('--widthT'));  // in vw
         let wW = widthW / 100 * widthD;  // in px
         let wT = widthT / 100 * widthD;  // in px
-        let leftEdge = $("#sendB").offset().left - wT/2;
-        let rightEdge = $("#sendB").offset().left + wW - wT/2;
+        let leftEdge = $("#slider-wrapper").offset().left - wT/2;
+        let rightEdge = $("#slider-wrapper").offset().left + wW - wT/2;
         let val = Math.round(f*max);
         let widthLNew = Math.max(0, f * wW - wT);
         let marginTNew = Math.max(0, f * wW - wT);
@@ -143,12 +144,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 if (i<=sendB) {$("#c"+i+"b").css('opacity', '0.3');}
                 else {$("#c"+i+"b").css('opacity', '0');}
                 if (game.userRole=="A"){
-                    $("#sendA").text("You keep "+sendA+" coins");
-                    $("#sendB").text("They get "+sendB+" coins");
+                    $("#sendA").text("Keep "+sendA);
+                    $("#sendB").text("Send "+sendB);
                 }
                 else {
-                    $("#sendA").text("They keep "+sendA+" coins");
-                    $("#sendB").text("You get "+sendB+" coins");
+                    $("#sendA").text("Keep "+sendA);
+                    $("#sendB").text("Send "+sendB);
                 }
             }            
         }
@@ -163,12 +164,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
                 else if (i<=currentB){$("#c"+(currentB-i)+"b").css('opacity', '1');}
                 else {$("#c"+i+"b").css('opacity', '0');}
                 if (game.userRole=="B"){
-                    $("#sendA").text("They get "+sendA+" coins");
-                    $("#sendB").text("You keep "+sendB+" coins");
+                    $("#sendA").text("Send "+sendA);
+                    $("#sendB").text("Keep "+sendB);
                 }
                 else {
-                    $("#sendA").text("You get "+sendA+" coins");
-                    $("#sendB").text("They keep "+sendB+" coins");
+                    $("#sendA").text("Send "+sendA);
+                    $("#sendB").text("Keep "+sendB);
                 }
             }
         }  
@@ -176,7 +177,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#slider-left").css('width', widthLNew);
         $("#slider-thumb").css('marginLeft', marginTNew);
         $("#slider-right").css('width', widthRNew);
-        $("#slider-right").css('marginLeft', marginRNew);        
+        $("#slider-right").css('marginLeft', marginRNew);
     }
     // when user resizes window, resize slider appropriately
     function resizeSlider() {
@@ -204,6 +205,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function switchToAgent(userGive) {
         let agentGive = agentGives[agentGives.length-1];
         let agentKeep = agentKeeps[agentKeeps.length-1];
+        setAgentTime();
         if (userGive==0 & game.userRole=="A") {
             updateLog("B", 0, 0);
             finishTurn();
@@ -505,6 +507,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         }
     }
 
+    function setAgentTime(){agentTime = 2000 + 3000*Math.random();}
+
     // Animate top bars increasing width and counting up
     function animateTurn() {
         let box = $("#turn-box"+turn);
@@ -513,10 +517,13 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function animateScoreA() {
         let box = (game.userRole=="A") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
-        let f = scoreA / (game.rounds*game.capital*game.match);
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
+        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        let f = scoreA / (game.rounds*game.capital*game.match * 2/3);
+        let w = f * parseInt($(":root").css('--boxWidth'))
+        let wMin = parseInt($(":root").css('--boxWidthMin'));
+        let wMax = parseInt($(":root").css('--boxWidth'));
+        if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
+        else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
                 {count: scoreA},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
@@ -526,10 +533,13 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function animateScoreB() {
         let box = (game.userRole=="B") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="B") ? $("#ys-num") : $("#ts-num");
-        let f = scoreB / (game.rounds*game.capital*game.match);
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'width': w+"vw"}, animateTime);}
+        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        let f = scoreB / (game.rounds*game.capital*game.match * 2/3);
+        let w = f * parseInt($(":root").css('--boxWidth'))
+        let wMin = parseInt($(":root").css('--boxWidthMin'));
+        let wMax = parseInt($(":root").css('--boxWidth'));
+        if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
+        else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
                 {count: scoreB},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
@@ -542,10 +552,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let oldBonus = parseInt(num.text());
         let score = (game.userRole == "A") ? scoreA : scoreB;
         let newBonus = parseInt(Number(100*(game.bonus_min + score * game.bonus_rate)).toFixed());
-        let f = score / (game.rounds*game.capital*game.match);
-        let w = f * parseInt($(":root").css('--barBoxWidth'))
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        if (w>wMin) {box.animate({'marginLeft': w+"vw"}, animateTime);}
+        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        let f = score / (game.rounds*game.capital*game.match * 2/3);
+        let w = f * parseInt($(":root").css('--boxWidth'))
+        let wMin = parseInt($(":root").css('--boxWidthMin'));
+        let wMax = parseInt($(":root").css('--boxWidth'));
+        if (w>wMin & w<wMax) {box.animate({'marginLeft': w+"vw"}, animateTime);}
         $({count: oldBonus}).animate(
                 {count: newBonus},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed()+"₵");}}
@@ -576,13 +588,12 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#imgA").fadeOut(quickTime);
         $("#imgB").fadeOut(quickTime);
         $("#game-over-area").fadeIn(quickTime);
-        $("#flair-text").fadeIn(quickTime);
-        $("#game-over-text").fadeIn(quickTime);
+        // $("#flair-text").fadeIn(quickTime);
+        // $("#game-over-text").fadeIn(quickTime);
         if (game.nGames+1 >= game.required) {
-            $("#flair-text").text("Required games complete! You may now Cash Out");
+            $("#play-again-text").text("Required games complete! You may now Cash Out");
+            $("#play-again-text").attr('href', $("#play-again-text").attr('href2'));
         }
-        else {
-            $("#play-again-text").fadeIn(quickTime);
-        }
+        $("#play-again-text").fadeIn(quickTime);
     }
 });

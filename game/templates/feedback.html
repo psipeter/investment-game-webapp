@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block body %}
-	<h3 class="center">You may also email <a href="mailto:pduggins@uwaterloo.ca?subject=Question%20regarding%20Investment%20Game%20Experiment">pduggins@uwaterloo.ca</a></h3>
+	<h2 class="center">You may also email <a href="mailto:pduggins@uwaterloo.ca?subject=Question%20regarding%20Investment%20Game%20Experiment">pduggins@uwaterloo.ca</a></h2>
 	<form id="textbox" method="post">
 		{% csrf_token %} 
 		{{form.feedback}}
@@ -17,9 +17,6 @@
 	</form>
 	<div class="button-wrapper">
 		<button class="button"> <label for="submit">Submit</label></button>
-	</div>
-	<div class="link-wrapper">
-		<a class="link" href="{% url 'home' %}">Home</a>
 	</div>
 {% endblock %}
 

@@ -1,8 +1,10 @@
 #id_feedback {
 	background: var(--myForeground);
-	width: 60%;
-	margin: 4% 20%;
+	width: 50vw;
+	height: 30vh;
+	margin: 5vh 15vw;
 	border: 1pt solid black;
+	font-size: 150%;
 }
 
 .center {

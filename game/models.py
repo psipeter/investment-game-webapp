@@ -52,22 +52,44 @@ class Agent(models.Model):
 		# 	self.blob = Blob.objects.get(name=blobname)
 		# 	self.obj = pickle.loads(self.blob.blob)
 		# else:
-		if name=='Fixed_M02':
-			self.obj = Fixed(player, M=0.2, E=EPSILON, S=SIGMA)
-		elif name=="Fixed_M05":
-			self.obj = Fixed(player, M=0.5, E=EPSILON, S=SIGMA)
-		elif name=="Fixed_M08":
-			self.obj = Fixed(player, M=0.8, E=EPSILON, S=SIGMA)
-		elif name=="T4T_X02":
-			self.obj = T4T(player, X=0.2, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
-		elif name=="T4T_X04":
-			self.obj = T4T(player, X=0.4, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
-		elif name=="T4T_X06":
-			self.obj = T4T(player, X=0.6, F=0.5, P=0.5, E=EPSILON, S=SIGMA)
-		elif name=="Greedier":
-			self.obj = BecomeGreedy(player, start=0.75, step=0.15, E=EPSILON, S=SIGMA)
+		if name=='T4TA1':
+			O = 0.5 # np.random.uniform(0.3, 0.5)
+			X = 0.5 # np.random.uniform(0.4, 0.6)
+			F = 1.0 # np.random.uniform(0.7, 0.8)
+			P = 1.0 # np.random.uniform(0.7, 0.8)
+			E = 0.0 # EPSILON
+			S = 0.0 # SIGMA
+		elif name=='T4TB1':
+			O = 0.5
+			X = 0.7
+			F = 0.2
+			P = 1.0
+			E = 0.0
+			S = 0.0
+		elif name=='T4TA2':
+			O = 0.8
+			X = 0.5
+			F = 1.0
+			P = 0.2
+			E = 0.0
+			S = 0.0
+		elif name=='T4TB2':
+			O = 0.3
+			X = 0.7
+			F = 0.1
+			P = 0.2
+			E = 0.0
+			S = 0.0
+		elif name=='tutorial':
+			O = 1.0
+			X = 0.5
+			F = 1.0
+			P = 0.4
+			E = 0
+			S = 0
 		else:
 			raise Exception(f'{name} is not a valid agent class')
+		self.obj = T4T(player, O=O, X=X, F=F, P=P, E=E, S=S)
 		self.blob = Blob.objects.create()
 		self.blob.name = blobname
 		self.blob.blob = pickle.dumps(self.obj)
@@ -116,11 +138,10 @@ class Game(models.Model):
 
 	def start(self, user):
 		self.user = user
-		self.seed = np.random.randint(1e6)
+		self.seed = self.user.nGames
 		np.random.seed(self.seed)  # set random number seed
-		idx = self.user.nGames
-		self.userRole = PLAYERS[idx][0]
-		self.agentRole = PLAYERS[idx][1]
+		self.userRole = "A" if self.seed%2==0 else "B"
+		self.agentRole = "B" if self.seed%2==0 else "A"
 		self.save()
 		self.setAgent()
 		if self.agentRole == "A":
@@ -131,11 +152,11 @@ class Game(models.Model):
 		self.save()
 
 	def setAgent(self):
-		idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
-		if self.user.group == "1" and self.userRole == "A": name = AGENTS_B_1[idx]
-		elif self.user.group == "1" and self.userRole == "B": name = AGENTS_A_1[idx]
-		elif self.user.group == "2" and self.userRole == "A": name = AGENTS_B_2[idx]
-		elif self.user.group == "2" and self.userRole == "B": name = AGENTS_A_2[idx]
+		# idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
+		if self.user.group == "1" and self.userRole == "A": name = "T4TB1"
+		elif self.user.group == "1" and self.userRole == "B": name = "T4TA1"
+		elif self.user.group == "2" and self.userRole == "A": name = "T4TB2"
+		elif self.user.group == "2" and self.userRole == "B": name = "T4TA2"
 		else: raise "agent not set"
 		self.agent = Agent.objects.create()
 		self.agent.start(name, self.agentRole)
@@ -143,7 +164,7 @@ class Game(models.Model):
 
 	def startTutorial(self, user, userRole, agentRole, agentName):
 		self.user = user
-		self.seed = np.random.randint(1e6)
+		self.seed = self.user.nGames
 		np.random.seed(self.seed)  # set random number seed
 		self.userRole = userRole
 		self.agentRole = agentRole
@@ -268,6 +289,7 @@ class User(AbstractUser):
 	empathy = models.CharField(max_length=300, null=True, blank=True)
 	risk = models.CharField(max_length=300, null=True, blank=True)
 	altruism = models.CharField(max_length=300, null=True, blank=True)
+	avatar = models.IntegerField(default=0)
 
 	def setProgress(self):
 		allGames = Game.objects.filter(user=self).exclude(tutorial=True)
@@ -284,7 +306,6 @@ class User(AbstractUser):
 			winnings += BONUS_MIN + score*BONUS_RATE
 		self.winnings = np.around(winnings, 2)
 		self.save()
-		print(self.winnings)
 
 	def show_winnings(self):
 		allGames = Game.objects.filter(user=self).exclude(tutorial=True)

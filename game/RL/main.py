@@ -8,7 +8,7 @@ match = 3
 turns = 5
 
 avg = 10
-rounds = 100
+rounds = 30
 games = 10
 seed = np.random.randint(0, 1e6)
 
@@ -16,16 +16,9 @@ nAA = capital+1
 nAB = capital*match+1
 nS = 10
 
-FA = 0.5
-PA = 0.5
-FB = 0.5
-PB = 0.5
-
-popA = [
-	Fixed("A", M=0.5),
-	Fixed("A", M=0.8),
-	T4T("A", X=0.2, F=FA, P=PA),
-	T4T("A", X=0.4, F=FA, P=PA),
+# popA = [
+	# T4T("A", O=0.4, X=0.8, F=0.8, P=0.2, E=0.1, S=0.05),
+	# T4T("A", O=0.4, X=0.5, F=0.5, P=1.0, E=0.1, S=0.05),
 	# T4T("A", X=0.4, F=FA, P=PA),
 	# T4T("A", X=0.6, F=FA, P=PA),
 	# Bandit("A", nAA, rO=rOA),
@@ -33,25 +26,70 @@ popA = [
 	# Wolf("A", nAA, nS),
 	# Hill("A", nAA, nS),
 	# ModelBased("A", nAA, nS)
-	]
+	# ]
 
-popB = [
+# popB = [
 	# T4T("B", F=FB, ID=str(FB)),
-	# Bandit("B", nAB, rO=0.3, dT=0.9),
-	# QLearn("B", nAB, nS, rO=0.3, dT=0.9),
+	# Bandit("B", nAB, rO=0.0, dT=0.7),
+	# QLearn("B", nAB, nS, rO=0.0, dT=0.7),
 	# Wolf("B", nAB, nS),
 	# Hill("B", nAB, nS),
-	ModelBased("B", nAB, nS, rO=0.3, dT=0.9)
-	]
+	# ModelBased("B", nAB, nS, rO=0.0, dT=0.7)
+	# ]
 
 # df = OneVsOne(popA, popB, capital, match, turns, avg, rounds, games, seed)
 # plotAll(df, popA, popB, capital, match, rounds, "1v1")
 
-df = ManyVsMany(popA, popB, capital, match, turns, avg, rounds, games, seed, "all")
-plotAll(df, popA, popB, capital, match, rounds, f"{popB[0].ID}_B_vs_2")
-popB[0].saveArchive(f'{popB[0].ID}_B_2')
+group = '1'
+player = 'A'
 
-plotPolicy(f"{popB[0].ID}_B_2.npz", popB[0].ID, "B", "2", nS, nAB)
+if group=='1' and player=="A":
+	popA = [
+		Bandit("A", nAA),
+		QLearn("A", nAA, nS),
+		ModelBased("A", nAA, nS)
+		]
+	popB = [
+		T4T("B", O=0.5, X=0.7, F=0.2, P=1.0, E=0.0, S=0.0)
+	]
+
+if group=='1' and player=="B":
+	popA = [
+		T4T("A", O=0.5, X=0.5, F=1.0, P=1.0, E=0.0, S=0.0)
+	]
+	popB = [
+		Bandit("B", nAB),
+		QLearn("B", nAB, nS),
+		ModelBased("B", nAB, nS)
+		]
+
+if group=='2' and player=="A":
+	popA = [
+		Bandit("A", nAA),
+		QLearn("A", nAA, nS),
+		ModelBased("A", nAA, nS)
+		]
+	popB = [
+		T4T("B", O=0.3, X=0.7, F=0.1, P=0.2, E=0.0, S=0.0)
+	]
+
+if group=='2' and player=="B":
+	popA = [
+		T4T("A", O=0.8, X=0.5, F=1.0, P=0.2, E=0.0, S=0.0)
+	]
+	popB = [
+		Bandit("B", nAB),
+		QLearn("B", nAB, nS),
+		ModelBased("B", nAB, nS)
+		]
+
+
+df = ManyVsMany(popA, popB, capital, match, turns, avg, rounds, games, seed, "all")
+plotAll(df, popA, popB, capital, match, rounds, f"Group{group}_Player{player}")
+
+# for agent in popB:
+# 	agent.saveArchive(f'{agent.ID}_{player}_{group}')
+# 	plotPolicy(f"{agent.ID}_{player}_{group}.npz", agent.ID, player, group, nS, nAB)
 
 # FAs = [0.0, 0.25, 0.5, 0.75, 1.0, 1.25]
 # PAs = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0]
