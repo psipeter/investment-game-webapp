@@ -128,10 +128,12 @@ a, a:visited, a:link {
 	grid-row: 1/4;
 	display: grid;
 	justify-content: center;
+	z-index: 1;
 }
 #imgI {
 	height: 100%;
-	z-index: 10;
+	width: 100%;
+	z-index: 1;
 }
 .headerL {
 	grid-column: 2;
@@ -164,7 +166,7 @@ a, a:visited, a:link {
 }
 
 #cash-link {
-	color: var(-myGray);
+	color: var(--myGray);
 }
 
 #headerU {color: black;}

@@ -159,12 +159,9 @@
 		<p id='c5r7' class='lr7 lc5'><span id='c5r7a'></span> <span id='c5r7b'></span></p>
 	</div>
 
-	<div id="game-over-area">
-		<!-- <h1 hidden id="flair-text">Isn't this fun!</h1> -->
-		<!-- <div id="play-again-wrapper"> -->
-		<a hidden id="play-again-text" href="{% url 'game' %}" href2="{% url 'cash' %}">New Game</a>
-		<!-- </div> -->
-		<!-- <h1 hidden id="game-over-text">Game Over</h1> -->
+	<div hidden id="game-over-area">
+		<div id='game-over-wrapper'><h1 hidden id="game-over-text">Game Over</h1></div>
+		<div id='play-again-wrapper'><button hidden id="play-again-text" href="{% url 'game' %}" href2="{% url 'cash' %}">New Game</button></div>
 	</div>
 
 	<div id='testChrome'>

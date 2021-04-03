@@ -11,10 +11,10 @@ body {
 
 #box {
 	display: grid;
-	grid-template-rows: 10vh 10vh 5vh 5vh 5vh;
+	grid-template-rows: 10vh 10vh 5vh 5vh 5vh 5vh;
 	grid-template-columns: 20vw 20vw;
 	width: 40vw;
-	height: 35vh;
+	/*height: 35vh;*/
 	margin: 0 20vw;
 	/*padding: 2vh 2vw;*/
 	border: 1pt solid black;
@@ -50,14 +50,14 @@ body {
 	justify-content: center;
 }
 #reset-wrapper {
-	grid-row: 5;
+	grid-row: 6;
 	grid-column: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 #register-wrapper {
-	grid-row: 5;
+	grid-row: 6;
 	grid-column: 2;
 	display: flex;
 	align-items: center;
@@ -69,7 +69,7 @@ body {
 	text-align: center;
 }
 
-form {margin: 0; display: flex; justify-content: center; font-size: 150%;}
+form {margin: 0; display: flex; justify-content: center; font-size: 120%;}
 input {font-size: 150%; font-family: inherit; width: 25vw; background: var(--myLightGray); border: 1pt solid black;}
 button {font-size: 150%; font-family: inherit; padding: 1vh 1vw;}
 a {font-size: 150%;}

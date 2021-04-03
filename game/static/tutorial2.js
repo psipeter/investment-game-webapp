@@ -31,16 +31,16 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     maxAgent = 0;  // updated after user moves
     $("#loadGame").remove();
     $("#bar-area").show().children().fadeIn(quickTime);
-    $("#nameA").fadeIn(quickTime)
-    $("#nameB").fadeIn(quickTime)
     $("#imgA").fadeIn(quickTime)
     $("#imgB").fadeIn(quickTime)
     $("#imgA").attr('src', `/static/user${game.avatar}A.svg`);
     $("#ts-box").css('background-color', 'var(--myPink)');
     $("#ys-box").css('background-color', 'var(--myTeal)');
     $("#turn-box1").css('visibility', 'visible');
+    $("#turn-text").css('visibility', 'visible');
     $("#bonus-box").css('visibility', 'visible');
     $("#turn-box").show().children().fadeIn(quickTime);
+    $("#turn-text").show().fadeIn(quickTime);
     $("#ys-box").show().children().fadeIn(quickTime);
     $("#ts-box").show().children().fadeIn(quickTime);
     $("#bonus-box").show().children().fadeIn(quickTime);
@@ -92,8 +92,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         $("#ts-box").fadeIn(quickTime);
         $("#ys-box").fadeIn(quickTime);
         $("#bonus-box").fadeIn(quickTime);
-        $("#nameB").css('opacity', '0.5')
-        $("#imgB").css('opacity', '0.5')
+        // $("#imgB").css('opacity', '0.5')
         animateTurn();
         executeMove("capital");
         setTimeout(function() {switchToUser();}, animateTime+waitTime);
@@ -109,16 +108,17 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         scoreB = 0;
         turn = 1;
         complete = false;
-        let wMin = parseInt($(":root").css('--barBoxWidthMin'));
-        $("#ts-box").css('width', wMin+"vw");
-        $("#ys-box").css('width', wMin+"vw");
-        $("#bonus-box").css('marginLeft', wMin+"vw");
-        $("#ts-num").text('0');
-        $("#ys-num").text('0');
+        // let wMin = parseInt($(":root").css('--boxWidthMin'));
+        // $("#ts-box").css('width', wMin+"vw");
+        // $("#ys-box").css('width', wMin+"vw");
+        // $("#bonus-box").css('marginLeft', wMin+"vw");
+        // $("#ts-num").text('0');
+        // $("#ys-num").text('0');
         $("#turn-box1").css('opacity', '0.2');
         $("#turn-box2").css('opacity', '0.2');
-        // animateScoreA();
-        // animateScoreB();
+        animateScoreA();
+        animateScoreB();
+        animateBonus();
         animateTurn();
 
         // animateBonus();
@@ -146,12 +146,8 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
             }
         });
         // reposition and recolor elements
-        $("#nameA").text("Investor");
-        $("#nameB").text(game.username);
-        $("#nameB").css('opacity', '1');
-        $("#imgB").css('opacity', '1');
-        $("#nameA").css('opacity', '0.5')
-        $("#imgA").css('opacity', '0.5')
+        $("#imgA").attr('src', `/static/robotA.svg`);
+        $("#imgB").attr('src', `/static/user${game.avatar}B.svg`);
         $("#ts-text").css('background-color', 'var(--myTeal)');
         $("#ts-box").css('background-color', 'var(--myTeal)');
         $("#ys-text").css('background-color', 'var(--myPink)');
@@ -160,8 +156,6 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         maxUser = 0;
         $("#playerA").fadeIn(quickTime);
         $("#playerB").fadeIn(quickTime);
-        $("#nameA").fadeIn(quickTime);
-        $("#nameB").fadeIn(quickTime);
         $("#imgA").fadeIn(quickTime);
         $("#imgB").fadeIn(quickTime);
         clearLog();
@@ -674,12 +668,13 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let box = (game.userRole=="A") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
         // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
-        let f = scoreA / (game.rounds*game.capital*game.match * 2/3);
+        let f = scoreA / (60);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth'));
         if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
-        else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
+        else if (w<=wMin) {box.animate({'width': wMin+"vw"}, animateTime);}
+        else if (w>=wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
                 {count: scoreA},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
@@ -690,12 +685,13 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let box = (game.userRole=="B") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="B") ? $("#ys-num") : $("#ts-num");
         // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
-        let f = scoreB / (game.rounds*game.capital*game.match * 2/3);
+        let f = scoreB / (60);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth'));
-        if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
-        else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
+        if (w>wMin & w<wMax) {console.log('animating'); box.animate({'width': w+"vw"}, animateTime);}
+        else if (w<=wMin) {box.animate({'width': wMin+"vw"}, animateTime);}
+        else if (w>=wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
                 {count: scoreB},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed());}}
@@ -709,11 +705,13 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let score = (game.userRole == "A") ? scoreA : scoreB;
         let newBonus = parseInt(Number(100*(game.bonus_min + score * game.bonus_rate)).toFixed());
         // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
-        let f = score / (game.rounds*game.capital*game.match * 2/3);
+        let f = score / (60);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth'));
         if (w>wMin & w<wMax) {box.animate({'marginLeft': w+"vw"}, animateTime);}
+        else if (w<=wMin) {box.animate({'marginLeft': wMin+"vw"}, animateTime);}
+        else if (w>=wMax) {box.animate({'marginLeft': wMax+"vw"}, animateTime);}
         $({count: oldBonus}).animate(
                 {count: newBonus},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed()+"₵");}}
@@ -726,8 +724,6 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let agentScore = agentRewards.reduce((a, b) => a + b, 0);
         $("#playerA").hide();
         $("#playerB").hide();
-        $("#nameA").hide();
-        $("#nameB").hide();
         $("#imgA").hide();
         $("#imgB").hide();
         if (tutorialGame==1){

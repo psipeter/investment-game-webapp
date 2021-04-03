@@ -23,30 +23,36 @@ initialize("/game/api/startGame/", "POST", (game) => {
     let agentGives = game.agentGives;
     let agentKeeps = game.agentKeeps;
     let agentRewards = game.agentRewards;
-    let agentAvatar = 1+Math.floor(Math.random() * 4);
+    // let agentAvatar = (game.avatar + 1) % 4;
     let isSliding = false;
     if (game.userRole == "A") {
         maxUser = game.capital;
         maxAgent = 0;  // updated after user moves
-        $("#imgB").css('opacity', '0.4')
-        $("#imgB").css('border', 'none')
-        $("#imgB").attr('src', `/static/user${agentAvatar}B.svg`)
+        // $("#imgB").css('opacity', '0.4')
+        $("#imgA").attr('src', `/static/user${game.avatar}A.svg`)
+        $("#imgB").attr('src', `/static/unknownB.svg`)
         $("#ts-box").css('background-color', 'var(--myPink)');
         $("#ys-box").css('background-color', 'var(--myTeal)');
         setTimeout(function() {switchToUser();}, animateTime);
     }
     else {
-        $("#imgA").css('opacity', '0.4')
-        $("#imgA").css('border', 'none')
-        $("#imgA").attr('src', `/static/user${agentAvatar}A.svg`)
+        // $("#imgA").css('opacity', '0.4')
+        $("#imgA").attr('src', `/static/unknownA.svg`)
+        $("#imgB").attr('src', `/static/user${game.avatar}B.svg`)
         $("#ts-box").css('background-color', 'var(--myTeal)');
         $("#ys-box").css('background-color', 'var(--myPink)');
         maxAgent = game.capital;
         maxUser = 0;  // updated after agent moves
         setTimeout(function() {switchToAgent(1);}, animateTime);
     }
-    $("#game-over-area").fadeIn(quickTime);
-    $("#game-over-text").fadeIn(quickTime);
+
+    // $("#game-over-area").fadeIn(quickTime);
+    // $("#game-over-text").fadeIn(quickTime);
+    // $("#play-again-text").fadeIn(quickTime);
+    // $("#play-again-text").click(function() {window.location.href=$(this).attr("href");});
+    // $("#game-over-text").text("Required games complete!");
+    // $("#play-again-text").text("Cash Out");
+
     $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
     setTimeout(function() {$("#loadGame").remove();}, quickTime);
     $("#turn-box1").css('visibility', 'visible');
@@ -507,7 +513,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         }
     }
 
-    function setAgentTime(){agentTime = 2000 + 3000*Math.random();}
+    function setAgentTime(){agentTime = 2000 + 2000*Math.random();}
 
     // Animate top bars increasing width and counting up
     function animateTurn() {
@@ -521,7 +527,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let f = scoreA / (game.rounds*game.capital*game.match * 2/3);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
-        let wMax = parseInt($(":root").css('--boxWidth'));
+        let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));
+        console.log(w, wMin, wMax)
         if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
         else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
@@ -537,7 +544,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let f = scoreB / (game.rounds*game.capital*game.match * 2/3);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
-        let wMax = parseInt($(":root").css('--boxWidth'));
+        let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));
         if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
         else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(
@@ -556,8 +563,9 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let f = score / (game.rounds*game.capital*game.match * 2/3);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
-        let wMax = parseInt($(":root").css('--boxWidth'));
+        let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));
         if (w>wMin & w<wMax) {box.animate({'marginLeft': w+"vw"}, animateTime);}
+        else if (w>wMax) {box.animate({'marginLeft': wMax+"vw"}, animateTime);}
         $({count: oldBonus}).animate(
                 {count: newBonus},
                 {duration: animateTime, step: function () {num.text(Number(this.count).toFixed()+"₵");}}
@@ -588,12 +596,15 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#imgA").fadeOut(quickTime);
         $("#imgB").fadeOut(quickTime);
         $("#game-over-area").fadeIn(quickTime);
-        // $("#flair-text").fadeIn(quickTime);
-        // $("#game-over-text").fadeIn(quickTime);
-        if (game.nGames+1 >= game.required) {
-            $("#play-again-text").text("Required games complete! You may now Cash Out");
-            $("#play-again-text").attr('href', $("#play-again-text").attr('href2'));
-        }
+        $("#game-over-text").fadeIn(quickTime);
         $("#play-again-text").fadeIn(quickTime);
+        if (game.nGames+1 >= game.required) {
+            $("#game-over-text").text("Required games complete!");
+            $("#play-again-text").text("Cash Out");
+            $("#play-again-text").click(function() {window.location.href=$(this).attr("href2");});
+        }
+        else {
+            $("#play-again-text").click(function() {window.location.href=$(this).attr("href");});
+        }
     }
 });

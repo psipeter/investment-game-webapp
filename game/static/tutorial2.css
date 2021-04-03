@@ -78,6 +78,6 @@
 #n2 {top: 65vh;}
 #n3 {top: 55vh;}
 #n4 {top: 33vh;}
-#n5 {top: 55vh;}
+#n5 {top: 40vh;}
 
 #warning {grid-row: 1; grid-column: 2; width: 100%; margin: 6vh 0; text-align: center; color: var(--myRed);}

@@ -10,7 +10,7 @@ body {
 	height: 30vh;
 	margin: 5vh 18vw;
 	padding: 2vh 2vw;
-	grid-template-rows: 20vh 10vh;
+	grid-template-rows: 20vh 15vh;
 	grid-template-columns: 10vw 30vw;
 	grid-column-gap: 2vw;
 	border: 1pt solid black;
@@ -49,7 +49,7 @@ body {
 	border: 1pt solid var(--myRed);
 }
 
-form {margin: 0; display: flex; font-size: 150%;}
+form {margin: 0; display: flex; font-size: 120%;}
 input {font-size: 150%; font-family: inherit; width: 27vw; background: var(--myLightGray); border: 1pt solid black;}
 select {font-size: 150%; color: inherit; font-family: inherit; width: 27vw; background: var(--myLightGray); border: 1pt solid black;}
 button {font-size: 150%; font-family: inherit; padding: 1vh 1vw; height: 5vh; width: 20vw;}
