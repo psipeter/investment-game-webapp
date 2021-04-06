@@ -53,7 +53,6 @@ def startGame(request):
 	if request.user.doneConsent and request.user.doneTutorial:
 		game = Game.objects.create()
 		game.start(request.user)
-		print(request.user.avatar)
 		data = {
 			'username': game.user.username,
 			'agentname': game.agent.name,

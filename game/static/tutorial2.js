@@ -37,10 +37,8 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     $("#ts-box").css('background-color', 'var(--myPink)');
     $("#ys-box").css('background-color', 'var(--myTeal)');
     $("#turn-box1").css('visibility', 'visible');
-    $("#turn-text").css('visibility', 'visible');
     $("#bonus-box").css('visibility', 'visible');
     $("#turn-box").show().children().fadeIn(quickTime);
-    $("#turn-text").show().fadeIn(quickTime);
     $("#ys-box").show().children().fadeIn(quickTime);
     $("#ts-box").show().children().fadeIn(quickTime);
     $("#bonus-box").show().children().fadeIn(quickTime);

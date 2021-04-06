@@ -50,8 +50,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
     // $("#game-over-text").fadeIn(quickTime);
     // $("#play-again-text").fadeIn(quickTime);
     // $("#play-again-text").click(function() {window.location.href=$(this).attr("href");});
-    // $("#game-over-text").text("Required games complete!");
-    // $("#play-again-text").text("Cash Out");
 
     $("#loadGame").fadeOut(quickTime).children().fadeOut(quickTime);
     setTimeout(function() {$("#loadGame").remove();}, quickTime);
@@ -528,7 +526,6 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));
-        console.log(w, wMin, wMax)
         if (w>wMin & w<wMax) {box.animate({'width': w+"vw"}, animateTime);}
         else if (w>wMax) {box.animate({'width': wMax+"vw"}, animateTime);}
         $({count: num.text()}).animate(

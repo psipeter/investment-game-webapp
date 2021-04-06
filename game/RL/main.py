@@ -8,7 +8,7 @@ match = 3
 turns = 5
 
 avg = 10
-rounds = 30
+rounds = 20
 games = 10
 seed = np.random.randint(0, 1e6)
 

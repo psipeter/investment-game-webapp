@@ -11,7 +11,7 @@ body {
 
 #box {
 	display: grid;
-	grid-template-rows: 10vh 15vh 5vh 10vh 5vh;
+	grid-template-rows: 10vh 15vh 10vh 5vh 5vh;
 	width: 40vw;
 	height: 45vh;
 	margin: 0 20vw;
@@ -33,13 +33,13 @@ body {
 	justify-content: center;
 }
 #error-wrapper {
-	grid-row: 3;
+	grid-row: 5;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 #button-wrapper {
-	grid-row: 4;
+	grid-row: 3;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -50,12 +50,12 @@ body {
 	text-align: center;
 }
 #link-wrapper {
-	grid-row: 5;
+	grid-row: 4;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 form {margin: 0; display: flex; justify-content: center; font-size: 150%;}
-input {font-size: 150%; font-family: inherit; width: 25vw; background: var(--myLightGray); border: 1pt solid black;}
-button {font-size: 150%; font-family: inherit; padding: 1vh 1vw;}
+input {font-family: inherit; width: 25vw;}
+button {width: 25vw; height: 5vh;}
 a {font-size: 150%;}

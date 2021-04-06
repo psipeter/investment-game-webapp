@@ -12,6 +12,9 @@
 	text-align: center;
 }
 
-.link-wrapper, .button-wrapper {
-	margin: 3vh 0;
+.button-wrapper {
+	width: 50vw;
+	margin: 0 15vw;
 }
+.button {width: 100%;}
+button {width: 80vw; height: 5vh;}

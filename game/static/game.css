@@ -235,13 +235,14 @@
 	grid-column: 2;
 	font-size: 250%;
 	width: 16vw;
+	min-width: min-content;
 	height: min-content;
 	padding: 0;
 	margin: 0 17vw;
 	/*padding: 0.5vh 0.5vw;*/
 	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
-	background-color: var(--myForeground);
-	border: 1pt solid black;
+	/*background-color: var(--myForeground);*/
+	/*border: 1pt solid black;*/
   	cursor: pointer;
   	z-index: 10;
 }
@@ -269,7 +270,7 @@
 	grid-row: 1; grid-column: 2;
 	width: var(--widthSlider);
 	height: var(--heightSlider);
-	margin: 6vh var(--marginSlider); 
+	margin: calc((20vh - var(--heightSlider)) / 2) var(--marginSlider); 
 	/*background-color: var(--myGray);*/
 }
 #slider-left {
@@ -378,6 +379,9 @@
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
+	/*z-index: 20;*/
+	height: 3vh;
+	/*width: 10vw;*/
 }
 #game-over-text {
 	height: min-content;
@@ -385,7 +389,11 @@
 	font-size: 400%;
 }
 #play-again-text {
+	margin: 0;
 	font-size: 250%;
+	/*height: 5vh;*/
+	width: 15vw;
+	cursor: pointer;
 }
 /*#flair-text {
 	grid-row: 1;
@@ -402,13 +410,23 @@
 	margin: 0;
 }*/
 
-@media (max-height: 900px) {body {font-size: 10pt;}}
-@media (max-height: 700px) {body {font-size: 8pt;}}
-@media (max-height: 500px) {body {font-size: 6pt;}}
-@media (max-height: 300px) {body {font-size: 4pt;}}
+@media (max-height: 900px) {body, #send-area {font-size: 10pt;}}
+@media (max-height: 700px) {body, #send-area {font-size: 8pt;}}
+@media (max-height: 500px) {body, #send-area {font-size: 6pt;}}
+@media (max-height: 300px) {body, #send-area {font-size: 4pt;}}
 
-@media (max-width: 1800px) {h1, h2, p {font-size: 10pt;}}
-@media (max-width: 1400px) {p {font-size: 10pt;}}
-@media (max-width: 1250px) {h1, h2, p {font-size: 8pt;}}
-@media (max-width: 1000px) {p {font-size: 6pt;}}
-@media (max-width: 750px) {h3 {font-size: 10pt;} h1, h2 {font-size: 6pt;} p {font-size: 4pt;}}
+@media (max-width: 1600px) {#bar-area, #send-area, #log-area, #player-area {font-size: 10pt;}}
+@media (max-width: 1200px) {#bar-area, #log-area {font-size: 8pt;}}
+@media (max-width: 1000px) {#bar-area, #log-area {font-size: 6pt;}}
+@media (max-width: 800px) {
+	#bar-area, #log-area {font-size: 4pt;}
+	#send-area, #player-area {font-size: 8pt;}
+	:root {
+		--heightSlider: 4vh;
+		--heightRL: 3vh;
+		--heightT: 3.5vh;
+	}
+/*@media (max-width: 1400px) {p {font-size: 10pt;}}*/
+/*@media (max-width: 1250px) {h1, h2, p {font-size: 8pt;}}*/
+/*@media (max-width: 1000px) {p {font-size: 6pt;}}*/
+/*@media (max-width: 750px) {h3 {font-size: 10pt;} h1, h2 {font-size: 6pt;} p {font-size: 4pt;}}*/

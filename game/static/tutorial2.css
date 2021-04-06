@@ -60,14 +60,15 @@
 	padding: 1vh 1vw;
 	cursor: pointer;
 	align-self: flex-end;
-	background-color: var(--myLightGray);
+	background-color: var(--myBlue);
+	color: var(--myWhite);
 	border: 1pt solid black;
 	border-radius: 2px;
 	z-index: 2;
-	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4), 0 0 16px 0 rgba(0, 0, 0, 0.35);
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
 }
 .back:hover, .back:active, .next:hover, .next:active {
-	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), 0 0 16px 0 rgba(0, 0, 0, 0.75);
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
 }
 .inactive {color: var(--myGray); cursor: not-allowed;}
 #slider-wrapper, #submit {z-index: 1;}
