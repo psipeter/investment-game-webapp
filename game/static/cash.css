@@ -1,5 +1,8 @@
 h2 {text-align: center; font-weight: normal;}
 .space {margin: 5% 0;}
+.teal {color: var(--myTeal);}
+.pink {color: var(--myPink);}
+.red {color: var(--myRed);}
 
 .wrapper {
 	width: 100%;

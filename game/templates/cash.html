@@ -11,15 +11,15 @@
 {% block body %}
 	<h1>Thanks for playing the Investment Game!</h1>
 	<div class='space'></div>
-	<h2>Your total winnings are</h2>
+	<h2 class='pink'>Your total winnings are</h2>
 	<div class="wrapper">
 		<p class="highlight">${{winnings}}</p>
 	</div>
-	<h2>Your HIT code is</h2>
+	<h2 class='teal'>Your HIT code is</h2>
 	<div class="wrapper">
 		<p class="highlight">{{user.code}}</p>
 	</div>
-	<h2>Please paste this code into the Mechanical Turk browser tab to finish the task</h2>
+	<h2 class="red">Please paste this code into the Mechanical Turk browser tab to finish the task</h2>
 
 	<div class='space'></div>
 	<div class="appreciation">
@@ -32,9 +32,6 @@
 		<p class="signature"> Department of Systems Design Engineering</p>
 	</div>
 
-	<div class="link-wrapper">
-		<a class="link" href="{% url 'home' %}">Home</a>
-	</div>
 {% endblock %}
 
 
