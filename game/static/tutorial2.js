@@ -349,7 +349,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
             }, animateTime+waitTime);
             return;
         }
-        if (userGive>giveThrMax*maxUser & tutorialGame==2) {
+        if (userKeep<((1-giveThrMax)*maxUser).toFixed(0) & tutorialGame==2) {
             hideSlider();
             $("#warning").text(`Please keep at least ${((1-giveThrMax)*maxUser).toFixed(0)}`);
             $("#warning").fadeIn(quickTime);

@@ -1,4 +1,5 @@
 initialize("/game/api/status/", "GET", (status) => {
+	resizeImg();
 	function chooseAvatar() {
 		if ($("select").val()==1) {$("#img-avatar").attr('src', '/static/user1C.svg');}
 		if ($("select").val()==2) {$("#img-avatar").attr('src', '/static/user2C.svg');}
@@ -14,4 +15,10 @@ initialize("/game/api/status/", "GET", (status) => {
 	chooseAvatar();
 	loadAvatar();
 	$("select").on('change', chooseAvatar);
+    $(window).resize(resizeImg);
+    function resizeImg() {
+    	$("#img-avatar").css('height', $("#form").css('height'));
+    	$("#img-wrapper").css('height', $("#form").css('height'));
+    }
+
 });

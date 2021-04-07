@@ -7,10 +7,10 @@ body {
 #box {
 	display: grid;
 	width: 40vw;
-	height: 40vh;
+	height: min-content;
 	margin: 5vh 18vw;
 	padding: 2vh 2vw;
-	grid-template-rows: 30vh 15vh;
+	grid-template-rows: minmax(min-content, 20vh) 15vh;
 	grid-template-columns: 10vw 30vw;
 	grid-column-gap: 2vw;
 	border: 1pt solid black;
@@ -26,7 +26,6 @@ body {
 	justify-content: center;
 }
 #img-avatar {
-	height: 100%;
 	width: 100%;
 }
 #form-wrapper {
@@ -34,6 +33,7 @@ body {
 	grid-column: 2;
 	display: flex;
 	justify-content: left;
+	align-items: center;
 }
 #button-wrapper {
 	grid-row: 2;
@@ -50,7 +50,7 @@ body {
 	border: 1pt solid var(--myRed);
 }
 
-form {margin: 0; display: flex;}
+form {font-size: 150%; margin: 0; display: flex;}
 input {width: 27vw;}
 select {width: 27vw;}
 button {height: 5vh; width: 100%;}

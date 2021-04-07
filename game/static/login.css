@@ -11,9 +11,9 @@ body {
 
 #box {
 	display: grid;
-	grid-template-rows: 10vh 10vh 10vh 5vh 5vh;
+	grid-template-rows: minmax(10vh, min-content) 10vh 10vh 5vh 5vh;
 	width: 40vw;
-	height: 35vh;
+	height: min-content;
 	margin: 0 20vw;
 	/*padding: 2vh 2vw;*/
 	border: 1pt solid black;
@@ -23,6 +23,7 @@ body {
 #title-wrapper {
 	grid-row: 1;
 	font-size: 150%;
+	height: minmax(min-content, 10vh);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -69,10 +70,29 @@ body {
 	text-align: center;
 }
 
-form {display: flex; justify-content: center;}
+form {font-size: 150%; display: flex; justify-content: center;}
 input {width: 25vw;}
 button {width: 25vw; height: 5vh;}
 /*label {width: 25vw; height: 5vh;}*/
 a {font-size: 150%;}
 /*button > label {width: 100%; height: 100%;}*/
 /*button > label > p {height: 100%;}*/
+@media (max-width: 1200px) {
+	#register-wrapper, #reset-wrapper {font-size: 8pt;}	
+}
+
+@media (max-width: 800px) {
+	#title-wrapper {font-size: 8pt;}
+	#register-wrapper, #reset-wrapper {font-size: 6pt;}	
+}
+
+@media (max-width: 600px) {
+	#register-wrapper, #reset-wrapper {font-size: 4pt;}	
+}
+
+@media (max-width: 400px) {
+	#box {grid-template-rows: 10vh 10vh 10vh 5vh 5vh 5vh;}
+	#reset-wrapper {grid-row: 4; width: 100%; margin: 0; justify-content: center;}	
+	#register-wrapper {grid-row: 5; width: 100%; margin: 0; justify-content: center;}	
+	#error-wrapper {grid-row: 6;}	
+}

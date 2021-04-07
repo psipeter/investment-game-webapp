@@ -9,6 +9,9 @@
 	--myRed: #990000;
 	--myWhite: #ffffff;
 	--myLightGray: #f0f0f0;
+	--myLightBlue: #4063bfff;
+	--myDarkGreen: #006926;
+	font-size: 12pt;
 }
 
 /* roboto-regular - latin */
@@ -31,17 +34,12 @@
        url('jaldi-v7-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-html {
-	margin: 1% 10%;
-	/*height: 100vh;*/
-}
 
 body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
+	width: 80vw;
+	height: 100vh;
+	margin: 0 10vw;
 	padding: 0;
-	font-size: 12pt;
 	font-family: 'Roboto', sans-serif;
 	background-color: var(--myBackground);
 	color: var(--myBlue);
@@ -49,33 +47,47 @@ body {
 
 h1 {
 	margin: 0;
-	font-family: 'Jaldi', sans-serif;
-	font-size: 250%;
-	font-weight: bold;
+	font-weight: normal;
 	text-align: center;
 }
 
 h2 {
 	margin: 0;
-	font-size: 140%;
 	font-weight: normal;
 }
 
 h3 {
 	margin: 0;
-	font-size: 110%;
 	font-weight: normal;
 }
 
-input, button, form {
-	font-size: 12pt;
+input, button, form, select {
+	font-size: inherit;
 	font-family: 'Roboto', sans-serif;
-	color: var(--myBlue);	
+	color: var(--myBlue);
+	margin: 1vh 0; 
 }
 
-.font2 {
-	font-family: 'Jaldi', sans-serif;	
+button {
+	font-size: inherit;
+	font-family: inherit;
+	padding: 1vh 1vw;
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
+	border: 1pt solid black;
+	color: var(--myWhite);
+	background-color: var(--myBlue);
+	padding: 0;
 }
+button:hover:enabled {
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+}
+label > div {width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;}
+label > div > p {margin: 0; height: min-content; width: 100%;}
+/*button:active {
+	color: var(--myYellow);
+	border: none;
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+}*/
 
 .link-wrapper, .button-wrapper {
 	margin: 2% 0;
@@ -84,6 +96,27 @@ input, button, form {
 	justify-content: center;
 }
 
-.link, .link:visited, .link:link {
+a, a:visited, a:link {
 	color: var(--myBlue);
+	text-decoration: none;
+}
+
+
+.body {
+	height: 80vh;
+	margin: 0;
+	margin-top: 5vh;
+}
+
+@media (max-width: 900px), (max-height: 900px) {
+	.body {font-size: 10pt;}
+}
+@media (max-width: 600px), (max-height: 700px) {
+	.body {font-size: 8pt;}
+}
+@media (max-width: 400px), (max-height: 500px) {
+	.body {font-size: 6pt;}
+}
+@media (max-width: 300px) {
+	.body {font-size: 4pt;}	
 }

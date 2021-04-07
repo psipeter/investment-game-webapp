@@ -23,7 +23,7 @@
 	box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
 }
 
-.image {width: 20vw; height: 12vh;}
+.image {width: 100%; height: 12vh;}
 .text {text-align: center; align-self: center;}
 
 #information-box {grid-row: 1; grid-column: 1; display: grid; grid-template-rows: 20% 80%;}

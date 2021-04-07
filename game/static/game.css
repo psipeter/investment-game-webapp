@@ -410,10 +410,10 @@
 	margin: 0;
 }*/
 
-@media (max-height: 900px) {body, #send-area {font-size: 10pt;}}
-@media (max-height: 700px) {body, #send-area {font-size: 8pt;}}
-@media (max-height: 500px) {body, #send-area {font-size: 6pt;}}
-@media (max-height: 300px) {body, #send-area {font-size: 4pt;}}
+@media (max-height: 900px) {#send-area {font-size: 10pt;}}
+@media (max-height: 700px) {#send-area {font-size: 8pt;}}
+@media (max-height: 500px) {#send-area {font-size: 6pt;}}
+@media (max-height: 300px) {#send-area {font-size: 4pt;}}
 
 @media (max-width: 1600px) {#bar-area, #send-area, #log-area, #player-area {font-size: 10pt;}}
 @media (max-width: 1200px) {#bar-area, #log-area {font-size: 8pt;}}

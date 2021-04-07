@@ -2,6 +2,7 @@ form {
 	height: 70vh;
 	border: 2pt solid black;
 	overflow: auto;
+	background-color: var(--myForeground);
 }
 .f1 {width: 60%; font-size: 80%;}
 .f2 {width: 20%; font-size: 80%;}
@@ -19,9 +20,7 @@ input, select {
 
 table {
 	width: 100%;
-	background-color: var(--myForeground);
 	padding: 1%;
-	border: 1pt solid black;
 	font-size: 150%;
 }
 
