@@ -46,23 +46,12 @@ body {
 	align-items: center;
 	justify-content: center;
 }
-#reset-wrapper {
+#extra-wrapper {
 	grid-row: 4;
-	grid-column: 1;
-	margin-left: 7.5vw;
-	width: calc(100% - 7.5vw);
+	margin: 0 7.5vw;
 	display: flex;
 	align-items: center;
-	justify-content: flex-start;
-}
-#register-wrapper {
-	grid-row: 4;
-	grid-column: 1;
-	margin-right: 7.5vw;
-	width: calc(100% - 7.5vw);
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
+	justify-content: space-between;
 }
 .error {
 	font-family: 'Roboto', sans-serif;
