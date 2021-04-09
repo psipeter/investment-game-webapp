@@ -529,9 +529,9 @@ class ModelBased(RLAgent):
 			myRewards = history['bRewards']
 			myStates = history['bStates']
 			otherRewards = history['aRewards']
-		for t in range(len(myGives)-1):
+		for t in range(len(myGives)):
 			s = myStates[t]
-			snew = myStates[t+1]
+			snew = myStates[t+1] if t<len(myGives)-1 else -1
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
 			self.cSA[s,a] += 1
