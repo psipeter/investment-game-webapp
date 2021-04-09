@@ -53,29 +53,29 @@ class Agent(models.Model):
 		# 	self.obj = pickle.loads(self.blob.blob)
 		# else:
 		if name=='T4TA1':
-			O = np.random.uniform(0.4, 0.6)
-			X = np.random.uniform(0.4, 0.6)
-			F = 1.0
-			P = 1.0
+			O = 0.5 # np.random.uniform(0.3, 0.5)
+			X = 0.5 # np.random.uniform(0.4, 0.6)
+			F = 1.0 # np.random.uniform(0.7, 0.8)
+			P = 1.0 # np.random.uniform(0.7, 0.8)
 			E = EPSILON
 			S = SIGMA
 		elif name=='T4TB1':
-			O = np.random.uniform(0.4, 0.6)
-			X = np.random.uniform(0.6, 0.8)
-			F = 0.3
+			O = 0.5
+			X = 0.7
+			F = 0.2
 			P = 1.0
 			E = EPSILON
 			S = SIGMA
 		elif name=='T4TA2':
-			O = np.random.uniform(0.7, 0.9)
-			X = np.random.uniform(0.4, 0.6)
+			O = 0.8
+			X = 0.5
 			F = 1.0
 			P = 0.2
 			E = EPSILON
 			S = SIGMA
 		elif name=='T4TB2':
-			O = np.random.uniform(0.2, 0.4)
-			X = np.random.uniform(0.6, 0.8)
+			O = 0.3
+			X = 0.7
 			F = 0.1
 			P = 0.2
 			E = EPSILON

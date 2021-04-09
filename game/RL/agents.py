@@ -31,8 +31,11 @@ class HardcodedAgent(AgentBase):
 			a = 0
 		elif np.random.rand() < self.E:
 			a = np.random.randint(0, money+1)
+		elif self.S > 0:
+			a = money * self.state + np.random.randint(-self.S, self.S+1)
+			# a = money * np.random.normal(self.state, self.S) if self.S > 0 else money * self.state
 		else:
-			a = money * np.random.normal(self.state, self.S) if self.S > 0 else money * self.state
+			a = money * self.state
 		give = int(np.clip(a, 0, money))
 		keep = int(money - give)
 		return give, keep
@@ -64,7 +67,7 @@ class T4T(HardcodedAgent):
 		assert F >= 0, "forgiveness rate must be positive or zero"
 		assert P >= 0, "punishment rate must be positive or zero"
 		self.E = E  # epsilon (random action)
-		self.S = S  # noise added to chosen action (standard deviation of state-based mean)
+		self.S = S  # noise added to chosen action
 		self.state = self.O if self.player=="A" else self.O/2
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 	def update(self, history):
