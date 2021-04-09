@@ -3,12 +3,6 @@ body {
 	width: 80vw;
 }
 
-#body-wrapper {
-	height: 100vh;
-	display: flex;
-	align-items: center;
-}
-
 #box {
 	display: grid;
 	grid-template-rows: 10vh 15vh 10vh 5vh 5vh;
@@ -22,6 +16,7 @@ body {
 
 #title-wrapper {
 	grid-row: 1;
+	font-size: 150%;
 	display: flex;
 	align-items: center;
 	justify-content: center;

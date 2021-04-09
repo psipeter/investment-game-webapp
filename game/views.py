@@ -150,7 +150,11 @@ def startGame(request):
 
 @login_required
 def startTutorial(request):
-	return render(request, "tutorial.html")
+	context = {
+		'bonus_min': f"{BONUS_MIN:.2f}",
+		'bonus_rate': f"{BONUS_RATE:.3f}",
+	}
+	return render(request, "tutorial.html", context=context)
 
 @login_required
 def startTutorial2(request):

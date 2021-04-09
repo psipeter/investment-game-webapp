@@ -8,7 +8,7 @@ import time
 from scipy.special import softmax
 
 
-def plotAll(dfAll, popA, popB, capital, match, rounds, name, endgames=5):
+def plotAll(dfAll, popA, popB, capital, match, rounds, turns, name, endgames=5):
 	ylim = ((0, capital*match))
 	yticks = (([0, 5, 10, 15, 20, 25, 30]))
 	binsAG = np.linspace(0, 1, capital+1)
@@ -20,21 +20,25 @@ def plotAll(dfAll, popA, popB, capital, match, rounds, name, endgames=5):
 	for A in popA:
 		AID = A.ID
 		dfEnd = dfAll.query('game >= @end & A==@AID')
-		gen = dfEnd['aGives'] / (dfEnd['aGives'] + dfEnd['aKeeps']) # plot ignores nan's
-		score = dfEnd['aScore']
 
 		fig, ax = plt.subplots()
-		sns.histplot(data=gen, ax=ax, stat="probability", bins=binsAG)  
+		sns.histplot(data=dfEnd['aGen'], ax=ax, stat="probability", bins=binsAG)  
 		ax.set(xlabel="Generosity Ratio", ylabel="Probability", xticks=((binsAG)),
-			title=f"{AID} (A) Generosity \nMean={np.mean(gen):.2f}, Std={np.std(gen):.2f}")
+			title=f"{AID} (A) Generosity \nMean={np.mean(dfEnd['aGen']):.2f}, Std={np.std(dfEnd['aGen']):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
 		fig.savefig(f"plots/{name}_{AID}A_generosity.pdf")
 
 		fig, ax = plt.subplots()
-		sns.histplot(data=score, ax=ax, stat="probability", bins=binsAR)  
+		sns.barplot(data=dfEnd, x='turn', y='aGen', ax=ax)  
+		ax.set(ylabel="Generosity Ratio", xlabel="Turn", ylim=((0, 1)))
+		fig.tight_layout()
+		fig.savefig(f"plots/{name}_{AID}A_moves.pdf")
+
+		fig, ax = plt.subplots()
+		sns.histplot(data=dfEnd['aScore'], ax=ax, stat="probability", bins=binsAR)  
 		ax.set(xlabel="Scores", ylabel="Probability", xticks=((binsAR)),
-			title=f"{AID} (A) Scores \nMean={np.mean(score):.2f}, Std={np.std(score):.2f}")
+			title=f"{AID} (A) Scores \nMean={np.mean(dfEnd['aScore']):.2f}, Std={np.std(dfEnd['aScore']):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
 		fig.savefig(f"plots/{name}_{AID}A_scores.pdf")
@@ -43,21 +47,25 @@ def plotAll(dfAll, popA, popB, capital, match, rounds, name, endgames=5):
 	for B in popB:
 		BID = B.ID
 		dfEnd = dfAll.query('game >= @end & B==@BID')
-		gen = dfEnd['bGives'] / (dfEnd['bGives'] + dfEnd['bKeeps']) # plot ignores nan's
-		score = dfEnd['bScore']
 
 		fig, ax = plt.subplots()
-		sns.histplot(data=gen, ax=ax, stat="probability", bins=binsBG)  
+		sns.histplot(data=dfEnd['bGen'], ax=ax, stat="probability", bins=binsBG)  
 		ax.set(xlabel="Generosity Ratio", ylabel="Probability", xticks=((binsBG)),
-			title=f"{BID} (B) Generosity \nMean={np.mean(gen):.2f}, Std={np.std(gen):.2f}")
+			title=f"{BID} (B) Generosity \nMean={np.mean(dfEnd['bGen']):.2f}, Std={np.std(dfEnd['bGen']):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
 		fig.savefig(f"plots/{name}_{BID}B_generosity.pdf")
 
 		fig, ax = plt.subplots()
-		sns.histplot(data=score, ax=ax, stat="probability", bins=binsBR)  
+		sns.barplot(data=dfEnd, x='turn', y='bGen', ax=ax)  
+		ax.set(ylabel="Generosity Ratio", xlabel="Turn", ylim=((0, 1)))
+		fig.tight_layout()
+		fig.savefig(f"plots/{name}_{BID}B_moves.pdf")
+
+		fig, ax = plt.subplots()
+		sns.histplot(data=dfEnd['bScore'], ax=ax, stat="probability", bins=binsBR)  
 		ax.set(xlabel="Score", ylabel="Probability", xticks=((binsBR)),
-			title=f"{BID} (B) Score \nMean={np.mean(score):.2f}, Std={np.std(score):.2f}")
+			title=f"{BID} (B) Score \nMean={np.mean(dfEnd['bScore']):.2f}, Std={np.std(dfEnd['bScore']):.2f}")
 		ax.grid(True, axis='y')
 		fig.tight_layout()
 		fig.savefig(f"plots/{name}_{BID}B_scores.pdf")

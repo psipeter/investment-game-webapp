@@ -15,7 +15,7 @@ function initialize(url, method, cback) {
             if (state.data.avatar==4){$("#imgI").attr('src', '/static/user4C.svg');}
 
             $("#headerU").text(state.data.username);
-            $("#headerG").text("Games Played: "+state.data.nGames +"/" + state.data.required);
+            $("#headerG").text("Games: "+state.data.nGames +"/" + state.data.required);
             $("#headerW").text("Winnings: $"+state.data.winnings);
             if (state.data.doneGames === null) {
                 $('#cash-link').css('color', 'var(--myGray');

@@ -7,21 +7,19 @@ capital = 10
 match = 3
 turns = 5
 
-avg = 10
-rounds = 20
-games = 10
+avg = 1
+rounds = 30
+games = 50
 seed = np.random.randint(0, 1e6)
 
 nAA = capital+1
 nAB = capital*match+1
 nS = 10
+rO = 0.1
 
 # popA = [
-	# T4T("A", O=0.4, X=0.8, F=0.8, P=0.2, E=0.1, S=0.05),
-	# T4T("A", O=0.4, X=0.5, F=0.5, P=1.0, E=0.1, S=0.05),
-	# T4T("A", X=0.4, F=FA, P=PA),
-	# T4T("A", X=0.6, F=FA, P=PA),
-	# Bandit("A", nAA, rO=rOA),
+	# T4T("A", turns, O=0.8, X=0.5, F=1.0, P=0.2, E=0.0, S=0.0),
+	# Bandit("A", turns, nAA),
 	# QLearn("A", nAA, nS, rO=rOA),
 	# Wolf("A", nAA, nS),
 	# Hill("A", nAA, nS),
@@ -29,8 +27,8 @@ nS = 10
 	# ]
 
 # popB = [
-	# T4T("B", F=FB, ID=str(FB)),
-	# Bandit("B", nAB, rO=0.0, dT=0.7),
+	# T4T("B", turns, O=0.5, X=0.7, F=0.2, P=1.0, E=0.0, S=0.0),
+	# Bandit("B", turns, nAB),
 	# QLearn("B", nAB, nS, rO=0.0, dT=0.7),
 	# Wolf("B", nAB, nS),
 	# Hill("B", nAB, nS),
@@ -38,54 +36,74 @@ nS = 10
 	# ]
 
 # df = OneVsOne(popA, popB, capital, match, turns, avg, rounds, games, seed)
-# plotAll(df, popA, popB, capital, match, rounds, "1v1")
+# plotAll(df, popA, popB, capital, match, rounds, turns, "1v1")
 
-group = '1'
-player = 'A'
+for group in ['1', '2']:
+	for player in ['A', 'B']:
+		print(group, player)
+		if group=='1' and player=="A":
+			popA = [
+				Bandit("A", turns, nAA, rO=rO),
+				QLearn("A", turns, nAA, nS, rO=rO),
+				ModelBased("A", turns, nAA, nS, rO=rO)
+				]
+			popB = [
+				# T4T("B", turns, O=0.4, X=0.6, F=0.2, P=1.0, E=0.1, S=0.05),
+				# T4T("B", turns, O=0.5, X=0.7, F=0.2, P=1.0, E=0.1, S=0.05),
+				# T4T("B", turns, O=0.6, X=0.8, F=0.2, P=1.0, E=0.1, S=0.05),
+				T4T("B", turns, O=np.random.uniform(0.4, 0.6), X=np.random.uniform(0.6, 0.8), F=0.2, P=1.0, E=0.1, S=0.05),
+				T4T("B", turns, O=np.random.uniform(0.4, 0.6), X=np.random.uniform(0.6, 0.8), F=0.2, P=1.0, E=0.1, S=0.05),
+				T4T("B", turns, O=np.random.uniform(0.4, 0.6), X=np.random.uniform(0.6, 0.8), F=0.2, P=1.0, E=0.1, S=0.05),
+			]
 
-if group=='1' and player=="A":
-	popA = [
-		Bandit("A", nAA),
-		QLearn("A", nAA, nS),
-		ModelBased("A", nAA, nS)
-		]
-	popB = [
-		T4T("B", O=0.5, X=0.7, F=0.2, P=1.0, E=0.0, S=0.0)
-	]
+		if group=='1' and player=="B":
+			popA = [
+				# T4T("A", turns, O=0.4, X=0.4, F=1.0, P=1.0, E=0.1, S=0.05),
+				# T4T("A", turns, O=0.5, X=0.5, F=1.0, P=1.0, E=0.1, S=0.05),
+				# T4T("A", turns, O=0.6, X=0.6, F=1.0, P=1.0, E=0.1, S=0.05),
+				T4T("A", turns, O=np.random.uniform(0.4, 0.6), X=np.random.uniform(0.4, 0.6), F=0.5, P=1.0, E=0.1, S=0.05),
+				T4T("A", turns, O=np.random.uniform(0.4, 0.6), X=np.random.uniform(0.4, 0.6), F=0.5, P=1.0, E=0.1, S=0.05),
+				T4T("A", turns, O=np.random.uniform(0.4, 0.6), X=np.random.uniform(0.4, 0.6), F=0.5, P=1.0, E=0.1, S=0.05),
 
-if group=='1' and player=="B":
-	popA = [
-		T4T("A", O=0.5, X=0.5, F=1.0, P=1.0, E=0.0, S=0.0)
-	]
-	popB = [
-		Bandit("B", nAB),
-		QLearn("B", nAB, nS),
-		ModelBased("B", nAB, nS)
-		]
+			]
+			popB = [
+				Bandit("B", turns, nAB, rO=rO),
+				QLearn("B", turns, nAB, nS, rO=rO),
+				ModelBased("B", turns, nAB, nS, rO=rO)
+				]
 
-if group=='2' and player=="A":
-	popA = [
-		Bandit("A", nAA),
-		QLearn("A", nAA, nS),
-		ModelBased("A", nAA, nS)
-		]
-	popB = [
-		T4T("B", O=0.3, X=0.7, F=0.1, P=0.2, E=0.0, S=0.0)
-	]
+		if group=='2' and player=="A":
+			popA = [
+				Bandit("A", turns, nAA, rO=rO),
+				QLearn("A", turns, nAA, nS, rO=rO),
+				ModelBased("A", turns, nAA, nS, rO=rO)
+				]
+			popB = [
+				# T4T("B", turns, O=0.2, X=0.6, F=0.1, P=0.2, E=0.1, S=0.05),
+				# T4T("B", turns, O=0.3, X=0.7, F=0.1, P=0.2, E=0.1, S=0.05),
+				# T4T("B", turns, O=0.4, X=0.8, F=0.1, P=0.2, E=0.1, S=0.05),
+				T4T("B", turns, O=np.random.uniform(0.2, 0.4), X=np.random.uniform(0.6, 0.8), F=0.1, P=0.2, E=0.1, S=0.05),
+				T4T("B", turns, O=np.random.uniform(0.2, 0.4), X=np.random.uniform(0.6, 0.8), F=0.1, P=0.2, E=0.1, S=0.05),
+				T4T("B", turns, O=np.random.uniform(0.2, 0.4), X=np.random.uniform(0.6, 0.8), F=0.1, P=0.2, E=0.1, S=0.05),
+			]
 
-if group=='2' and player=="B":
-	popA = [
-		T4T("A", O=0.8, X=0.5, F=1.0, P=0.2, E=0.0, S=0.0)
-	]
-	popB = [
-		Bandit("B", nAB),
-		QLearn("B", nAB, nS),
-		ModelBased("B", nAB, nS)
-		]
+		if group=='2' and player=="B":
+			popA = [
+				# T4T("A", turns, O=0.7, X=0.4, F=1.0, P=0.2, E=0.1, S=0.05),
+				# T4T("A", turns, O=0.8, X=0.5, F=1.0, P=0.2, E=0.1, S=0.05),
+				# T4T("A", turns, O=0.9, X=0.6, F=1.0, P=0.2, E=0.1, S=0.05),
+				T4T("A", turns, O=np.random.uniform(0.7, 0.9), X=np.random.uniform(0.4, 0.6), F=1.0, P=0.2, E=0.1, S=0.05),
+				T4T("A", turns, O=np.random.uniform(0.7, 0.9), X=np.random.uniform(0.4, 0.6), F=1.0, P=0.2, E=0.1, S=0.05),
+				T4T("A", turns, O=np.random.uniform(0.7, 0.9), X=np.random.uniform(0.4, 0.6), F=1.0, P=0.2, E=0.1, S=0.05),
+			]
+			popB = [
+				Bandit("B", turns, nAB, rO=rO),
+				QLearn("B", turns, nAB, nS, rO=rO),
+				ModelBased("B", turns, nAB, nS, rO=rO)
+				]
 
-
-df = ManyVsMany(popA, popB, capital, match, turns, avg, rounds, games, seed, "all")
-plotAll(df, popA, popB, capital, match, rounds, f"Group{group}_Player{player}")
+		df = ManyVsMany(popA, popB, capital, match, turns, avg, rounds, games, seed, "all")
+		plotAll(df, popA, popB, capital, match, rounds, turns, f"{group}{player}")
 
 # for agent in popB:
 # 	agent.saveArchive(f'{agent.ID}_{player}_{group}')

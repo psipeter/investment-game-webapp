@@ -14,10 +14,12 @@ class Game():
 		self.history = {
 			'aGives': [],
 			'aKeeps': [],
+			'aGen': [],
 			'aRewards': [],
 			'aStates': [],
 			'bGives': [],
 			'bKeeps': [],
+			'bGen': [],
 			'bRewards': [],
 			'bStates': [],
 		}
@@ -28,16 +30,19 @@ class Game():
 			aGive, aKeep = self.A.act(self.capital, self.history)
 			self.history['aGives'].append(aGive)
 			self.history['aKeeps'].append(aKeep)
+			self.history['aGen'].append(aGive/(aGive+aKeep))
 			self.history['aStates'].append(self.A.state)
 			bGive, bKeep = self.B.act(aGive*self.match, self.history)
 			self.history['bGives'].append(bGive)
 			self.history['bKeeps'].append(bKeep)
+			self.history['bGen'].append(np.NaN if (bGive+bKeep)==0 else bGive/(bGive+bKeep))
 			self.history['bStates'].append(self.B.state)
 			self.history['aRewards'].append(aKeep+bGive)
 			self.history['bRewards'].append(bKeep)
 	def historyToDataframe(self, game):
 		columns = ('A', 'B', 'game', 'turn',
-			'aGives', 'aKeeps', 'aRewards', 'aStates', 'bGives', 'bKeeps', 'bRewards', 'bStates', 'aScore', 'bScore')
+			'aGives', 'aKeeps', 'aGen', 'aRewards', 'aStates', 'aScore',
+			'bGives', 'bKeeps', 'bGen', 'bRewards', 'bStates', 'bScore')
 		dfs = []
 		for t in range(self.turns):
 			dfs.append(pd.DataFrame([[
@@ -47,13 +52,15 @@ class Game():
 				t,
 				self.history['aGives'][t],
 				self.history['aKeeps'][t],
+				self.history['aGen'][t],
 				self.history['aRewards'][t],
 				self.history['aStates'][t],
+				np.mean(self.history['aRewards']),
 				self.history['bGives'][t],
 				self.history['bKeeps'][t],
+				self.history['bGen'][t],
 				self.history['bRewards'][t],
 				self.history['bStates'][t],
-				np.mean(self.history['aRewards']),
 				np.mean(self.history['bRewards']),
 			]], columns=columns))
 		df = pd.concat([df for df in dfs], ignore_index=True)

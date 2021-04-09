@@ -50,24 +50,11 @@ class Fixed(HardcodedAgent):
 	def update(self, history):
 		self.state = self.M
 
-class BecomeGreedy(HardcodedAgent):
-	def __init__(self, player, start, step, S=0, E=0, ID="BecomeGreedy"):
-		self.player = player
-		self.ID = ID
-		self.start = start
-		self.step = step
-		self.E = E
-		self.S = S
-		self.state = self.start
-	def update(self, history):
-		self.state -= self.step
-		self.state = np.clip(self.state, 0, 1)
-	def reset(self):
-		self.state = self.start
 
 class T4T(HardcodedAgent):
-	def __init__(self, player, O=1, X=0.5, F=1.0, P=1.0, E=0, S=0, C=0.2, ID="T4T"):
+	def __init__(self, player, turns, O=1, X=0.5, F=1.0, P=1.0, E=0, S=0, C=0.2, ID="T4T"):
 		self.player = player
+		self.turns = turns
 		self.ID = ID
 		self.O = O  # initial state of the agent
 		self.X = X  # expected generosity of opponent (fraction of capital given, fraction of available money returned)
@@ -82,7 +69,8 @@ class T4T(HardcodedAgent):
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 	def update(self, history):
 		if self.player == "A":
-			if len(history['bGives'])==0: return
+			if len(history['bGives'])==0:
+				return
 			otherGive = history['bGives'][-1]
 			otherKeep = history['bKeeps'][-1]
 			if otherGive+otherKeep==0:
@@ -99,6 +87,11 @@ class T4T(HardcodedAgent):
 			# delta = self.maxGive if otherKeep==0 else -otherKeep/(otherGive+otherKeep)
 		self.state += delta*self.F if delta>0 else delta*self.P
 		self.state = np.clip(self.state, 0, self.maxGive)
+		# special rules for final round
+		# if self.player == "A" and len(history['bGives'])==self.turns-1:
+		# 	self.state = 0
+		# if self.player == "B" and len(history['aGives'])==self.turns:
+		# 	self.state = 0
 	def reset(self):
 		self.state = self.O if self.player=="A" else self.O/2
 		self.maxGive = 1.0 if self.player=="A" else 0.5
@@ -106,40 +99,52 @@ class T4T(HardcodedAgent):
 
 class RLAgent(AgentBase):
 	def setState(self, history, t):
-		if len(history['aGives'])==0 or len(history['bGives'])==0:
-			self.state = 0  # no history state
+		turn = len(history['aGives']) if self.player=="A" else len(history['bGives'])
+		# print('turn', turn)
+		if turn==0 and self.player=="A":
+			self.state = 0 # no information state
 			return
-		if self.player == "A":
-			myGive = history['aGives'][t]
-			myKeep = history['aKeeps'][t]
-			otherGive = history['bGives'][t]
-			otherKeep = history['bKeeps'][t]
-		else:
-			myGive = history['bGives'][t]
-			myKeep = history['bKeeps'][t]
+		elif turn==0 and self.player=="B":
+			# myGive = 1  # pretend I'm perfect to skip no-information state
+			# myKeep = 0
 			otherGive = history['aGives'][t]
 			otherKeep = history['aKeeps'][t]
-		if (otherGive==0 and otherKeep==0) or (myGive==0 and myKeep==0):
-			self.state = 1  # no information state
+		elif turn>0 and self.player == "A":
+			# myGive = history['aGives'][t]
+			# myKeep = history['aKeeps'][t]
+			otherGive = history['bGives'][t]
+			otherKeep = history['bKeeps'][t]
+		elif turn>0 and self.player == "B":
+			# myGive = history['bGives'][t]
+			# myKeep = history['bKeeps'][t]
+			otherGive = history['aGives'][t]
+			otherKeep = history['aKeeps'][t]
+		# print('otherGive', otherGive)
+		# print('otherKeep', otherKeep)
+		if (otherGive==0 and otherKeep==0): # or (myGive==0 and myKeep==0):
+			self.state = 0  # no information state
 			return
-		myRatio = myGive / (myGive + myKeep)
+		# myRatio = myGive / (myGive + myKeep)
 		otherRatio = otherGive / (otherGive + otherKeep)
 		# map this ratio into a discrete state space of size Q
 		maxState = 0 if self.nS <= 1 else self.nS-1
-		myState = int(myRatio * maxState)
+		# myState = int(myRatio * maxState)
 		otherState = int(otherRatio * maxState)
-		state = otherState
-		assert 0 <= state <= self.nS, "state outside limit"
-		self.state = 2+state
+		assert 0 <= otherState <= self.nS, "state outside limit"
+		state = turn*self.nS + otherState
+		# print('otherState', otherState)
+		# print('state', state)
+		self.state = state
 	def reset(self):
 		self.state = 0
 
 class Bandit(RLAgent):
-	def __init__(self, player, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
+	def __init__(self, player, turns, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
 		self.player = player
+		self.turns = turns
 		self.nA = nA
+		self.nS = 1
 		self.state = 0
-		self.nS = 0
 		self.ID = ID
 		self.E = E  # epsilon random action
 		self.T = T  # temperature for Boltzmann exploration
@@ -149,19 +154,21 @@ class Bandit(RLAgent):
 		self.rO = rO  # weight for prosocial reward
 		self.dE = dE  # epsilon decay
 		self.dT = dT  # temperature decay
-		self.Q = np.zeros((nA))  # value function
-		self.cA = np.zeros((nA))  # visits to each action
+		self.Q = np.zeros((self.nS, nA))  # value function
+		self.cSA = np.zeros((self.nS, nA))  # visits to each action in this state
 	def act(self, money, history):
-		self.setState(history, -1)
+		# self.setState(history, -1)
+		# self.state = len(history['aGives']) if self.player=="A" else len(history['bGives'])
+		self.state = 0
 		if money == 0:
 			a = 0
 		elif np.random.rand() < self.E:
 			a = np.random.randint(0, money+1)
 		elif self.T > 0:
-			prob = softmax(self.Q / self.T)
+			prob = softmax(self.Q[self.state] / self.T)
 			a = np.where(np.cumsum(prob) >= np.random.rand())[0][0]
 		else:
-			a = np.argmax(self.Q)
+			a = np.argmax(self.Q[self.state])
 		give = int(np.clip(a, 0, money))
 		keep = int(money - give)
 		return give, keep
@@ -176,37 +183,37 @@ class Bandit(RLAgent):
 			myRewards = history['bRewards']
 			myStates = history['bStates']
 			otherRewards = history['aRewards']
-		for t in range(len(myGives)-1):
+		for t in range(len(myGives)):
 			s = myStates[t]
-			snew = myStates[t+1]
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
-			self.cA[a] += 1
-			self.Q[a] = (r + self.cA[a]*self.Q[a]) / (self.cA[a] + 1)
+			self.cSA[s, a] += 1
+			self.Q[s, a] = (r + self.cSA[s, a]*self.Q[s, a]) / (self.cSA[s, a] + 1)
 	def reduceExploration(self, i):
 		self.E *= self.dE
 		self.T *= self.dT
 	def saveArchive(self, file):
-		np.savez(file, Q=self.Q, nA=self.cA)
+		np.savez(file, Q=self.Q, cSA=self.cSA)
 	def loadArchive(self, file):
 		data = np.load(file)
 		self.Q = data['Q']
-		self.cA = data['nA']
+		self.cSA = data['cSA']
 	def restart(self):
 		self.E = self.E0
 		self.T = self.T0
 		self.Q = np.zeros_like((self.Q))
-		self.cA = np.zeros_like((self.cA))
+		self.cSA = np.zeros_like((self.cSA))
 
 
 
 class QLearn(RLAgent):
-	def __init__(self, player, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
+	def __init__(self, player, turns, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
 		self.player = player
 		self.ID = ID
 		self.nA = nA
-		self.state = 0
+		self.turns = turns
 		self.nS = nS
+		self.state = 0
 		self.G = G
 		self.E = E
 		self.L = L
@@ -219,8 +226,8 @@ class QLearn(RLAgent):
 		self.dT = dT
 		self.rS = rS  # weight for selfish reward
 		self.rO = rO  # weight for prosocial reward
-		self.Q = np.zeros((2+nS, nA))
-		self.cSA = np.zeros((2+nS, nA))
+		self.Q = np.zeros((nS*turns, nA))
+		self.cSA = np.zeros((nS*turns, nA))
 	def act(self, money, history):
 		self.setState(history, -1)
 		if money == 0:
@@ -246,15 +253,19 @@ class QLearn(RLAgent):
 			myRewards = history['bRewards']
 			myStates = history['bStates']
 			otherRewards = history['aRewards']
-		for t in range(len(myGives)-1):
+		for t in range(len(myGives)):
 			s = myStates[t]
-			snew = myStates[t+1]
+			snew = myStates[t+1] if t<len(myGives)-1 else 0
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
 			self.cSA[s,a] += 1
 			# L = self.L / self.cSA[s,a]
 			L = self.L
-			self.Q[s, a] += L * (r + self.G*np.max(self.Q[snew, :]) - self.Q[s, a])
+			if t<len(myGives)-1:
+				self.Q[s, a] += L * (r + self.G*np.max(self.Q[snew, :]) - self.Q[s, a])
+			else:  # final turn: bandit update rule = moving average
+				self.Q[s, a] = (r + self.cSA[s, a]*self.Q[s, a]) / (self.cSA[s, a] + 1)
+		# final turn update
 	def restart(self):
 		self.E = self.E0
 		self.L = self.L0
@@ -266,11 +277,11 @@ class QLearn(RLAgent):
 		self.L *= self.dL
 		self.T *= self.dT
 	def saveArchive(self, file):
-		np.savez(file, Q=self.Q, nSA=self.cSA)
+		np.savez(file, Q=self.Q, cSA=self.cSA)
 	def loadArchive(self, file):
 		data = np.load(file)
 		self.Q = data['Q']
-		self.cSA = data['nSA']
+		self.cSA = data['cSA']
 
 
 # from Table 5,6 of Bowling and Veloso 2002
@@ -367,11 +378,11 @@ class Wolf(RLAgent):
 		self.L *= self.dL
 		self.T *= self.dT
 	def saveArchive(self, file):
-		np.savez(file, Q=self.Q, nSA=self.cSA, pi=self.pi, piBar=self.piBar)
+		np.savez(file, Q=self.Q, cSA=self.cSA, pi=self.pi, piBar=self.piBar)
 	def loadArchive(self, file):
 		data = np.load(file)
 		self.Q = data['Q']
-		self.cSA = data['nSA']
+		self.cSA = data['cSA']
 		self.pi = data['pi']
 		self.piBar = data['piBar']
 
@@ -460,20 +471,21 @@ class Hill(RLAgent):
 		self.L *= self.dL
 		self.T *= self.dT
 	def saveArchive(self, file):
-		np.savez(file, Q=self.Q, pi=self.pi, nSA=self.cSA, delta=self.delta, V=self.V)
+		np.savez(file, Q=self.Q, pi=self.pi, cSA=self.cSA, delta=self.delta, V=self.V)
 	def loadArchive(self, file):
 		data = np.load(file)
 		self.Q = data['Q']
 		self.pi = data['pi']
-		self.cSA = data['nSA']
+		self.cSA = data['cSA']
 		self.delta = data['delta']
 		self.V = data['V']
 
 
 class ModelBased(RLAgent):
-	def __init__(self, player, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
+	def __init__(self, player, turns, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
 		self.player = player
 		self.ID = ID
+		self.turns = turns
 		self.state = 0
 		self.G = G
 		self.E = E
@@ -486,12 +498,12 @@ class ModelBased(RLAgent):
 		self.nA = nA
 		self.rS = rS  # weight for selfish reward
 		self.rO = rO  # weight for prosocial reward
-		self.R = np.zeros((2+nS, nA))
-		self.M = np.zeros((2+nS, nA, 2+nS))
-		self.V = np.zeros((2+nS))
-		self.cSA = np.zeros((2+nS, nA))
-		self.cSAS = np.zeros((2+nS, nA, 2+nS))
-		self.pi = np.zeros((2+nS, nA))
+		self.R = np.zeros((nS*turns, nA))
+		self.M = np.zeros((nS*turns, nA, nS*turns))
+		self.V = np.zeros((nS*turns))
+		self.cSA = np.zeros((nS*turns, nA))
+		self.cSAS = np.zeros((nS*turns, nA, nS*turns))
+		self.pi = np.zeros((nS*turns, nA))
 	def act(self, money, history):
 		self.setState(history, -1)
 		if money == 0:
@@ -550,12 +562,12 @@ class ModelBased(RLAgent):
 		self.E *= self.dE
 		self.T *= self.dT
 	def saveArchive(self, file):
-		np.savez(file, R=self.R, T=self.M, V=self.V, nSA=self.cSA, nSAS=self.cSAS, pi=self.pi)
+		np.savez(file, R=self.R, T=self.M, V=self.V, cSA=self.cSA, cSAS=self.cSAS, pi=self.pi)
 	def loadArchive(self, file):
 		data = np.load(file)
 		self.R = data['R']
 		self.M = data['M']
 		self.V = data['V']
-		self.cSA = data['nSA']
-		self.cSAS = data['nSAS']
+		self.cSA = data['cSA']
+		self.cSAS = data['cSAS']
 		self.pi = data['pi']

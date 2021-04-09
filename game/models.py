@@ -89,7 +89,7 @@ class Agent(models.Model):
 			S = 0
 		else:
 			raise Exception(f'{name} is not a valid agent class')
-		self.obj = T4T(player, O=O, X=X, F=F, P=P, E=E, S=S)
+		self.obj = T4T(player, ROUNDS, O=O, X=X, F=F, P=P, E=E, S=S)
 		self.blob = Blob.objects.create()
 		self.blob.name = blobname
 		self.blob.blob = pickle.dumps(self.obj)
