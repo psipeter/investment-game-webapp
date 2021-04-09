@@ -597,7 +597,7 @@ initialize("/game/api/startGame/", "POST", (game) => {
         $("#play-again-text").fadeIn(quickTime);
         if (game.nGames+1 >= game.required) {
             $("#game-over-text").text("Required games complete!");
-            $("#play-again-text").text("Cash Out");
+            $("#play-again-text").text("Home");
             $("#play-again-text").click(function() {window.location.href=$(this).attr("href2");});
         }
         else {
