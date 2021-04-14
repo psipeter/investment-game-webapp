@@ -105,7 +105,10 @@ class RLAgent(AgentBase):
 		turn = len(history['aGives']) if self.player=="A" else len(history['bGives'])
 		# print('turn', turn)
 		if turn==0 and self.player=="A":
-			self.state = 0 # no information state
+			self.state = self.nS + 0 # first turn state
+			return
+		if (turn == self.turns-1 and self.player=="A") or (turn==self.turns and self.player=="B"):
+			self.state = self.nS + 1  # last turn state  # TODO: why does setting this to 1 (unique state) fail?
 			return
 		elif turn==0 and self.player=="B":
 			# myGive = 1  # pretend I'm perfect to skip no-information state
@@ -122,10 +125,8 @@ class RLAgent(AgentBase):
 			# myKeep = history['bKeeps'][t]
 			otherGive = history['aGives'][t]
 			otherKeep = history['aKeeps'][t]
-		# print('otherGive', otherGive)
-		# print('otherKeep', otherKeep)
 		if (otherGive==0 and otherKeep==0): # or (myGive==0 and myKeep==0):
-			self.state = 0  # no information state
+			self.state = self.nS + 2  # no information state
 			return
 		# myRatio = myGive / (myGive + myKeep)
 		otherRatio = otherGive / (otherGive + otherKeep)
@@ -133,10 +134,8 @@ class RLAgent(AgentBase):
 		maxState = 0 if self.nS <= 1 else self.nS-1
 		# myState = int(myRatio * maxState)
 		otherState = int(otherRatio * maxState)
-		assert 0 <= otherState <= self.nS, "state outside limit"
-		state = turn*self.nS + otherState
-		# print('otherState', otherState)
-		# print('state', state)
+		assert 0 <= otherState < self.nS, "state outside limit"
+		state = otherState
 		self.state = state
 	def reset(self):
 		self.state = 0
@@ -157,8 +156,8 @@ class Bandit(RLAgent):
 		self.rO = rO  # weight for prosocial reward
 		self.dE = dE  # epsilon decay
 		self.dT = dT  # temperature decay
-		self.Q = np.zeros((self.nS, nA))  # value function
-		self.cSA = np.zeros((self.nS, nA))  # visits to each action in this state
+		self.Q = np.zeros((self.nS+3, nA))  # value function
+		self.cSA = np.zeros((self.nS+3, nA))  # visits to each action in this state
 	def act(self, money, history):
 		# self.setState(history, -1)
 		# self.state = len(history['aGives']) if self.player=="A" else len(history['bGives'])
@@ -229,8 +228,8 @@ class QLearn(RLAgent):
 		self.dT = dT
 		self.rS = rS  # weight for selfish reward
 		self.rO = rO  # weight for prosocial reward
-		self.Q = np.zeros((nS*turns, nA))
-		self.cSA = np.zeros((nS*turns, nA))
+		self.Q = np.zeros((nS+3, nA))
+		self.cSA = np.zeros((nS+3, nA))
 	def act(self, money, history):
 		self.setState(history, -1)
 		if money == 0:
@@ -258,7 +257,7 @@ class QLearn(RLAgent):
 			otherRewards = history['aRewards']
 		for t in range(len(myGives)):
 			s = myStates[t]
-			snew = myStates[t+1] if t<len(myGives)-1 else 0
+			snew = myStates[t+1] if t<len(myGives)-1 else self.nS+1
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
 			self.cSA[s,a] += 1
@@ -267,7 +266,8 @@ class QLearn(RLAgent):
 			if t<len(myGives)-1:
 				self.Q[s, a] += L * (r + self.G*np.max(self.Q[snew, :]) - self.Q[s, a])
 			else:  # final turn: bandit update rule = moving average
-				self.Q[s, a] = (r + self.cSA[s, a]*self.Q[s, a]) / (self.cSA[s, a] + 1)
+				self.Q[s, a] += L * r
+				# self.Q[s, a] = (r + self.cSA[s, a]*self.Q[s, a]) / (self.cSA[s, a] + 1)
 		# final turn update
 	def restart(self):
 		self.E = self.E0
@@ -501,12 +501,12 @@ class ModelBased(RLAgent):
 		self.nA = nA
 		self.rS = rS  # weight for selfish reward
 		self.rO = rO  # weight for prosocial reward
-		self.R = np.zeros((nS*turns, nA))
-		self.M = np.zeros((nS*turns, nA, nS*turns))
-		self.V = np.zeros((nS*turns))
-		self.cSA = np.zeros((nS*turns, nA))
-		self.cSAS = np.zeros((nS*turns, nA, nS*turns))
-		self.pi = np.zeros((nS*turns, nA))
+		self.R = np.zeros((nS+3, nA))
+		self.M = np.zeros((nS+3, nA, nS+3))
+		self.V = np.zeros((nS+3))
+		self.cSA = np.zeros((nS+3, nA))
+		self.cSAS = np.zeros((nS+3, nA, nS+3))
+		self.pi = np.zeros((nS+3, nA))
 	def act(self, money, history):
 		self.setState(history, -1)
 		if money == 0:
@@ -534,7 +534,7 @@ class ModelBased(RLAgent):
 			otherRewards = history['aRewards']
 		for t in range(len(myGives)):
 			s = myStates[t]
-			snew = myStates[t+1] if t<len(myGives)-1 else -1
+			snew = myStates[t+1] if t<len(myGives)-1 else self.nS + 1
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
 			self.cSA[s,a] += 1

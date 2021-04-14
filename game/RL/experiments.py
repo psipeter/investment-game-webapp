@@ -214,3 +214,64 @@ def FriendlinessFriendliness(rlAs, rlBs, capital, match, turns, avg, rounds, gam
 			dfsAll.append(pd.DataFrame([[rlA.rO, rlB.rO, meanA, meanB, stdA, stdB]], columns=columns))
 	dfFinal = pd.concat([df for df in dfsAll], ignore_index=True)
 	return dfFinal
+
+def GreedyAndGenerous(a1rl, a1t4t, b1rl, b1t4t, a2rl, a2t4t, b2rl, b2t4t, capital, match, turns, avg, rounds, games, seed):
+	np.random.seed(seed)
+	dfs = []
+	columns = ('agent', 'group', 'player', 'game', 'turn', 'reward', 'generosity')
+	for group in ['1', '2']:
+		for player in ['A', 'B']:
+			if group=='1' and player=='A':
+				popA = a1rl
+				popB = a1t4t
+			if group=='1' and player=='B':
+				popB = b1rl
+				popA = b1t4t
+			if group=='2' and player=='A':
+				popA = a2rl
+				popB = a2t4t
+			if group=='2' and player=='B':
+				popB = b2rl
+				popA = b2t4t				
+			for a in range(avg):
+				print(f'avg {a}')
+				for A in popA:
+					A.restart()
+				for B in popB:
+					B.restart()
+				for r in range(rounds):
+					np.random.shuffle(popA)
+					np.random.shuffle(popB)
+					histories = []
+					for A in popA:
+						for B in popB:
+							for g in range(games):
+								A.reset()
+								B.reset()
+								G = Game(A, B, capital, match, turns)
+								G.play()
+								for t in range(turns):  # include final move
+									gen = G.history['aGen'][t] if player=='A' else G.history['bGen'][t]
+									if player=="B" and t==turns-2: gen = np.NaN  # exclude B's final greedy move
+									reward = G.history['aRewards'][t] if player=='A' else G.history['bRewards'][t]
+									dfs.append(pd.DataFrame([[
+										A.ID if player=='A' else B.ID,
+										"generous" if group=='1' else "greedy",
+										player,
+										r,
+										t,
+										reward,
+										gen
+									]], columns=columns))
+								histories.append({'A': A, 'B': B, 'hist': G.history})
+					# batch learning
+					np.random.shuffle(histories)
+					for hist in histories:
+						hist['A'].learn(hist['hist'])
+						hist['B'].learn(hist['hist'])
+					for A in popA:
+						A.reduceExploration(r)
+					for B in popB:
+						B.reduceExploration(r)
+	dfAll = pd.concat([df for df in dfs], ignore_index=True)
+	return dfAll
