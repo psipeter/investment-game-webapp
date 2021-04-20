@@ -50,7 +50,7 @@ a1rl = [
 	QLearn("A", nAA, nS, rO=rO, dT=dT),
 	ModelBased("A", nAA, nS, rO=rO, dT=dT)
 	]
-a1t4t = [T4T("B", O=0.5, X=0.5, F=0.5, P=1.0, E=EPSILON, S=SIGMA)]
+a1t4t = [T4T("B", O=0.3, X=0.5, F=0.5, P=1.0, E=EPSILON, S=SIGMA)]
 b1rl = [
 	Bandit("B", nAB, rO=rO, dT=dT),
 	QLearn("B", nAB, nS, rO=rO, dT=dT),

@@ -50,7 +50,7 @@ def startGame(request):
 			"status": "error",
 			"message": "Must use a POST request to start a new game",
 		})
-	if request.user.doneConsent and request.user.doneTutorial:
+	if request.user.doneConsent and request.user.doneTutorial and request.user.doneSurvey:
 		game = Game.objects.create()
 		game.start(request.user)
 		data = {

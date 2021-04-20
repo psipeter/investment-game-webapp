@@ -142,10 +142,10 @@ def startGame(request):
 	if request.user.nGames > REQUIRED:
 		error(request, 'You have already played the maximum number of games')
 		return redirect('home')		
-	if request.user.doneConsent and request.user.doneTutorial:
+	if request.user.doneConsent and request.user.doneTutorial and request.user.doneSurvey:
 		return render(request, "game.html")
 	else:
-		error(request, 'You must complete the tutorial before playing the required games')
+		error(request, 'You must complete the tutorial and the survey before playing the required games')
 		return redirect('home')
 
 @login_required

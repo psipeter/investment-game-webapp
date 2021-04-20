@@ -60,7 +60,7 @@ class Agent(models.Model):
 			E = EPSILON
 			S = SIGMA
 		elif name=='T4TB1':
-			O = 0.5
+			O = 0.3
 			X = 0.5
 			F = 0.5
 			P = 1.0

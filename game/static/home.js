@@ -26,10 +26,13 @@ initialize("/game/api/status/", "GET", (status) => {
     if (doneTutorialBool) {
         $('#tutorial-text').text('Tutorial [✔]');
     }
+    if (doneSurveyBool & doneTutorialBool) {
+        $('#game-text').text('Play Games');
+    }
     else {
         $('#game-box').addClass('inactive');
         $('#game-box').off('click');
-        $('#game-box').click(function(e) {alert("To play games, first complete the tutorial");});
+        $('#game-box').click(function(e) {alert("To play games, first complete the tutorial and the survey");});
     }
     if (doneGamesBool) {
         $('#game-text').text('Play Games [✔]');
@@ -47,7 +50,7 @@ initialize("/game/api/status/", "GET", (status) => {
         else {
             $('#cash-box').addClass('inactive');
             $('#cash-box').off('click');
-            $('#cash-box').click(function(e) {alert("Complete the survey and play at least one game");});
+            $('#cash-box').click(function(e) {alert("Complete at least one game");});
         }
     }
 });
