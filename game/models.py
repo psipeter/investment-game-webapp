@@ -61,8 +61,8 @@ class Agent(models.Model):
 			S = SIGMA
 		elif name=='T4TB1':
 			O = 0.5
-			X = 0.7
-			F = 0.2
+			X = 0.5
+			F = 0.5
 			P = 1.0
 			E = EPSILON
 			S = SIGMA
@@ -75,7 +75,7 @@ class Agent(models.Model):
 			S = SIGMA
 		elif name=='T4TB2':
 			O = 0.3
-			X = 0.7
+			X = 0.5
 			F = 0.1
 			P = 0.2
 			E = EPSILON
@@ -89,7 +89,7 @@ class Agent(models.Model):
 			S = 0
 		else:
 			raise Exception(f'{name} is not a valid agent class')
-		self.obj = T4T(player, ROUNDS, O=O, X=X, F=F, P=P, E=E, S=S)
+		self.obj = T4T(player, O=O, X=X, F=F, P=P, E=E, S=S)
 		self.blob = Blob.objects.create()
 		self.blob.name = blobname
 		self.blob.blob = pickle.dumps(self.obj)

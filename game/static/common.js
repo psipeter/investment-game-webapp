@@ -17,11 +17,14 @@ function initialize(url, method, cback) {
             $("#headerU").text(state.data.username);
             $("#headerG").text("Games: "+state.data.nGames +"/" + state.data.required);
             $("#headerW").text("Winnings: $"+state.data.winnings);
-            if (state.data.doneGames === null) {
+            if (state.data.nGames <= 0) {
                 $('#cash-link').css('color', 'var(--myGray');
                 $('#cash-link').css('cursor', 'not-allowed');
                 $("#cash-link").removeAttr('href');
             }
+            else {
+                $('#cash-link').css('color', 'var(--myBlue');
+            }         
             cback(state.data);
         }
     }

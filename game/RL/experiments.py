@@ -250,9 +250,9 @@ def GreedyAndGenerous(a1rl, a1t4t, b1rl, b1t4t, a2rl, a2t4t, b2rl, b2t4t, capita
 								B.reset()
 								G = Game(A, B, capital, match, turns)
 								G.play()
-								for t in range(turns):  # include final move
+								for t in range(turns-1):  # don't include final move
 									gen = G.history['aGen'][t] if player=='A' else G.history['bGen'][t]
-									if player=="B" and t==turns-2: gen = np.NaN  # exclude B's final greedy move
+									# if player=="B" and t==turns-2: gen = np.NaN  # exclude B's final greedy move
 									reward = G.history['aRewards'][t] if player=='A' else G.history['bRewards'][t]
 									dfs.append(pd.DataFrame([[
 										A.ID if player=='A' else B.ID,

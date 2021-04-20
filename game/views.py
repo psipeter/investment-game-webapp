@@ -108,7 +108,7 @@ def survey(request):
 @login_required
 def cash(request):
 	request.user.setProgress()
-	if not (request.user.doneConsent and request.user.doneGames):
+	if not (request.user.doneConsent and request.user.nGames > 0):
 		error(request, 'You must complete the required games before cashing out')
 		return redirect('home')
 	else:

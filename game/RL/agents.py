@@ -55,9 +55,8 @@ class Fixed(HardcodedAgent):
 
 
 class T4T(HardcodedAgent):
-	def __init__(self, player, turns, O=1, X=0.5, F=1.0, P=1.0, E=0, S=0, C=0.2, ID="T4T"):
+	def __init__(self, player, O=1, X=0.5, F=1.0, P=1.0, E=0, S=0, C=0.2, ID="T4T"):
 		self.player = player
-		self.turns = turns
 		self.ID = ID
 		self.O = O  # initial state of the agent
 		self.X = X  # expected generosity of opponent (fraction of capital given, fraction of available money returned)
@@ -90,11 +89,6 @@ class T4T(HardcodedAgent):
 			# delta = self.maxGive if otherKeep==0 else -otherKeep/(otherGive+otherKeep)
 		self.state += delta*self.F if delta>0 else delta*self.P
 		self.state = np.clip(self.state, 0, self.maxGive)
-		# special rules for final round
-		# if self.player == "A" and len(history['bGives'])==self.turns-1:
-		# 	self.state = 0
-		# if self.player == "B" and len(history['aGives'])==self.turns:
-		# 	self.state = 0
 	def reset(self):
 		self.state = self.O if self.player=="A" else self.O/2
 		self.maxGive = 1.0 if self.player=="A" else 0.5
@@ -106,9 +100,6 @@ class RLAgent(AgentBase):
 		# print('turn', turn)
 		if turn==0 and self.player=="A":
 			self.state = self.nS + 0 # first turn state
-			return
-		if (turn == self.turns-1 and self.player=="A") or (turn==self.turns and self.player=="B"):
-			self.state = self.nS + 1  # last turn state  # TODO: why does setting this to 1 (unique state) fail?
 			return
 		elif turn==0 and self.player=="B":
 			# myGive = 1  # pretend I'm perfect to skip no-information state
@@ -126,7 +117,7 @@ class RLAgent(AgentBase):
 			otherGive = history['aGives'][t]
 			otherKeep = history['aKeeps'][t]
 		if (otherGive==0 and otherKeep==0): # or (myGive==0 and myKeep==0):
-			self.state = self.nS + 2  # no information state
+			self.state = self.nS + 1  # no information state
 			return
 		# myRatio = myGive / (myGive + myKeep)
 		otherRatio = otherGive / (otherGive + otherKeep)
@@ -141,9 +132,8 @@ class RLAgent(AgentBase):
 		self.state = 0
 
 class Bandit(RLAgent):
-	def __init__(self, player, turns, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
+	def __init__(self, player, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
 		self.player = player
-		self.turns = turns
 		self.nA = nA
 		self.nS = 1
 		self.state = 0
@@ -156,11 +146,10 @@ class Bandit(RLAgent):
 		self.rO = rO  # weight for prosocial reward
 		self.dE = dE  # epsilon decay
 		self.dT = dT  # temperature decay
-		self.Q = np.zeros((self.nS+3, nA))  # value function
-		self.cSA = np.zeros((self.nS+3, nA))  # visits to each action in this state
+		self.Q = np.zeros((self.nS+2, nA))  # value function
+		self.cSA = np.zeros((self.nS+2, nA))  # visits to each action in this state
 	def act(self, money, history):
 		# self.setState(history, -1)
-		# self.state = len(history['aGives']) if self.player=="A" else len(history['bGives'])
 		self.state = 0
 		if money == 0:
 			a = 0
@@ -185,7 +174,7 @@ class Bandit(RLAgent):
 			myRewards = history['bRewards']
 			myStates = history['bStates']
 			otherRewards = history['aRewards']
-		for t in range(len(myGives)):
+		for t in range(len(myGives)-1):
 			s = myStates[t]
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
@@ -209,11 +198,10 @@ class Bandit(RLAgent):
 
 
 class QLearn(RLAgent):
-	def __init__(self, player, turns, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
+	def __init__(self, player, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
 		self.player = player
 		self.ID = ID
 		self.nA = nA
-		self.turns = turns
 		self.nS = nS
 		self.state = 0
 		self.G = G
@@ -228,8 +216,8 @@ class QLearn(RLAgent):
 		self.dT = dT
 		self.rS = rS  # weight for selfish reward
 		self.rO = rO  # weight for prosocial reward
-		self.Q = np.zeros((nS+3, nA))
-		self.cSA = np.zeros((nS+3, nA))
+		self.Q = np.zeros((nS+2, nA))
+		self.cSA = np.zeros((nS+2, nA))
 	def act(self, money, history):
 		self.setState(history, -1)
 		if money == 0:
@@ -255,20 +243,14 @@ class QLearn(RLAgent):
 			myRewards = history['bRewards']
 			myStates = history['bStates']
 			otherRewards = history['aRewards']
-		for t in range(len(myGives)):
+		for t in range(len(myGives)-1):
 			s = myStates[t]
-			snew = myStates[t+1] if t<len(myGives)-1 else self.nS+1
+			snew = myStates[t+1]
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
 			self.cSA[s,a] += 1
-			# L = self.L / self.cSA[s,a]
 			L = self.L
-			if t<len(myGives)-1:
-				self.Q[s, a] += L * (r + self.G*np.max(self.Q[snew, :]) - self.Q[s, a])
-			else:  # final turn: bandit update rule = moving average
-				self.Q[s, a] += L * r
-				# self.Q[s, a] = (r + self.cSA[s, a]*self.Q[s, a]) / (self.cSA[s, a] + 1)
-		# final turn update
+			self.Q[s, a] += L * (r + self.G*np.max(self.Q[snew, :]) - self.Q[s, a])
 	def restart(self):
 		self.E = self.E0
 		self.L = self.L0
@@ -485,10 +467,9 @@ class Hill(RLAgent):
 
 
 class ModelBased(RLAgent):
-	def __init__(self, player, turns, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
+	def __init__(self, player, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
 		self.player = player
 		self.ID = ID
-		self.turns = turns
 		self.state = 0
 		self.G = G
 		self.E = E
@@ -532,9 +513,9 @@ class ModelBased(RLAgent):
 			myRewards = history['bRewards']
 			myStates = history['bStates']
 			otherRewards = history['aRewards']
-		for t in range(len(myGives)):
+		for t in range(len(myGives)-1):
 			s = myStates[t]
-			snew = myStates[t+1] if t<len(myGives)-1 else self.nS + 1
+			snew = myStates[t+1]
 			a = myGives[t]
 			r = (self.rS*myRewards[t]+self.rO*otherRewards[t])/(self.rS+self.rO)
 			self.cSA[s,a] += 1

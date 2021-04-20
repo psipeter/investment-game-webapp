@@ -40,13 +40,14 @@ initialize("/game/api/status/", "GET", (status) => {
         $('#cash-text').text('HIT Code / Cash Out [✔]');
     }
     else {
-        if (doneSurveyBool & doneTutorialBool & doneGamesBool) {
+        // if (doneSurveyBool & doneTutorialBool & doneGamesBool) {
+        if (doneSurveyBool & doneTutorialBool & status.nGames > 0) {
             $('#cash-text').text('HIT Code / Cash Out');
         }
         else {
             $('#cash-box').addClass('inactive');
             $('#cash-box').off('click');
-            $('#cash-box').click(function(e) {alert("Complete the survey and the "+status.required+" required games");});
+            $('#cash-box').click(function(e) {alert("Complete the survey and play at least one game");});
         }
     }
 });
