@@ -8,8 +8,8 @@ match = 3
 turns = 5
 
 avg = 5
-rounds = 50
-games = 10
+rounds = 40
+games = 20
 seed = np.random.randint(0, 1e6)
 
 nAA = capital+1
@@ -18,7 +18,7 @@ nS = 10
 rO = 0.0
 dT = 0.8
 EPSILON = 0
-SIGMA = 1
+SIGMA = 2
 
 # popA = [
 	# T4T("A", O=0.8, X=0.5, F=1.0, P=0.2, E=0.0, S=0.0),

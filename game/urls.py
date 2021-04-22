@@ -3,13 +3,13 @@ from . import views
 from . import api_views
 
 urlpatterns = [
-    path('slider', views.slider, name='slider'),
     path('game/', views.startGame, name='game'),
     path('tutorial', views.startTutorial, name="tutorial"),
     path('tutorial2', views.startTutorial2, name="tutorial2"),
     path('information', views.information, name='information'),
     path('consent', views.consent, name='consent'),
     path('survey', views.survey, name='survey'),
+    path('exit_survey', views.exit_survey, name='exit_survey'),
     path('cash', views.cash, name="cash"),
     path('feedback', views.feedback, name="feedback"),
     path('api/status/', api_views.status),

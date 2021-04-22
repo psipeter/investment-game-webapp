@@ -1,0 +1,57 @@
+{% extends "default.html" %}
+{% load static %}
+
+{% block title %}<title>Exit Survey</title>{% endblock %}
+{% block title2 %}Exit Survey{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'exit_survey.css' %}">
+{% endblock %}
+
+{% block body %}
+	<form method="POST">
+		<h2 id='t1'>Please complete the exit survey. All responses are optional</h2>
+		{% csrf_token %}
+		<table>
+			<tr>
+				<td class="f1">{{ form.compensation.label_tag }}</td>
+				<td class="f2">{{ form.compensation }}</td>
+			</tr>
+			<tr>
+				<td class="f1">{{ form.objective.label_tag }}</td>
+				<td class="f2">{{ form.objective }}</td>
+			</tr>
+			<tr>
+				<td class="f1">{{ form.selfLearning.label_tag }}</td>
+				<td class="f2">{{ form.selfLearning }}</td>
+			</tr>
+			<tr>
+				<td class="f1">{{ form.otherIdentity.label_tag }}</td>
+				<td class="f2">{{ form.otherIdentity }}</td>
+			</tr>
+			<tr>
+				<td class="f1">{{ form.otherStrategy.label_tag }}</td>
+				<td class="f2">{{ form.otherStrategy }}</td>
+			</tr>
+			<tr>
+				<td class="f1">{{ form.otherNumber.label_tag }}</td>
+				<td class="f2">{{ form.otherNumber }}</td>
+			</tr>
+		</table>
+		<br>
+
+		<h2 id='t2'>How could we improve the user experience in the investment game?</h2>
+		<p class='center'>{{form.selfFeedback}}</p>
+
+		<input hidden id="submit" type="submit" />
+	</form>
+	<div class="button-wrapper">
+		<button class="button"> <label for="submit"><div><p>Submit</p></div></label></button>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript" src="{% static 'common.js' %}"></script>
+	<script type="text/javascript" src="{% static 'survey.js' %}"></script>
+{% endblock %}

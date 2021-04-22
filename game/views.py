@@ -9,7 +9,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from .models import Game, User, Feedback
-from game.forms import LoginForm, CreateForm, ProfileForm, ResetForm, CashForm, FeedbackForm, TutorialForm
+from game.forms import LoginForm, CreateForm, SurveyForm, ExitSurveyForm, ResetForm, CashForm, FeedbackForm, TutorialForm
 import pytz
 from .parameters import *
 
@@ -95,14 +95,14 @@ def consent(request):
 @login_required
 def survey(request):
 	if request.method == 'POST':
-		form = ProfileForm(request.POST, instance=request.user)
+		form = SurveyForm(request.POST, instance=request.user)
 		if form.is_valid():
 			form.save()
 			request.user.doneSurvey = timezone.now()
 			request.user.save()
 			return redirect('home')
 	else:
-		form = ProfileForm(instance=request.user)
+		form = SurveyForm(instance=request.user)
 	return render(request, 'survey.html', {'form': form})
 
 @login_required
@@ -161,10 +161,19 @@ def startTutorial2(request):
 	context = {
 		'required': REQUIRED,
 		'minBonus': f'{BONUS_MIN:.2f}',
-		'maxBonus': f'{BONUS_MIN+BONUS_RATE*CAPITAL*MATCH*ROUNDS:.2f}',
+		'maxBonus': f'{BONUS_MIN+BONUS_RATE*CAPITAL*MATCH*TURNS:.2f}',
 	}
 	return render(request, "tutorial2.html", context=context)
 
 @login_required
-def slider(request):
-	return render(request, "slider.html")
+def exit_survey(request):
+	if request.method == 'POST':
+		form = ExitSurveyForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+			request.user.doneExit = timezone.now()
+			request.user.save()
+			return redirect('home')
+	else:
+		form = ExitSurveyForm(instance=request.user)
+	return render(request, 'exit_survey.html', {'form': form})

@@ -521,8 +521,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function animateScoreA() {
         let box = (game.userRole=="A") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
-        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
-        let f = scoreA / (game.rounds*game.capital*game.match * 2/3);
+        // let f = scoreA / (game.turns*game.capital*game.match);  // theoretical max is never achieved
+        let f = scoreA / (game.turns*game.capital*game.match * 2/3);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));
@@ -537,8 +537,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
     function animateScoreB() {
         let box = (game.userRole=="B") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="B") ? $("#ys-num") : $("#ts-num");
-        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
-        let f = scoreB / (game.rounds*game.capital*game.match * 2/3);
+        // let f = scoreA / (game.turns*game.capital*game.match);  // theoretical max is never achieved
+        let f = scoreB / (game.turns*game.capital*game.match * 2/3);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));
@@ -556,8 +556,8 @@ initialize("/game/api/startGame/", "POST", (game) => {
         let oldBonus = parseInt(num.text());
         let score = (game.userRole == "A") ? scoreA : scoreB;
         let newBonus = parseInt(Number(100*(game.bonus_min + score * game.bonus_rate)).toFixed());
-        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
-        let f = score / (game.rounds*game.capital*game.match * 2/3);
+        // let f = scoreA / (game.turns*game.capital*game.match);  // theoretical max is never achieved
+        let f = score / (game.turns*game.capital*game.match * 2/3);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
         let wMax = parseInt($(":root").css('--boxWidth')) - parseInt($(":root").css('--bonusWidthMin'));

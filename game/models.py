@@ -131,7 +131,7 @@ class Game(models.Model):
 	complete = models.BooleanField(default=False)
 	tStart = models.DateTimeField(null=True, blank=True)
 	tEnd = models.DateTimeField(null=True, blank=True)
-	rounds = models.IntegerField(default=ROUNDS)
+	turns = models.IntegerField(default=TURNS)
 	capital = models.IntegerField(default=CAPITAL)
 	match = models.FloatField(default=MATCH)
 	seed = models.IntegerField(default=0)
@@ -153,10 +153,10 @@ class Game(models.Model):
 
 	def setAgent(self):
 		# idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
-		if self.user.group == "1" and self.userRole == "A": name = "T4TB1"
-		elif self.user.group == "1" and self.userRole == "B": name = "T4TA1"
-		elif self.user.group == "2" and self.userRole == "A": name = "T4TB2"
-		elif self.user.group == "2" and self.userRole == "B": name = "T4TA2"
+		if self.user.group == "generous" and self.userRole == "A": name = "T4TB1"
+		elif self.user.group == "generous" and self.userRole == "B": name = "T4TA1"
+		elif self.user.group == "greedy" and self.userRole == "A": name = "T4TB2"
+		elif self.user.group == "greedy" and self.userRole == "B": name = "T4TA2"
 		else: raise "agent not set"
 		self.agent = Agent.objects.create()
 		self.agent.start(name, self.agentRole)
@@ -205,9 +205,9 @@ class Game(models.Model):
 	def checkComplete(self):
 		userGives = self.historyToArray("user", "give")
 		agentGives = self.historyToArray("agent", "give")
-		if len(userGives) == self.rounds and len(agentGives) == self.rounds:
+		if len(userGives) == self.turns and len(agentGives) == self.turns:
 			self.complete = True
-		if len(userGives) > self.rounds or len(agentGives) > self.rounds:
+		if len(userGives) > self.turns or len(agentGives) > self.turns:
 			raise Exception("Too many moves taken")
 		self.save()
 
@@ -267,9 +267,10 @@ class Game(models.Model):
 class User(AbstractUser):
 	# assign to unique group
 	def f():
-		return 1 if np.random.rand() < 0.5 else 2
+		return "generous" if np.random.rand() < 0.5 else "greedy"
 	def g():
 		return get_random_string(length=32)
+	avatar = models.IntegerField(default=0)
 	mturk = models.CharField(max_length=33, unique=True)
 	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
 	nGames = models.IntegerField(default=0)
@@ -279,7 +280,8 @@ class User(AbstractUser):
 	doneTutorial = models.DateTimeField(null=True, blank=True)
 	doneGames = models.DateTimeField(null=True, blank=True)
 	doneCash = models.DateTimeField(null=True, blank=True)
-	group = models.CharField(max_length=300, choices=(("1", "forgive"), ("2", "punish")), default=f)
+	doneExit = models.DateTimeField(null=True, blank=True)
+	group = models.CharField(max_length=300, choices=(("generous", "generous"), ("greedy", "greedy")), default=f)
 	code = models.CharField(max_length=300, help_text="MTurk Confirmation Code", default=g)
 	age = models.CharField(max_length=300, null=True, blank=True)
 	gender = models.CharField(max_length=300, null=True, blank=True)
@@ -289,7 +291,13 @@ class User(AbstractUser):
 	empathy = models.CharField(max_length=300, null=True, blank=True)
 	risk = models.CharField(max_length=300, null=True, blank=True)
 	altruism = models.CharField(max_length=300, null=True, blank=True)
-	avatar = models.IntegerField(default=0)
+	compensation = models.CharField(max_length=300, null=True, blank=True)
+	objective = models.CharField(max_length=300, null=True, blank=True)
+	selfLearning = models.CharField(max_length=300, null=True, blank=True)
+	otherIdentity = models.CharField(max_length=300, null=True, blank=True)
+	otherStrategy = models.CharField(max_length=300, null=True, blank=True)
+	otherNumber = models.CharField(max_length=300, null=True, blank=True)
+	selfFeedback = models.CharField(max_length=4200, null=True, blank=True)
 
 	def setProgress(self):
 		allGames = Game.objects.filter(user=self).exclude(tutorial=True)

@@ -32,7 +32,8 @@ class HardcodedAgent(AgentBase):
 		elif np.random.rand() < self.E:
 			a = np.random.randint(0, money+1)
 		elif self.S > 0:
-			a = money * self.state + np.random.randint(-self.S, self.S+1)
+			# a = money * self.state + np.random.randint(-self.S, self.S+1)
+			a = money * self.state + np.random.randint(-self.S, 1)
 			# a = money * np.random.normal(self.state, self.S) if self.S > 0 else money * self.state
 		else:
 			a = money * self.state

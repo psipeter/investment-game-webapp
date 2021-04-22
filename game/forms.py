@@ -66,7 +66,7 @@ class ResetForm(forms.Form):
 		else:
 			raise ValidationError("Passwords do not match")
 
-class ProfileForm(forms.ModelForm):
+class SurveyForm(forms.ModelForm):
 	ageChoices = tuple([(str(n), str(n)) for n in np.arange(18, 121)])
 	ageChoices = (('', '---'),) + ageChoices
 	age = forms.ChoiceField(choices=ageChoices, required=False)
@@ -121,6 +121,60 @@ class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = models.User
 		fields = ('age', 'gender', 'income', 'education', 'veteran', 'empathy', 'risk', 'altruism')
+
+class ExitSurveyForm(forms.ModelForm):
+	compensationChoices = (
+		('', '---'),
+		('<', 'I should have earned more for the time I spent'),
+		('=', 'I earned a reasonable amount for the time I spent'),
+		('>', 'I earned more than I usually do for the time I spent'))
+	compensationLabel = 'Was the money you earned for completing this HIT appropriate?'
+	compensation = forms.ChoiceField(choices=compensationChoices, label=compensationLabel, required=False)
+	objectiveChoices = (
+		('', '---'),
+		('self', 'I tried to earn as many points for myself as possible, without considering my opponent’s score'),
+		('equal', 'I tried to achieve a high score for both myself and my opponent'),
+		('random', 'I chose behaviors at random, playing as quickly as possible'))
+	objectiveLabel = 'What was your objective when playing the investment game?'
+	objective = forms.ChoiceField(choices=objectiveChoices, label=objectiveLabel, required=False)
+	selfLearningChoices = (
+		('', '---'),
+		('slow', 'I needed to play more games to develop a good strategy'),
+		('good', 'I learned a good strategy by the end, but didn’t get bored'),
+		('fast', 'I learned a good strategy quickly, and playing the remaining games was boring'),
+		('random', 'I chose behaviors at random, playing as quickly as possible'))
+	selfLearningLabel = 'Were you able to learn an effective strategy?'
+	selfLearning = forms.ChoiceField(choices=selfLearningChoices, label=selfLearningLabel, required=False)
+	otherIdentityChoices = (
+		('', '---'),
+		('human', 'I played against human opponents'),
+		('computer', 'I played against computer opponents'),
+		('mix', 'I played against a mix of human and computer opponents'))
+	otherIdentityLabel = 'What were your beliefs about the identity of your opponents?'
+	otherIdentity = forms.ChoiceField(choices=otherIdentityChoices, label=otherIdentityLabel, required=False)
+	otherStrategyChoices = (
+		('', '---'),
+		('generous', 'They were always generous'),
+		('mix-random', 'They were sometimes generous and sometimes greedy, in a random pattern'),
+		('mix-adaptive', 'They were sometimes generous and sometimes greedy, depending on my moves'),
+		('greedy', 'They were always greedy'))
+	otherStrategyLabel = 'How would you describe the strategies of your opponents?'
+	otherStrategy = forms.ChoiceField(choices=otherStrategyChoices, label=otherStrategyLabel, required=False)
+	otherNumberChoices = (
+		('', '---'),
+		('same', 'I played the same opponent in every game'),
+		('mix', 'I sometimes played the same opponent and sometimes played a different opponent'),
+		('unique', 'I played a different opponent in every game'))
+	otherNumberLabel = 'What were your beliefs about the number of opponents you played?'
+	otherNumber = forms.ChoiceField(choices=otherNumberChoices, label=otherNumberLabel, required=False)
+	selfFeedbackLabel = 'How could we improve the user experience in the investment game?'
+	selfFeedback = forms.CharField(max_length=4200, label=selfFeedbackLabel,
+		widget=forms.Textarea(attrs={'rows': 6, 'cols': 60, 'placeholder': "Your feedback here...",}))
+
+	class Meta:
+		model = models.User
+		fields = ('compensation', 'objective', 'selfLearning', 'otherIdentity', 'otherStrategy', 'otherNumber', 'selfFeedback')
+
 
 class FeedbackForm(forms.Form):
 	feedback = forms.CharField(

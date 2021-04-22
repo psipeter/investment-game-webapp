@@ -47,7 +47,7 @@ def makeDF():
 					if player=="B" and t==ROUNDS-2: gen = np.NaN  # exclude B's final greedy move
 					dfs.append(pd.DataFrame([[
 						user.username,
-						"generous" if user.group=='1' else "greedy",
+						user.group,
 						player,
 						g,
 						t,

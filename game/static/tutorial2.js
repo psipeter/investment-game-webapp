@@ -665,7 +665,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     function animateScoreA() {
         let box = (game.userRole=="A") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="A") ? $("#ys-num") : $("#ts-num");
-        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        // let f = scoreA / (game.turns*game.capital*game.match);  // theoretical max is never achieved
         let f = scoreA / (60);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
@@ -682,7 +682,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
     function animateScoreB() {
         let box = (game.userRole=="B") ? $("#ys-box") : $("#ts-box");
         let num = (game.userRole=="B") ? $("#ys-num") : $("#ts-num");
-        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        // let f = scoreA / (game.turns*game.capital*game.match);  // theoretical max is never achieved
         let f = scoreB / (60);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
@@ -702,7 +702,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let oldBonus = parseInt(num.text());
         let score = (game.userRole == "A") ? scoreA : scoreB;
         let newBonus = parseInt(Number(100*(game.bonus_min + score * game.bonus_rate)).toFixed());
-        // let f = scoreA / (game.rounds*game.capital*game.match);  // theoretical max is never achieved
+        // let f = scoreA / (game.turns*game.capital*game.match);  // theoretical max is never achieved
         let f = score / (60);
         let w = f * parseInt($(":root").css('--boxWidth'))
         let wMin = parseInt($(":root").css('--boxWidthMin'));
