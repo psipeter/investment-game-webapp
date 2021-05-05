@@ -263,13 +263,14 @@ class User(AbstractUser):
 	selfFeedback = models.CharField(max_length=4200, null=True, blank=True)
 
 	def setGroup(self):
+		# If there is a significant imbalance in number of users in each group, force a rebalance
 		# Query database, count users in both groups, assign user to less common group
 		greedyUsers = User.objects.filter(nGames__gte=1, group='greedy').count()
 		generousUsers = User.objects.filter(nGames__gte=1, group='generous').count()
 		print(greedyUsers, generousUsers, int(timezone.now().second))
-		if generousUsers < greedyUsers:
+		if generousUsers+2 < greedyUsers:
 			self.group = 'generous'
-		elif greedyUsers < generousUsers:
+		elif greedyUsers+2 < generousUsers:
 			self.group = 'greedy'			
 		else:
 			self.group = 'generous' if int(timezone.now().second)%2==0 else 'greedy'
