@@ -95,8 +95,8 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         userKeep = maxUser - userGive;
         if (userGive==0){
             hideSlider();
-            $("#warning").fadeIn(quickTime);
-            setTimeout(function() {$("#warning").fadeOut(quickTime); showSlider(game.userRole, 0, maxUser, true);}, waitTime);
+            $("#warning").fadeIn(animateTime);
+            setTimeout(function() {$("#warning").fadeOut(); showSlider(game.userRole, 0, maxUser, true);}, animateTime+waitTime);
         }
         else {
             $("#submit").hide();
@@ -144,6 +144,15 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
                 url: '/game/api/updateTutorial/',
                 data: sendData,
                 dataType: 'json',
+                timeout: 7000,
+                error: function() {
+                    $("#loading").hide();
+                    $("#slider-wrapper").hide();
+                    $("#submit").hide();
+                    $("#sendA").hide();
+                    $("#sendB").hide();
+                    $("#serverError").fadeIn(animateTime);
+                },
                 success: function (returnData) {
                     // update globals
                     userGives = returnData.userGives;
@@ -265,17 +274,16 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         let widthT = parseInt($(":root").css('--widthT'));  // in vw
         let wW = widthW / 100 * widthD;  // in px
         let wT = widthT / 100 * widthD;  // in px
-        let leftEdge = $("#slider-wrapper").offset().left - wT/2;
-        let rightEdge = $("#slider-wrapper").offset().left + wW - wT/2;
-        // console.log(wW, wT);
-        // console.log(leftEdge, rightEdge);
-        // console.log(x);
         if ($("#slider-wrapper").hasClass('flipped')) {
+            let leftEdge = $("#slider-wrapper").offset().left + wT/2;
+            let rightEdge = $("#slider-wrapper").offset().left + wW + wT/2;
             if (x <= leftEdge) {return 1;}
             else if (x >= rightEdge) {return 0;}
             else {return 1 - (x-leftEdge)/wW;}
         }
         else {
+            let leftEdge = $("#slider-wrapper").offset().left - wT/2;
+            let rightEdge = $("#slider-wrapper").offset().left + wW - wT/2;
             if (x <= leftEdge) {return 0;}
             else if (x >= rightEdge) {return 1;}
             else {return (x-leftEdge)/wW;}            
@@ -322,7 +330,7 @@ initialize("/game/api/startTutorial/", "POST", (game) => {
         else {
             let sendA = val;
             let sendB = max-val;
-            for (let i = 0; i <= currentB; i++) {
+            for (let i = 0; i<=game.capital*game.match; i++) {
                 if (i<=currentA) {$("#c"+i+"a").css('opacity', '1');}
                 else if (i<=(currentA+sendA)){$("#c"+i+"a").css('opacity', '0.3');}
                 else {$("#c"+i+"a").css('opacity', '0');}

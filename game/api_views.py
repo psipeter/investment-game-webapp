@@ -56,7 +56,7 @@ def startGame(request):
 		game.start(request.user)
 		data = {
 			'username': game.user.username,
-			'agentname': game.agent.name,
+			'agentname': game.agent.userRole,
 			'nGames': game.user.nGames,
 			'winnings': f"{request.user.winnings:.2f}",
 			'uuid': game.uuid,
@@ -126,7 +126,7 @@ def startTutorial(request):
 		request.user.setProgress()
 		data = {
 			'username': game.user.username,
-			'agentname': game.agent.name,
+			'agentname': game.agent.userRole,
 			'nGames': game.user.nGames,
 			'winnings': f"{request.user.winnings:.2f}",
 			'uuid': game.uuid,

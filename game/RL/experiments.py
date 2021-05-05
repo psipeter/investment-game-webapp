@@ -325,9 +325,9 @@ def GreedyAndGenerous2(nAgents, nAA, nAB, nS, rOmin, rOmax, dTmin, dTmax, epsilo
 				if group=='generous' and player=='A':
 					popB = [T4TV("B", seed=a, minO=0.3, maxO=0.5, minX=0.5, maxX=0.5, minF=0.4, maxF=0.6, minP=1.0, maxP=1.0, E=epsilon)]
 				if group=='generous' and player=='B':
-					popA = [T4TV("A", seed=a, minO=0.5, maxO=0.7, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0, E=epsilon)]
+					popA = [T4TV("A", seed=a, minO=0.6, maxO=0.8, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0, E=epsilon)]
 				if group=='greedy' and player=='A':
-					popB = [T4TV("B", seed=a, minO=0.2, maxO=0.3, minX=0.5, maxX=0.5, minF=0.1, maxF=0.3, minP=0.2, maxP=0.2, E=epsilon)]
+					popB = [T4TV("B", seed=a, minO=0.1, maxO=0.3, minX=0.5, maxX=0.5, minF=0.0, maxF=0.1, minP=0.2, maxP=0.2, E=epsilon)]
 				if group=='greedy' and player=='B':
 					popA = [T4TV("A", seed=a, minO=0.8, maxO=1.0, minX=0.5, maxX=0.5, minF=1.0, maxF=1.0, minP=0.1, maxP=0.3, E=epsilon)]
 				for A in popA:

@@ -82,3 +82,4 @@
 #n5 {top: 40vh;}
 
 #warning {grid-row: 1; grid-column: 2; width: 100%; margin: 6vh 0; text-align: center; color: var(--myRed);}
+#serverError {grid-row: 1; grid-column: 2; width: 100%; margin: 0 0; text-align: center;}

@@ -7,7 +7,7 @@ capital = 10
 match = 3
 turns = 5
 
-avg = 10
+avg = 5
 rounds = 30
 games = 20
 seed = np.random.randint(0, 1e6)
@@ -77,9 +77,9 @@ SIGMA = 0
 # plotGreedyAndGenerous(dfLoad)
 # plotGreedyAndGenerous(dfLoad, byAgent=True)
 
-nAgents = 7
+nAgents = 5
 rOmin = 0
-rOmax = 0.3
+rOmax = 0.2
 dTmin = 0.5
 dTmax = 0.8
 df = GreedyAndGenerous2(nAgents, nAA, nAB, nS, rOmin, rOmax, dTmin, dTmax, EPSILON, SIGMA,

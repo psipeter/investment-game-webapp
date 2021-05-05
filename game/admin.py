@@ -15,7 +15,7 @@ class Game(admin.ModelAdmin):
 
 @admin.register(Agent)
 class Agent(admin.ModelAdmin):
-	list_display = ('name', 'player', 'created')
+	list_display = ('userGroup', 'userRole', 'created')
 
 @admin.register(User)
 class User(UserAdmin):

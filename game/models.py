@@ -30,45 +30,30 @@ class Blob(models.Model):
 
 class Agent(models.Model):
 	uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique agent ID")
-	name = models.CharField(max_length=100, blank=True, null=True, default=str)
 	created = models.DateTimeField(auto_now_add=True)
-	player = models.CharField(max_length=1, choices=(("A", "A"), ("B", "B")), null=True, blank=True)
+	userGroup = models.CharField(max_length=10, null=True, blank=True)
+	userRole = models.CharField(max_length=10, null=True, blank=True)
 	blob = models.ForeignKey(Blob, on_delete=models.SET_NULL, null=True, blank=True)
 	obj = None  # will store de-pickled blob, the python agent class
 
-	def start(self, name, player):
-		self.name = name
-		self.player = player
-		self.save()
-
 	def getObj(self, game):
-		name = self.name
-		player = self.player
-		# blobname = f"{name}{player}"
-		blobname = name
-		nA = int(game.capital+1) if player == "A" else int(game.capital*game.match+1)
-		nS = 10
-		# if Blob.objects.filter(name=blobname).exists():
-		# 	self.blob = Blob.objects.get(name=blobname)
-		# 	self.obj = pickle.loads(self.blob.blob)
-		# else:
-		if name=='generousA':
-			self.obj = T4TV("B", seed=game.seed, minO=0.3, maxO=0.5, minX=0.5, maxX=0.5, minF=0.4, maxF=0.6, minP=1.0, maxP=1.0)
-		elif name=='generousB':
-			self.obj = T4TV("A", seed=game.seed, minO=0.5, maxO=0.7, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0)
-		elif name=='greedyA':
-			self.obj = T4TV("B", seed=game.seed, minO=0.2, maxO=0.3, minX=0.5, maxX=0.5, minF=0.1, maxF=0.3, minP=0.2, maxP=0.2)
-		elif name=='greedyB':
-			self.obj = T4TV("A", seed=game.seed, minO=0.8, maxO=1.0, minX=0.5, maxX=0.5, minF=1.0, maxF=1.0, minP=0.1, maxP=0.3)
-		elif name=='tutorial':
-			self.obj = T4T(player, O=1, X=0.5, F=1.0, P=0.4, E=0, S=0)
+		if self.userGroup=='generous' and self.userRole=='A':
+			self.obj = T4TV("B", seed=game.seed, minO=0.3, maxO=0.5, minX=0.5, maxX=0.5, minF=0.4, maxF=0.6, minP=1.0, maxP=1.0, E=0)
+		elif self.userGroup=='generous' and self.userRole=='B':
+			self.obj = T4TV("A", seed=game.seed, minO=0.6, maxO=0.8, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0, E=0)
+		elif self.userGroup=='greedy' and self.userRole=='A':
+			self.obj = T4TV("B", seed=game.seed, minO=0.1, maxO=0.3, minX=0.5, maxX=0.5, minF=0.0, maxF=0.1, minP=0.2, maxP=0.2, E=0)
+		elif self.userGroup=='greedy' and self.userRole=='B':
+			self.obj = T4TV("A", seed=game.seed, minO=0.8, maxO=1.0, minX=0.5, maxX=0.5, minF=1.0, maxF=1.0, minP=0.1, maxP=0.3, E=0)
+		elif self.userGroup=='tutorial' and self.userRole=="A":
+			self.obj = T4T("B", O=1, X=0.5, F=1.0, P=0.4, E=0, S=0)
+		elif self.userGroup=='tutorial' and self.userRole=="B":
+			self.obj = T4T("A", O=1, X=0.5, F=1.0, P=0.4, E=0, S=0)
 		else:
-			raise Exception(f'{name} is not a valid agent class')
+			raise Exception(f'userGroup {self.userGroup}, usreRole {self.userRole} not understood')
 		self.blob = Blob.objects.create()
-		self.blob.name = blobname
+		self.blob.name = self.userGroup+self.userRole
 		self.blob.blob = pickle.dumps(self.obj)
-		# stop indent
-		self.obj.loadArchive(file=f"{name}{player}.npz")
 		self.obj.reset()
 		agentStates = game.historyToArray("agent", "state")
 		if len(agentStates) > 0:
@@ -99,8 +84,8 @@ class Game(models.Model):
 	agentKeeps = models.CharField(max_length=50, blank=True, null=True, default=str)
 	agentRewards = models.CharField(max_length=50, blank=True, null=True, default=str)
 	agentStates = models.CharField(max_length=50, blank=True, null=True, default=str)
-	userRole = models.CharField(max_length=1, choices=(("A", "A"), ("B", "B")), null=True, blank=True)
-	agentRole = models.CharField(max_length=1, choices=(("A", "A"), ("B", "B")), null=True, blank=True)
+	userRole = models.CharField(max_length=1, null=True, blank=True)
+	agentRole = models.CharField(max_length=1, null=True, blank=True)
 	tutorial = models.BooleanField(default=False)
 	complete = models.BooleanField(default=False)
 	tStart = models.DateTimeField(null=True, blank=True)
@@ -135,13 +120,10 @@ class Game(models.Model):
 		self.save()
 
 	def setAgent(self):
-		if self.user.group == "generous" and self.userRole == "A": name = "generousA"
-		elif self.user.group == "generous" and self.userRole == "B": name = "generousB"
-		elif self.user.group == "greedy" and self.userRole == "A": name = "greedyA"
-		elif self.user.group == "greedy" and self.userRole == "B": name = "greedyB"
-		else: raise "agent not set"
 		self.agent = Agent.objects.create()
-		self.agent.start(name, self.agentRole)
+		self.agent.userGroup = self.user.group
+		self.agent.userRole = self.userRole
+		self.agent.save()
 		self.save()
 
 	def startTutorial(self, user, userRole, agentRole, agentName):
@@ -151,7 +133,10 @@ class Game(models.Model):
 		self.agentRole = agentRole
 		self.save()
 		self.agent = Agent.objects.create()
-		self.agent.start(agentName, self.agentRole)
+		self.agent.userGroup = "tutorial"
+		self.agent.userRole = self.userRole
+		self.agent.save()
+		self.save()
 		if self.agentRole == "A":
 			self.goAgent(self.capital)
 		self.user.currentGame = self
@@ -260,7 +245,7 @@ class User(AbstractUser):
 	doneCash = models.DateTimeField(null=True, blank=True)
 	doneExit = models.DateTimeField(null=True, blank=True)
 	group = models.CharField(max_length=300, null=True, blank=True)
-	code = models.CharField(max_length=300, help_text="MTurk Confirmation Code", default=g)
+	code = models.CharField(max_length=300, default=g)
 	age = models.CharField(max_length=300, null=True, blank=True)
 	gender = models.CharField(max_length=300, null=True, blank=True)
 	income = models.CharField(max_length=300, null=True, blank=True)
