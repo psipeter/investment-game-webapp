@@ -9,7 +9,7 @@ class Game(admin.ModelAdmin):
 	list_display = ('uuid', 'user', 'get_userGroup', 'userRole', 'agentRole', 'tStart', 'tEnd', 'userGives', 'userKeeps', 'userRewards', 'userTimes', 'agentGives', 'agentKeeps', 'agentRewards')
 	ordering = ('-tStart',)
 	def get_userGroup(self, obj):
-		return obj.user.group
+		return obj.agent.userGroup  # displays 'tutorial'
 	get_userGroup.short_description = "userGroup"
 
 @admin.register(Agent)
