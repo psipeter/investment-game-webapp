@@ -52,44 +52,18 @@ class Agent(models.Model):
 		# 	self.blob = Blob.objects.get(name=blobname)
 		# 	self.obj = pickle.loads(self.blob.blob)
 		# else:
-		if name=='T4TA1':
-			O = 0.5 # np.random.uniform(0.3, 0.5)
-			X = 0.5 # np.random.uniform(0.4, 0.6)
-			F = 1.0 # np.random.uniform(0.7, 0.8)
-			P = 1.0 # np.random.uniform(0.7, 0.8)
-			E = EPSILON
-			S = SIGMA
-		elif name=='T4TB1':
-			O = 0.3
-			X = 0.5
-			F = 0.5
-			P = 1.0
-			E = EPSILON
-			S = SIGMA
-		elif name=='T4TA2':
-			O = 0.8
-			X = 0.5
-			F = 1.0
-			P = 0.2
-			E = EPSILON
-			S = SIGMA
-		elif name=='T4TB2':
-			O = 0.3
-			X = 0.5
-			F = 0.1
-			P = 0.2
-			E = EPSILON
-			S = SIGMA
+		if name=='generousA':
+			self.obj = T4TV("B", seed=game.seed, minO=0.3, maxO=0.5, minX=0.5, maxX=0.5, minF=0.4, maxF=0.6, minP=1.0, maxP=1.0)
+		elif name=='generousB':
+			self.obj = T4TV("A", seed=game.seed, minO=0.5, maxO=0.7, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0)
+		elif name=='greedyA':
+			self.obj = T4TV("B", seed=game.seed, minO=0.2, maxO=0.3, minX=0.5, maxX=0.5, minF=0.1, maxF=0.3, minP=0.2, maxP=0.2)
+		elif name=='greedyB':
+			self.obj = T4TV("A", seed=game.seed, minO=0.8, maxO=1.0, minX=0.5, maxX=0.5, minF=1.0, maxF=1.0, minP=0.1, maxP=0.3)
 		elif name=='tutorial':
-			O = 1.0
-			X = 0.5
-			F = 1.0
-			P = 0.4
-			E = 0
-			S = 0
+			self.obj = T4T(player, O=1, X=0.5, F=1.0, P=0.4, E=0, S=0)
 		else:
 			raise Exception(f'{name} is not a valid agent class')
-		self.obj = T4T(player, O=O, X=X, F=F, P=P, E=E, S=S)
 		self.blob = Blob.objects.create()
 		self.blob.name = blobname
 		self.blob.blob = pickle.dumps(self.obj)
@@ -139,9 +113,18 @@ class Game(models.Model):
 	def start(self, user):
 		self.user = user
 		self.seed = self.user.nGames
-		np.random.seed(self.seed)  # set random number seed
-		self.userRole = "A" if self.seed%2==0 else "B"
-		self.agentRole = "B" if self.seed%2==0 else "A"
+		userGamesA = Game.objects.filter(user=user, userRole="A", complete=True).count()
+		userGamesB = Game.objects.filter(user=user, userRole="B", complete=True).count()
+		if userGamesA < userGamesB:
+			self.userRole = "A"
+			self.agentRole = "B"
+		elif userGamesB < userGamesA:
+			self.userRole = "B"
+			self.agentRole = "A"
+		else:
+			switch = int(timezone.now().second)%2==0
+			self.userRole = "A" if switch else "B"
+			self.agentRole = "B" if switch else "A"
 		self.save()
 		self.setAgent()
 		if self.agentRole == "A":
@@ -152,11 +135,10 @@ class Game(models.Model):
 		self.save()
 
 	def setAgent(self):
-		# idx = int(self.user.nGames/2) # item 0 from list 1, item 0 from list 2, item 1 from list 1, ...
-		if self.user.group == "generous" and self.userRole == "A": name = "T4TB1"
-		elif self.user.group == "generous" and self.userRole == "B": name = "T4TA1"
-		elif self.user.group == "greedy" and self.userRole == "A": name = "T4TB2"
-		elif self.user.group == "greedy" and self.userRole == "B": name = "T4TA2"
+		if self.user.group == "generous" and self.userRole == "A": name = "generousA"
+		elif self.user.group == "generous" and self.userRole == "B": name = "generousB"
+		elif self.user.group == "greedy" and self.userRole == "A": name = "greedyA"
+		elif self.user.group == "greedy" and self.userRole == "B": name = "greedyB"
 		else: raise "agent not set"
 		self.agent = Agent.objects.create()
 		self.agent.start(name, self.agentRole)
@@ -165,7 +147,6 @@ class Game(models.Model):
 	def startTutorial(self, user, userRole, agentRole, agentName):
 		self.user = user
 		self.seed = self.user.nGames
-		np.random.seed(self.seed)  # set random number seed
 		self.userRole = userRole
 		self.agentRole = agentRole
 		self.save()
@@ -266,10 +247,7 @@ class Game(models.Model):
 
 class User(AbstractUser):
 	# assign to unique group
-	def f():
-		return "generous" if np.random.rand() < 0.5 else "greedy"
-	def g():
-		return get_random_string(length=32)
+	def g(): return get_random_string(length=32)
 	avatar = models.IntegerField(default=0)
 	mturk = models.CharField(max_length=33, unique=True)
 	currentGame = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="currentGame")
@@ -281,7 +259,7 @@ class User(AbstractUser):
 	doneGames = models.DateTimeField(null=True, blank=True)
 	doneCash = models.DateTimeField(null=True, blank=True)
 	doneExit = models.DateTimeField(null=True, blank=True)
-	group = models.CharField(max_length=300, choices=(("generous", "generous"), ("greedy", "greedy")), default=f)
+	group = models.CharField(max_length=300, null=True, blank=True)
 	code = models.CharField(max_length=300, help_text="MTurk Confirmation Code", default=g)
 	age = models.CharField(max_length=300, null=True, blank=True)
 	gender = models.CharField(max_length=300, null=True, blank=True)
@@ -298,6 +276,19 @@ class User(AbstractUser):
 	otherStrategy = models.CharField(max_length=300, null=True, blank=True)
 	otherNumber = models.CharField(max_length=300, null=True, blank=True)
 	selfFeedback = models.CharField(max_length=4200, null=True, blank=True)
+
+	def setGroup(self):
+		# Query database, count users in both groups, assign user to less common group
+		greedyUsers = User.objects.filter(nGames__gte=1, group='greedy').count()
+		generousUsers = User.objects.filter(nGames__gte=1, group='generous').count()
+		print(greedyUsers, generousUsers, int(timezone.now().second))
+		if generousUsers < greedyUsers:
+			self.group = 'generous'
+		elif greedyUsers < generousUsers:
+			self.group = 'greedy'			
+		else:
+			self.group = 'generous' if int(timezone.now().second)%2==0 else 'greedy'
+		self.save()
 
 	def setProgress(self):
 		allGames = Game.objects.filter(user=self).exclude(tutorial=True)

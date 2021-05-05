@@ -264,6 +264,7 @@
 #imgA {grid-row: 1; grid-column: 1; height: 20vh; width: 15vw;}
 #imgB {grid-row: 1; grid-column: 3; height: 20vh; width: 15vw;}
 #loading {grid-row: 1; grid-column: 2; width: 100%; margin: 6vh 0; text-align: center;}
+#serverError {grid-row: 1; grid-column: 2; width: 100%; margin: 0 0; text-align: center;}
 #form {grid-row: 1; grid-column: 2; width: 0; height: 0; margin: 0;}
 
 #slider-wrapper {

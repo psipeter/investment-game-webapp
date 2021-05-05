@@ -94,6 +94,46 @@ class T4T(HardcodedAgent):
 		self.state = self.O if self.player=="A" else self.O/2
 		self.maxGive = 1.0 if self.player=="A" else 0.5
 
+class T4TV(HardcodedAgent):
+	def __init__(self, player, seed, minO=0.9, maxO=1, minX=0.5, maxX=0.6, minF=0.9, maxF=1, minP=0.9, maxP=1, E=0, S=0, C=0.2, ID="T4TV"):
+		self.player = player
+		self.ID = ID
+		rng = np.random.RandomState(seed=seed)
+		self.O = np.around(rng.uniform(minO, maxO), decimals=2) if minO<maxO else minO # initial state of the agent
+		self.X = np.around(rng.uniform(minX, maxX), decimals=2) if minX<maxX else minX  # expected generosity of opponent (fraction of capital given, fraction of available money returned)
+		self.F = np.around(rng.uniform(minF, maxF), decimals=2) if minF<maxF else minF  # rate of forgiveness (state increase with opponent generosity)
+		self.P = np.around(rng.uniform(minP, maxP), decimals=2) if minP<maxP else minP  # rate of punishment (state decrease with opponent greed)
+		self.C = C  # comeback rate (state change if opponent had a forced skip last turn)
+		assert self.F >= 0, "forgiveness rate must be positive or zero"
+		assert self.P >= 0, "punishment rate must be positive or zero"
+		self.E = E  # epsilon (random action)
+		self.S = S  # noise added to chosen action
+		self.state = self.O if self.player=="A" else self.O/2
+		self.maxGive = 1.0 if self.player=="A" else 0.5
+	def update(self, history):
+		if self.player == "A":
+			if len(history['bGives'])==0:
+				return
+			otherGive = history['bGives'][-1]
+			otherKeep = history['bKeeps'][-1]
+			if otherGive+otherKeep==0:
+				# if opponent was skipped last turn, agent state goes from zero to self.C (*self.F)
+				delta = self.C
+			else:
+				# delta proportional to generosity fraction minus expected generosity (self.X)
+				delta = otherGive/(otherGive+otherKeep) - self.X
+		else:
+			otherGive = history['aGives'][-1]
+			otherKeep = history['aKeeps'][-1]
+			# delta proportional to generosity fraction minus expected generosity (self.X)
+			delta = otherGive/(otherGive+otherKeep) - self.X
+			# delta = self.maxGive if otherKeep==0 else -otherKeep/(otherGive+otherKeep)
+		self.state += delta*self.F if delta>0 else delta*self.P
+		self.state = np.clip(self.state, 0, self.maxGive)
+	def reset(self):
+		self.state = self.O if self.player=="A" else self.O/2
+		self.maxGive = 1.0 if self.player=="A" else 0.5
+
 
 class RLAgent(AgentBase):
 	def setState(self, history, t):

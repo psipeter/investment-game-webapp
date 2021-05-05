@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import pandas as pd
+from agents import *
 
 class Game():
 	def __init__(self, A, B, capital, match, turns):
@@ -262,6 +263,93 @@ def GreedyAndGenerous(a1rl, a1t4t, b1rl, b1t4t, a2rl, a2t4t, b2rl, b2t4t, capita
 										t,
 										reward,
 										gen
+									]], columns=columns))
+								histories.append({'A': A, 'B': B, 'hist': G.history})
+					# batch learning
+					np.random.shuffle(histories)
+					for hist in histories:
+						hist['A'].learn(hist['hist'])
+						hist['B'].learn(hist['hist'])
+					for A in popA:
+						A.reduceExploration(r)
+					for B in popB:
+						B.reduceExploration(r)
+	dfAll = pd.concat([df for df in dfs], ignore_index=True)
+	return dfAll
+
+def GreedyAndGenerous2(nAgents, nAA, nAB, nS, rOmin, rOmax, dTmin, dTmax, epsilon, sigma, capital, match, turns, avg, rounds, games, seed):
+	np.random.seed(seed)
+	generousA = []
+	greedyA = []
+	generousB = []
+	greedyB = []
+	for n in range(nAgents):
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		generousA.append(Bandit("A", nAA, rO=rO, dT=dT, ID=f"Bandit rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		generousA.append(QLearn("A", nAA, nS, rO=rO, dT=dT, ID=f"QLearn rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		generousA.append(ModelBased("A", nAA, nS, rO=rO, dT=dT, ID=f"ModelBased rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		greedyA.append(Bandit("A", nAA, rO=rO, dT=dT, ID=f"Bandit rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		greedyA.append(QLearn("A", nAA, nS, rO=rO, dT=dT, ID=f"QLearn rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		greedyA.append(ModelBased("A", nAA, nS, rO=rO, dT=dT, ID=f"ModelBased rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		generousB.append(Bandit("B", nAB, rO=rO, dT=dT, ID=f"Bandit rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		generousB.append(QLearn("B", nAB, nS, rO=rO, dT=dT, ID=f"QLearn rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		generousB.append(ModelBased("B", nAB, nS, rO=rO, dT=dT, ID=f"ModelBased rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		greedyB.append(Bandit("B", nAB, rO=rO, dT=dT, ID=f"Bandit rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		greedyB.append(QLearn("B", nAB, nS, rO=rO, dT=dT, ID=f"QLearn rO={rO} dT={dT}"))
+		rO, dT = np.around(np.random.uniform(rOmin, rOmax), decimals=2), np.around(np.random.uniform(dTmin, dTmax), decimals=2)
+		greedyB.append(ModelBased("B", nAB, nS, rO=rO, dT=dT, ID=f"ModelBased rO={rO} dT={dT}"))		
+	dfs = []
+	columns = ('agent', 'group', 'player', 'game', 'turn', 'reward', 'generosity')
+	for group in ['greedy', 'generous']:
+		for player in ['A', 'B']:
+			if group=='generous' and player=='A':
+				popA = generousA
+			if group=='generous' and player=='B':
+				popB = generousB
+			if group=='greedy' and player=='A':
+				popA = greedyA
+			if group=='greedy' and player=='B':
+				popB = greedyB
+			for a in range(avg):
+				print(f'avg {a}')
+				if group=='generous' and player=='A':
+					popB = [T4TV("B", seed=a, minO=0.3, maxO=0.5, minX=0.5, maxX=0.5, minF=0.4, maxF=0.6, minP=1.0, maxP=1.0, E=epsilon)]
+				if group=='generous' and player=='B':
+					popA = [T4TV("A", seed=a, minO=0.5, maxO=0.7, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0, E=epsilon)]
+				if group=='greedy' and player=='A':
+					popB = [T4TV("B", seed=a, minO=0.2, maxO=0.3, minX=0.5, maxX=0.5, minF=0.1, maxF=0.3, minP=0.2, maxP=0.2, E=epsilon)]
+				if group=='greedy' and player=='B':
+					popA = [T4TV("A", seed=a, minO=0.8, maxO=1.0, minX=0.5, maxX=0.5, minF=1.0, maxF=1.0, minP=0.1, maxP=0.3, E=epsilon)]
+				for A in popA:
+					A.restart()
+				for B in popB:
+					B.restart()
+				for r in range(rounds):
+					np.random.shuffle(popA)
+					np.random.shuffle(popB)
+					histories = []
+					for A in popA:
+						for B in popB:
+							for g in range(games):
+								A.reset()
+								B.reset()
+								G = Game(A, B, capital, match, turns)
+								G.play()
+								for t in range(turns):
+									gen = G.history['aGen'][t] if player=='A' else G.history['bGen'][t]
+									reward = G.history['aRewards'][t] if player=='A' else G.history['bRewards'][t]
+									dfs.append(pd.DataFrame([[
+										A.ID if player=='A' else B.ID, group, player, r, t, reward, gen
 									]], columns=columns))
 								histories.append({'A': A, 'B': B, 'hist': G.history})
 					# batch learning

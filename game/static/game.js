@@ -290,6 +290,17 @@ initialize("/game/api/startGame/", "POST", (game) => {
             url: '/game/api/updateGame/',
             data: sendData,
             dataType: 'json',
+            timeout: 7000,
+            error: function() {
+                $("#loading").hide();
+                $("#slider-wrapper").hide();
+                $("#submit").hide();
+                $("#sendA").hide();
+                $("#sendB").hide();
+                console.log('server error');
+                $("#serverError").fadeIn(animateTime);
+                $("#serverError2").fadeIn(animateTime);
+            },
             success: function (returnData) {
                 // update globals
                 userGives = returnData.userGives;

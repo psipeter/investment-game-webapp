@@ -7,8 +7,8 @@ capital = 10
 match = 3
 turns = 5
 
-avg = 5
-rounds = 40
+avg = 10
+rounds = 30
 games = 20
 seed = np.random.randint(0, 1e6)
 
@@ -16,9 +16,9 @@ nAA = capital+1
 nAB = capital*match+1
 nS = 10
 rO = 0.0
-dT = 0.8
+dT = 0.7
 EPSILON = 0
-SIGMA = 2
+SIGMA = 0
 
 # popA = [
 	# T4T("A", O=0.8, X=0.5, F=1.0, P=0.2, E=0.0, S=0.0),
@@ -43,39 +43,52 @@ SIGMA = 2
 # df = ManyVsMany(popA, popB, capital, match, turns, avg, rounds, games, seed, "all")
 # plotAll(df, popA, popB, capital, match, rounds, turns, "1v1")
 
-dfs = []
-columns = ('agent', 'group', 'player', 'game', 'turn', 'reward', 'generosity')
-a1rl = [
-	Bandit("A", nAA, rO=rO, dT=dT),
-	QLearn("A", nAA, nS, rO=rO, dT=dT),
-	ModelBased("A", nAA, nS, rO=rO, dT=dT)
-	]
-a1t4t = [T4T("B", O=0.3, X=0.5, F=0.5, P=1.0, E=EPSILON, S=SIGMA)]
-b1rl = [
-	Bandit("B", nAB, rO=rO, dT=dT),
-	QLearn("B", nAB, nS, rO=rO, dT=dT),
-	ModelBased("B", nAB, nS, rO=rO, dT=dT)
-	]
-b1t4t = [T4T("A", O=0.5, X=0.5, F=1.0, P=1.0, E=EPSILON, S=SIGMA)]
-a2rl = [
-	Bandit("A", nAA, rO=rO, dT=dT),
-	QLearn("A", nAA, nS, rO=rO, dT=dT),
-	ModelBased("A", nAA, nS, rO=rO, dT=dT)
-	]
-a2t4t = [T4T("B", O=0.3, X=0.5, F=0.1, P=0.2, E=EPSILON, S=SIGMA)]
-b2rl = [
-	Bandit("B", nAB, rO=rO, dT=dT),
-	QLearn("B", nAB, nS, rO=rO, dT=dT),
-	ModelBased("B", nAB, nS, rO=rO, dT=dT)
-	]
-b2t4t = [T4T("A", O=0.8, X=0.5, F=1.0, P=0.2, E=EPSILON, S=SIGMA)]
+# generousA_rl = [
+# 	Bandit("A", nAA, rO=rO, dT=dT, ID="Bandit"),
+# 	QLearn("A", nAA, nS, rO=rO, dT=dT, ID="QLearn"),
+# 	ModelBased("A", nAA, nS, rO=rO, dT=dT, ID="ModelBased"),
+# 	]
+# generousA_t4t = [T4TV("B", seed=0, minO=0.3, maxO=0.5, minX=0.5, maxX=0.5, minF=0.5, maxF=0.7, minP=1.0, maxP=1.0, E=EPSILON)]
+# generousB_rl = [
+# 	Bandit("B", nAB, rO=rO, dT=dT, ID="Bandit"),
+# 	QLearn("B", nAB, nS, rO=rO, dT=dT, ID="QLearn"),
+# 	ModelBased("B", nAB, nS, rO=rO, dT=dT, ID="ModelBased"),
+# 	]
+# generousB_t4t = [T4TV("A", seed=0, minO=0.5, maxO=0.7, minX=0.5, maxX=0.5, minF=0.8, maxF=1.0, minP=1.0, maxP=1.0, E=EPSILON)]
+# greedyA_rl = [
+# 	Bandit("A", nAA, rO=rO, dT=dT, ID="Bandit"),
+# 	QLearn("A", nAA, nS, rO=rO, dT=dT, ID="QLearn"),
+# 	ModelBased("A", nAA, nS, rO=rO, dT=dT, ID="ModelBased"),
+# 	]
+# greedyA_t4t = [T4TV("B", seed=0, minO=0.2, maxO=0.4, minX=0.5, maxX=0.5, minF=0.0, maxF=0.2, minP=0.2, maxP=0.2, E=EPSILON)]
+# greedyB_rl = [
+# 	Bandit("B", nAB, rO=rO, dT=dT, ID="Bandit"),
+# 	QLearn("B", nAB, nS, rO=rO, dT=dT, ID="QLearn"),
+# 	ModelBased("B", nAB, nS, rO=rO, dT=dT, ID="ModelBased"),
+# 	]
+# greedyB_t4t = [T4TV("A", seed=0, minO=0.8, maxO=1.0, minX=0.5, maxX=0.5, minF=1.0, maxF=1.0, minP=0.1, maxP=0.3, E=EPSILON)]
 
-df = GreedyAndGenerous(a1rl, a1t4t, b1rl, b1t4t, a2rl, a2t4t, b2rl, b2t4t, capital, match, turns, avg, rounds, games, seed)
-df.to_pickle("data/GreedyAndGenerous.pkl")
+# df = GreedyAndGenerous(
+# 	generousA_rl, generousA_t4t, generousB_rl, generousB_t4t, greedyA_rl, greedyA_t4t, greedyB_rl, greedyB_t4t,
+# 	capital, match, turns, avg, rounds, games, seed)
+# df.to_pickle("data/GreedyAndGenerous_batch2.pkl")
 
-dfLoad = pd.read_pickle(f"data/GreedyAndGenerous.pkl")
+# dfLoad = pd.read_pickle(f"data/GreedyAndGenerous_batch2.pkl")
+# plotGreedyAndGenerous(dfLoad)
+# plotGreedyAndGenerous(dfLoad, byAgent=True)
+
+nAgents = 7
+rOmin = 0
+rOmax = 0.3
+dTmin = 0.5
+dTmax = 0.8
+df = GreedyAndGenerous2(nAgents, nAA, nAB, nS, rOmin, rOmax, dTmin, dTmax, EPSILON, SIGMA,
+	capital, match, turns, avg, rounds, games, seed)
+df.to_pickle("data/GreedyAndGenerous2_batch2.pkl")
+
+dfLoad = pd.read_pickle(f"data/GreedyAndGenerous2_batch2.pkl")
 plotGreedyAndGenerous(dfLoad)
-
+plotGreedyAndGenerous(dfLoad, byAgent=True)
 
 # for group in ['1', '2']:
 # 	for player in ['A', 'B']:

@@ -84,6 +84,7 @@ def consent(request):
 			user.save()
 			auth_login(request, user)
 			user.doneConsent = timezone.now()
+			user.setGroup()
 			user.save()
 			return redirect('home')
 	else:

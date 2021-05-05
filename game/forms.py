@@ -78,28 +78,28 @@ class SurveyForm(forms.ModelForm):
 	gender = forms.ChoiceField(choices=genderChoices, required=False)
 	incomeChoices = (
 		('', '---'),
-		('1', 'Less than $20,000'),
-		('2', '$20,000 - 40,000'),
-		('3', '$40,000 - 60,000'),
-		('4', '$60,000 - 80,000'),
-		('5', '$80,000 - 100,000'),
-		('6', 'Greater than $100,000'))
+		('20k', 'Less than $20,000'),
+		('40k', '$20,000 - 40,000'),
+		('60k', '$40,000 - 60,000'),
+		('80k', '$60,000 - 80,000'),
+		('100k', '$80,000 - 100,000'),
+		('>100k', 'Greater than $100,000'))
 	income = forms.ChoiceField(
 		# label="Yearly Household Income (combined before tax income of all working members of the household)",
 		label="Yearly Household Income",
 		choices=incomeChoices, required=False)
 	educationChoices = (
 		('', '---'),
-		('1', 'Primary (middle) school'),
-		('2', 'Secondary (high) school'),
-		('3', 'Undergraduate degree'),
-		('4', 'Graduate degree'),
-		('6', 'Other'))
+		('primary', 'Primary (middle) school'),
+		('secondary', 'Secondary (high) school'),
+		('undergrad', 'Undergraduate degree'),
+		('grad', 'Graduate degree'),
+		('other', 'Other'))
 	education = forms.ChoiceField(choices=educationChoices, required=False)
 	veteranChoices = (
 		('', '---'),
-		('1', 'Yes'),
-		('2', 'No'))
+		('yes', 'Yes'),
+		('no', 'No'))
 	veteran = forms.ChoiceField(
 		label="Have you ever played the Prisoner's Dilemma?",
 		choices=veteranChoices,
@@ -109,11 +109,11 @@ class SurveyForm(forms.ModelForm):
 	altruismLabel = "I win a million dollars in the lottery. I would keep the money for myself rather than giving it away to friends, family, or charity"
 	likertScale = (
 		('', '---'),
-		('1', 'Strongly Disagree'),
-		('2', 'Disagree'),
-		('3', 'Undecided'),
-		('4', 'Agree'),
-		('5', 'Strongly Agree'))
+		('D!', 'Strongly Disagree'),
+		('D', 'Disagree'),
+		('U', 'Undecided'),
+		('A', 'Agree'),
+		('A!', 'Strongly Agree'))
 	empathy = forms.ChoiceField(choices=likertScale, label=empathyLabel, required=False)
 	risk = forms.ChoiceField(choices=likertScale, label=riskLabel, required=False)
 	altruism = forms.ChoiceField(choices=likertScale, label=altruismLabel, required=False)
