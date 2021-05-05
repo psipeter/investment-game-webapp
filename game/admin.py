@@ -6,12 +6,11 @@ from .models import Game, Agent, User, Blob, Feedback
 # admin.site.register(Game)
 @admin.register(Game)
 class Game(admin.ModelAdmin):
-	list_display = ('uuid', 'user', 'userRole', 'get_agent', 'agentRole', 'tStart', 'tEnd', 'userGives', 'userKeeps', 'userRewards', 'userTimes', 'agentGives', 'agentKeeps', 'agentRewards')
+	list_display = ('uuid', 'user', 'get_userGroup', 'userRole', 'agentRole', 'tStart', 'tEnd', 'userGives', 'userKeeps', 'userRewards', 'userTimes', 'agentGives', 'agentKeeps', 'agentRewards')
 	ordering = ('-tStart',)
-	def get_agent(self, obj):
-		return obj.agent.name
-	get_agent.short_description = "Agent"
-	get_agent.admin_order_field = "agent__agentType"
+	def get_userGroup(self, obj):
+		return obj.user.group
+	get_userGroup.short_description = "userGroup"
 
 @admin.register(Agent)
 class Agent(admin.ModelAdmin):
