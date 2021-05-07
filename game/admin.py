@@ -18,7 +18,7 @@ class Agent(admin.ModelAdmin):
 
 @admin.register(User)
 class User(UserAdmin):
-	list_display = ('username', 'mturk', 'group', 'nGames', 'show_winnings', 'doneTutorial', 'doneCash', 'selfFeedback')
+	list_display = ('username', 'mturk', 'group', 'nGames', 'show_winnings', 'doneTutorial', 'doneCash', 'code', 'selfFeedback')
 
 @admin.register(Blob)
 class Blob(admin.ModelAdmin):
