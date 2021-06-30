@@ -173,7 +173,7 @@ class RLAgent(AgentBase):
 		self.state = 0
 
 class Bandit(RLAgent):
-	def __init__(self, player, nA, E=0, T=100, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
+	def __init__(self, player, nA, E=1, T=0, rS=1, rO=0, dE=0.9, dT=0.7, ID="Bandit"):
 		self.player = player
 		self.nA = nA
 		self.nS = 1
@@ -181,6 +181,7 @@ class Bandit(RLAgent):
 		self.ID = ID
 		self.E = E  # epsilon random action
 		self.T = T  # temperature for Boltzmann exploration
+		self.G = 1  # placeholder
 		self.E0 = E
 		self.T0 = T
 		self.rS = rS  # weight for selfish reward
@@ -239,7 +240,7 @@ class Bandit(RLAgent):
 
 
 class QLearn(RLAgent):
-	def __init__(self, player, nA, nS, E=0, T=100, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
+	def __init__(self, player, nA, nS, E=1, T=0, L=1, G=0.9, rS=1, rO=0, dE=0.9, dL=0.9, dT=0.7, ID="QLearn"):
 		self.player = player
 		self.ID = ID
 		self.nA = nA
@@ -508,7 +509,7 @@ class Hill(RLAgent):
 
 
 class ModelBased(RLAgent):
-	def __init__(self, player, nA, nS, E=0, T=100, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
+	def __init__(self, player, nA, nS, E=1, T=0, G=0.9, rS=1, rO=0, dE=0.9, dT=0.7, ID="ModelBased"):
 		self.player = player
 		self.ID = ID
 		self.state = 0

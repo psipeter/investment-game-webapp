@@ -7,18 +7,139 @@ capital = 10
 match = 3
 turns = 5
 
-avg = 5
-rounds = 30
-games = 20
-seed = np.random.randint(0, 1e6)
-
 nAA = capital+1
 nAB = capital*match+1
-nS = 10
-rO = 0.0
-dT = 0.7
-EPSILON = 0
-SIGMA = 0
+nS = 3
+
+# games = 1
+# nAgents = 200
+# rounds = 15
+# seed = np.random.randint(0, 1e6)
+
+# '''Investor Generous'''
+# rOmin = 0.1
+# rOmax = 0.2
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# types = ['bandit', 'qlearn', 'modelbased']
+# group = 'InvestorGenerous'
+# df = Single(nAgents, nAA, nAB, nS, rOmin, rOmax, dEmin, dEmax, Gmin, Gmax, capital, match, turns, rounds, games, seed, types, group)
+
+# '''Investor Greedy'''
+# rOmin = 0.1
+# rOmax = 0.2
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# types = ['bandit', 'qlearn', 'modelbased']
+# group = 'InvestorGreedy'
+# df = Single(nAgents, nAA, nAB, nS, rOmin, rOmax, dEmin, dEmax, Gmin, Gmax, capital, match, turns, rounds, games, seed, types, group)
+
+# '''Trustee Generous'''
+# rOmin = 0.7
+# rOmax = 0.9
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# types = ['bandit', 'qlearn', 'modelbased']
+# group = 'TrusteeGenerous'
+# df = Single(nAgents, nAA, nAB, nS, rOmin, rOmax, dEmin, dEmax, Gmin, Gmax, capital, match, turns, rounds, games, seed, types, group)
+
+
+# '''Trustee Greedy'''
+# rOmin = 0.7
+# rOmax = 0.9
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# types = ['bandit', 'qlearn', 'modelbased']
+# group = 'TrusteeGreedy'
+# df = Single(nAgents, nAA, nAB, nS, rOmin, rOmax, dEmin, dEmax, Gmin, Gmax, capital, match, turns, rounds, games, seed, types, group)
+
+# plotScoreGenAll()
+
+# seed = 0
+# games = 15
+# trials = 200
+# repetitions = 1
+# rOA = 0.1
+# rOB = 0.3
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# architecture = 'bandit'
+# runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, architecture, capital, match, turns, trials, repetitions, games, seed, nS)
+# plotScoreGenFourGroups(architecture, exploration_thr=2.0, first_last_games=3)
+
+
+# seed = 0
+# games = 15
+# trials = 200
+# repetitions = 1
+# rOA = 0.1
+# rOB = 0.3
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# architecture = 'qlearn'
+# runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, architecture, capital, match, turns, trials, repetitions, games, seed, nS)
+# plotScoreGenFourGroups(architecture, exploration_thr=2.0, first_last_games=3)
+
+
+# seed = 0
+# games = 15
+# trials = 200
+# repetitions = 1
+# rOA = 0.1
+# rOB = 0.3
+# dEmin = 0.4
+# dEmax = 0.8
+# Gmin = 0.1
+# Gmax = 0.9
+# architecture = 'modelbased'
+# runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, architecture, capital, match, turns, trials, repetitions, games, seed, nS)
+# plotScoreGenFourGroups(architecture, exploration_thr=2.0, first_last_games=3)
+
+
+
+seed = 0
+games = 15
+trials = 200
+repetitions = 1
+rOA = 0.2
+rOB = 0.8
+dEmin = 0.4
+dEmax = 0.8
+Gmin = 0.1
+Gmax = 0.9
+# runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, 'bandit', capital, match, turns, trials, repetitions, games, seed, nS)
+# runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, 'qlearn', capital, match, turns, trials, repetitions, games, seed, nS)
+# runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, 'modelbased', capital, match, turns, trials, repetitions, games, seed, nS)
+plotScoreGenFourGroupsAll()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # popA = [
 	# T4T("A", O=0.8, X=0.5, F=1.0, P=0.2, E=0.0, S=0.0),
@@ -77,18 +198,6 @@ SIGMA = 0
 # plotGreedyAndGenerous(dfLoad)
 # plotGreedyAndGenerous(dfLoad, byAgent=True)
 
-nAgents = 5
-rOmin = 0
-rOmax = 0.2
-dTmin = 0.5
-dTmax = 0.8
-df = GreedyAndGenerous2(nAgents, nAA, nAB, nS, rOmin, rOmax, dTmin, dTmax, EPSILON, SIGMA,
-	capital, match, turns, avg, rounds, games, seed)
-df.to_pickle("data/GreedyAndGenerous2_batch2.pkl")
-
-dfLoad = pd.read_pickle(f"data/GreedyAndGenerous2_batch2.pkl")
-plotGreedyAndGenerous(dfLoad)
-plotGreedyAndGenerous(dfLoad, byAgent=True)
 
 # for group in ['1', '2']:
 # 	for player in ['A', 'B']:
