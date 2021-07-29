@@ -11,6 +11,11 @@ from scipy.ndimage import histogram, gaussian_filter1d
 from scipy.stats import ttest_ind, entropy, ks_2samp
 from statannot import add_stat_annotation
 from matplotlib.lines import Line2D
+sns.set_context(rc = {'patch.linewidth': 0})
+palette = sns.color_palette('deep')
+sns.set(context='paper', style='white', font='CMU Serif',
+    rc={'font.size':10, 'mathtext.fontset': 'cm', 'axes.labelpad':0, 'axes.linewidth': 0.5, 'axes.titlepad': 20, 'axes.titlesize': 14})
+pvalue_thresholds = [[1e-3, "***"], [1e-2, "**"], [1e-1, "*"], [1e0, "ns"]]
 
 def plotAll(dfAll, popA, popB, capital, match, rounds, turns, name, endgames=5):
 	ylim = ((0, capital*match))
@@ -1221,3 +1226,324 @@ def plotScoreGenFourGroupsAll(load=True, orientation_thr=0, exploration_thr=2.0,
 	# plt.tight_layout()
 	# fig.savefig(f'plots/ScoreGenBarplot_all_Orientation.pdf')
 	# fig.savefig(f'plots/ScoreGenBarplot_all_Orientation.svg')
+
+
+def plotScoreGenDistribution(architecture, load=True, orientation_thr=0, exploration_thr=2.0, first_last_games=3):
+	REQUIRED = 30
+	TURNS = 5
+	first_games = first_last_games
+	last_games = int(REQUIRED/2)-first_last_games
+	first_turns = first_games*TURNS
+	last_turns = last_games*TURNS
+	players = ["A", "B"]
+	groups = ['greedy', 'generous']
+	fourgroups = ["Investor\nGreedy", "Investor\nGenerous", "Trustee\nGreedy", "Trustee\nGenerous"]
+	fourlabels = ["Investor, Greedy", "Investor, Generous", "Trustee, Greedy", "Trustee, Generous"]
+	fournames = ["InvestorGreedy", "InvestorGenerous", "TrusteeGreedy", "TrusteeGenerous"]
+	four1 = fourgroups[0]
+	four2 = fourgroups[1]
+	four3 = fourgroups[2]
+	four4 = fourgroups[3]
+
+	if load:
+		df =pd.read_pickle(f"plots/plotScoreGenDistribution_{architecture}.pkl")
+	else:
+		# collect average data about the agent
+		dfIn = pd.read_pickle(f"data/runFourGroups_{architecture}.pkl")
+		dfsAgent = []
+		columns = ('agent', 'group', 'player', 'orientation', 'exploration', 'gamma')
+		agents = dfIn['agent'].unique()
+		for agent in agents:
+			for group in groups:
+				for player in players:
+					data = dfIn.query("agent==@agent & player==@player & group==@group")
+					gens = data['generosity'].to_numpy()
+					scores = data['score'].to_numpy()
+					# exploration = 'low' if np.std(gens[:first_turns]) < exploration_thr else 'high'
+					orientation = "self" if data['rO'].values[0] <= orientation_thr else "social"
+					exploration = 'low' if entropy(gens[:first_turns]) < exploration_thr else 'high'
+					gamma = data['G'].values[0]
+					dfsAgent.append(pd.DataFrame([[agent, group, player, orientation, exploration, gamma]], columns=columns))			
+		dfAgent = pd.concat([df for df in dfsAgent], ignore_index=True)
+		# create the main dataframe (per-turn score/gen info), appending user data
+		columns = ('ID', 'group', 'player', 'fourgroup',
+			'game', 'turn', 'score', 'generosity',
+			'orientation', 'exploration', 'gamma')
+		dfs = []
+		for index, row in dfIn.iterrows():
+			agent = row['agent']
+			group = row['group']
+			player = row['player']
+			if group=='greedy' and player=='A': fourgroup = "Investor\nGreedy"
+			if group=='greedy' and player=='B': fourgroup = "Trustee\nGreedy"
+			if group=='generous' and player=='A': fourgroup = "Investor\nGenerous"
+			if group=='generous' and player=='B': fourgroup = "Trustee\nGenerous"
+			data = dfAgent.query("agent==@agent & group==@group & player==@player")
+			orientation = data['orientation'].values[0]
+			exploration = data['exploration'].values[0]
+			gamma = data['gamma'].values[0]
+			newRow = pd.DataFrame([[
+				row['agent'], group, player, fourgroup,
+				row['game']+1, row['turn'], row['score'], row['generosity'],
+				orientation, exploration, gamma
+				]], columns=columns)
+			dfs.append(newRow)
+		df = pd.concat([df for df in dfs], ignore_index=True)
+		df.to_pickle(f"plots/plotScoreGenDistribution_{architecture}.pkl")
+	dfLast = df.query('game>@last_games')
+
+
+	# print("ALL")
+	# yLimsGen = [((-0.1, 1.1)), ((-0.1, 1.1)), ((-0.1, 0.8)), ((-0.1, 0.6))]
+	# yTicksGen = [((0, 1)), ((0, 1)), ((0, 0.6)), ((0, 0.6))]
+	# yLimsScore = [((2, 11)), ((6, 16)), ((5, 33)), ((-1.5, 24))]
+	# yTicksScore = [((2, 11)), ((6, 16)), ((10, 30)), ((0, 24))]
+	# xticks = ((1, first_games, last_games+1, 15))
+	# fig, axes = plt.subplots(nrows=4, ncols=2, figsize=((6.5, 8)), sharex=True)
+	# for i, fourgroup in enumerate(fourgroups):
+	# 	data = df.query("fourgroup==@fourgroup")
+	# 	score1 = np.array(data.query('game<=@first_games')['score'])
+	# 	gen1 = np.array(data.query('game<=@first_games')['generosity'])
+	# 	score2 = np.array(data.query('game>@last_games')['score'])
+	# 	gen2 = np.array(data.query('game>@last_games')['generosity'])
+	# 	ksval_score, pval_score = ks_2samp(score1, score2)
+	# 	ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+	# 	print(f"{fourlabels[i]}, Learning KS test: SCORE p={pval_score:.5f}")
+	# 	print(f"{fourlabels[i]}, Learning KS test: GEN p={pval_gen:.5f}")
+	# 	sns.kdeplot(data=data, x='game', y='generosity', bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=axes[i][0])
+	# 	sns.kdeplot(data=data, x='game', y='score', bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=axes[i][1])
+	# 	axes[i][0].axvspan(1, first_games, color='gray', alpha=0.3)
+	# 	axes[i][1].axvspan(1, first_games, color='gray', alpha=0.3)
+	# 	axes[i][0].axvspan(last_games+1, 15, color='gray', alpha=0.3)
+	# 	axes[i][1].axvspan(last_games+1, 15, color='gray', alpha=0.3)
+	# 	axes[i][0].set(xticks=xticks, ylim=yLimsGen[i], yticks=yTicksGen[i], ylabel='', xlabel='')
+	# 	axes[i][1].set(xticks=xticks, ylim=yLimsScore[i], yticks=yTicksScore[i], ylabel='', xlabel='')
+	# 	axes[i][0].legend(handles=[], title=f"{fourlabels[i]}", loc="upper center", frameon=False)
+	# 	axes[i][1].legend(handles=[], title=f"{fourlabels[i]}", loc="upper center", frameon=False)	
+	# axes[0][0].set(title='Generosity')
+	# axes[0][1].set(title='Score')
+	# axes[3][0].set(xlabel='Game')
+	# axes[3][1].set(xlabel='Game')
+	# plt.tight_layout()
+	# fig.savefig(f'plots/ScoreGenDistribution_{architecture}.pdf')
+	# fig.savefig(f'plots/ScoreGenDistribution_{architecture}.svg')
+
+	print("ORIENTATION")
+	independent = ['self', 'social']
+	ind_label = ["Self-Oriented", "Socially-Oriented"]
+	ind0, ind1 = independent[0], independent[1]
+	slf, social = "self", "social"
+	box_pairs = [
+		((four1, ind0), (four1, ind1)),
+		((four2, ind0), (four2, ind1)),
+		((four3, ind0), (four3, ind1)),
+		((four4, ind0), (four4, ind1)),
+		]
+
+	yLimsGen = [((-0.1, 1.1)), ((-0.1, 1.1)), ((-0.1, 0.9)), ((-0.1, 0.6))]
+	yTicksGen = [((0, 1)), ((0, 1)), ((0, 0.6)), ((0, 0.6))]
+	yLimsScore = [((2, 11)), ((6, 16)), ((3, 33)), ((-1.5, 24))]
+	yTicksScore = [((2, 11)), ((6, 16)), ((10, 30)), ((0, 24))]
+	for i, fourgroup in enumerate(fourgroups):
+		data = df.query("fourgroup==@fourgroup")
+		print(f'{fourlabels[i]}, orientation self {len(data.query("orientation==@slf"))}, social {len(data.query("orientation==@social"))}')
+		score1 = np.array(data.query('orientation==@ind0 & game<=@first_games')['score'])
+		gen1 = np.array(data.query('orientation==@ind0 & game<=@first_games')['generosity'])
+		score2 = np.array(data.query('orientation==@ind1 & game<=@first_games')['score'])
+		gen2 = np.array(data.query('orientation==@ind1 & game<=@first_games')['generosity'])
+		ksval_score, pval_score = ks_2samp(score1, score2)
+		ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+		print(f"initial distribution KS test: SCORE p={pval_score:.5f}, GEN p={pval_gen:.5f}")
+		score1 = np.array(data.query('orientation==@ind0 & game>@last_games')['score'])
+		gen1 = np.array(data.query('orientation==@ind0 & game>@last_games')['generosity'])
+		score2 = np.array(data.query('orientation==@ind1 & game>@last_games')['score'])
+		gen2 = np.array(data.query('orientation==@ind1 & game>@last_games')['generosity'])
+		ksval_score, pval_score = ks_2samp(score1, score2)
+		ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+		print(f"final distribution KS test: SCORE p={pval_score:.5f}, GEN p={pval_gen:.5f}")
+		score1 = np.array(data.query('orientation==@ind0')['score'])
+		gen1 = np.array(data.query('orientation==@ind0')['generosity'])
+		score2 = np.array(data.query('orientation==@ind1')['score'])
+		gen2 = np.array(data.query('orientation==@ind1')['generosity'])
+		ksval_score, pval_score = ks_2samp(score1, score2)
+		ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+		print(f"overall distribution KS test: SCORE p={pval_score:.5f}, GEN p={pval_gen:.5f}")
+		fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=((6.5, 4)), sharex=True)
+		sns.kdeplot(data=data.query("orientation==@ind0"), x='game', y='generosity', color=palette[0], bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax)
+		sns.kdeplot(data=data.query("orientation==@ind0"), x='game', y='score', color=palette[0], bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax2)
+		sns.kdeplot(data=data.query("orientation==@ind1"), x='game', y='generosity', color=palette[1], bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax3)
+		sns.kdeplot(data=data.query("orientation==@ind1"), x='game', y='score', color=palette[1], bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax4)
+		ax.axvspan(last_games+1, 15, color='gray', alpha=0.3)
+		ax2.axvspan(last_games+1, 15, color='gray', alpha=0.3)
+		ax3.axvspan(last_games+1, 15, color='gray', alpha=0.3)
+		ax4.axvspan(last_games+1, 15, color='gray', alpha=0.3)
+		ax.set(ylim=yLimsGen[i], yticks=yTicksGen[i], ylabel='', title='Generosity')
+		ax2.set(ylim=yLimsScore[i], yticks=yTicksScore[i], ylabel='', title='Score')
+		ax3.set(ylim=yLimsGen[i], yticks=yTicksGen[i], xticks=((last_games+1, 15)), xlabel='Game', ylabel='')
+		ax4.set(ylim=yLimsScore[i], yticks=yTicksScore[i], xticks=((last_games+1, 15)), xlabel='Game', ylabel='')
+		ax.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[0]}", loc="upper center", frameon=False)
+		ax2.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[0]}", loc="upper center", frameon=False)
+		ax3.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[1]}", loc="upper center", frameon=False)
+		ax4.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[1]}", loc="upper center", frameon=False)
+		plt.tight_layout()
+		fig.savefig(f'plots/ScoreGenDistribution_{architecture}_Orientation_{fournames[i]}.pdf')
+		fig.savefig(f'plots/ScoreGenDistribution_{architecture}_Orientation_{fournames[i]}.svg')
+
+	# y1s = [
+	# 	np.mean(dfLast.query("fourgroup==@four1 & orientation==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four1 & orientation==@ind1")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & orientation==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & orientation==@ind1")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & orientation==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & orientation==@ind1")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & orientation==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & orientation==@ind1")['generosity']),
+	# 	]
+	# y2s = [
+	# 	np.mean(dfLast.query("fourgroup==@four1 & orientation==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four1 & orientation==@ind1")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & orientation==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & orientation==@ind1")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & orientation==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & orientation==@ind1")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & orientation==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & orientation==@ind1")['score']),
+	# 	]
+	# for i, fourgroup in enumerate(fourgroups):
+	# 	data = dfLast.query("fourgroup==@fourgroup")
+	# 	score1 = np.array(data.query('orientation==@ind0')['score'])
+	# 	gen1 = np.array(data.query('orientation==@ind0')['generosity'])
+	# 	score2 = np.array(data.query('orientation==@ind1')['score'])
+	# 	gen2 = np.array(data.query('orientation==@ind1')['generosity'])
+	# 	Tval_score, pval_score = ttest_ind(score1, score2, equal_var=False)
+	# 	Tval_gen, pval_gen = ttest_ind(gen1, gen2, equal_var=False)
+	# 	print(f"{fourlabels[i]}, Orientation Welsh T test: SCORE p={pval_score:.5f}")
+	# 	print(f"{fourlabels[i]}, Orientation Welsh T test: GEN p={pval_gen:.5f}")
+	# fig, (ax, ax2) = plt.subplots(nrows=1, ncols=2, figsize=((6.5, 2)), sharex=True)
+	# sns.barplot(data=dfLast, x='fourgroup', y='generosity', order=fourgroups, hue='orientation', hue_order=independent, ax=ax)
+	# sns.barplot(data=dfLast, x='fourgroup', y='score', order=fourgroups, hue='orientation', hue_order=independent, ax=ax2)
+	# add_stat_annotation(ax, data=dfLast, x='fourgroup', y='generosity', order=fourgroups, hue='orientation', hue_order=independent,
+	# 	box_pairs=box_pairs, test='t-test_ind', text_format='star', loc='outside', verbose=0, pvalue_thresholds=pvalue_thresholds)
+	# add_stat_annotation(ax2, data=dfLast, x='fourgroup', y='score', order=fourgroups, hue='orientation', hue_order=independent,
+	# 	box_pairs=box_pairs, test='t-test_ind', text_format='star', loc='outside', verbose=0, pvalue_thresholds=pvalue_thresholds)
+	# for i, v in enumerate(y1s):
+	# 	plt.text(x=i/3, y=10*v, s=f"{v:.2f}", fontsize=8)
+	# for i, v in enumerate(y2s):
+	# 	plt.text(x=i/3, y=5+v/2, s=f"{v:.2f}", fontsize=8)
+	# ax.set(xlabel='', ylabel='', title='Generosity', yticks=(()))
+	# ax2.set(xlabel='', ylabel='', title='Score', yticks=(()))
+	# ax2.get_legend().remove()
+	# sns.despine(ax=ax, left=True, right=True, top=True)
+	# sns.despine(ax=ax2, left=True, right=True, top=True)
+	# plt.tight_layout()
+	# fig.savefig(f'plots/ScoreGenBarplot_{architecture}_Orientation.pdf')
+	# fig.savefig(f'plots/ScoreGenBarplot_{architecture}_Orientation.svg')
+
+
+	# print("EXPLORATION")
+	# independent = ['low', 'high']
+	# ind_label = ["Low Exploration", "High Exploration"]
+	# ind0, ind1 = independent[0], independent[1]
+	# low, high = 'low', 'high'
+	# box_pairs = [
+	# 	((four1, ind0), (four1, ind1)),
+	# 	((four2, ind0), (four2, ind1)),
+	# 	((four3, ind0), (four3, ind1)),
+	# 	((four4, ind0), (four4, ind1)),
+	# 	]
+
+	# yLimsGen = [((-0.1, 1.1)), ((-0.1, 1.1)), ((-0.1, 0.6)), ((-0.1, 0.6))]
+	# yTicksGen = [((0, 1)), ((0, 1)), ((0, 0.6)), ((0, 0.6))]
+	# yLimsScore = [((2, 11)), ((6, 16)), ((10, 30)), ((-1.5, 24))]
+	# yTicksScore = [((2, 11)), ((6, 16)), ((10, 30)), ((0, 24))]
+	# for i, fourgroup in enumerate(fourgroups):
+	# 	data = df.query("fourgroup==@fourgroup")
+	# 	print(f'{fourlabels[i]}, exploration low {len(data.query("exploration==@low"))}, high {len(data.query("exploration==@high"))}')
+	# 	score1 = np.array(data.query('exploration==@ind0 & game<=@first_games')['score'])
+	# 	gen1 = np.array(data.query('exploration==@ind0 & game<=@first_games')['generosity'])
+	# 	score2 = np.array(data.query('exploration==@ind1 & game<=@first_games')['score'])
+	# 	gen2 = np.array(data.query('exploration==@ind1 & game<=@first_games')['generosity'])
+	# 	ksval_score, pval_score = ks_2samp(score1, score2)
+	# 	ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+	# 	print(f"initial distribution KS test: SCORE p={pval_score:.5f}, GEN p={pval_gen:.5f}")
+	# 	score1 = np.array(data.query('exploration==@ind0 & game>@last_games')['score'])
+	# 	gen1 = np.array(data.query('exploration==@ind0 & game>@last_games')['generosity'])
+	# 	score2 = np.array(data.query('exploration==@ind1 & game>@last_games')['score'])
+	# 	gen2 = np.array(data.query('exploration==@ind1 & game>@last_games')['generosity'])
+	# 	ksval_score, pval_score = ks_2samp(score1, score2)
+	# 	ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+	# 	print(f"final distribution KS test: SCORE p={pval_score:.5f}, GEN p={pval_gen:.5f}")
+	# 	score1 = np.array(data.query('exploration==@ind0')['score'])
+	# 	gen1 = np.array(data.query('exploration==@ind0')['generosity'])
+	# 	score2 = np.array(data.query('exploration==@ind1')['score'])
+	# 	gen2 = np.array(data.query('exploration==@ind1')['generosity'])
+	# 	ksval_score, pval_score = ks_2samp(score1, score2)
+	# 	ksval_gen, pval_gen = ks_2samp(gen1, gen2)
+	# 	print(f"overall distribution KS test: SCORE p={pval_score:.5f}, GEN p={pval_gen:.5f}")
+	# 	fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2, figsize=((6.5, 4)), sharex=True)
+	# 	sns.kdeplot(data=data.query("exploration==@ind0"), x='game', y='generosity', bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax)
+	# 	sns.kdeplot(data=data.query("exploration==@ind0"), x='game', y='score', bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax2)
+	# 	sns.kdeplot(data=data.query("exploration==@ind1"), x='game', y='generosity', color=palette[1], bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax3)
+	# 	sns.kdeplot(data=data.query("exploration==@ind1"), x='game', y='score', color=palette[1], bw_method=0.1, levels=4, thresh=0.15, fill=True, ax=ax4)
+	# 	ax.set(ylim=yLimsGen[i], yticks=yTicksGen[i], ylabel='', title='Generosity')
+	# 	ax2.set(ylim=yLimsScore[i], yticks=yTicksScore[i], ylabel='', title='Score')
+	# 	ax3.set(ylim=yLimsGen[i], yticks=yTicksGen[i], xticks=((1, 15)), xlabel='Game', ylabel='')
+	# 	ax4.set(ylim=yLimsScore[i], yticks=yTicksScore[i], xticks=((1, 15)), xlabel='Game', ylabel='')
+	# 	ax.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[0]}", loc="upper center", frameon=False)
+	# 	ax2.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[0]}", loc="upper center", frameon=False)
+	# 	ax3.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[1]}", loc="upper center", frameon=False)
+	# 	ax4.legend(handles=[], title=f"{fourlabels[i]}, {ind_label[1]}", loc="upper center", frameon=False)
+	# 	plt.tight_layout()
+	# 	fig.savefig(f'plots/ScoreGenDistribution_{architecture}_Exploration_{fournames[i]}.pdf')
+	# 	fig.savefig(f'plots/ScoreGenDistribution_{architecture}_Exploration_{fournames[i]}.svg')
+
+
+	# y1s = [
+	# 	np.mean(dfLast.query("fourgroup==@four1 & exploration==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four1 & exploration==@ind1")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & exploration==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & exploration==@ind1")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & exploration==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & exploration==@ind1")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & exploration==@ind0")['generosity']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & exploration==@ind1")['generosity']),
+	# 	]
+	# y2s = [
+	# 	np.mean(dfLast.query("fourgroup==@four1 & exploration==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four1 & exploration==@ind1")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & exploration==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four2 & exploration==@ind1")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & exploration==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four3 & exploration==@ind1")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & exploration==@ind0")['score']),
+	# 	np.mean(dfLast.query("fourgroup==@four4 & exploration==@ind1")['score']),
+	# 	]
+	# for i, fourgroup in enumerate(fourgroups):
+	# 	data = dfLast.query("fourgroup==@fourgroup")
+	# 	score1 = np.array(data.query('exploration==@ind0')['score'])
+	# 	gen1 = np.array(data.query('exploration==@ind0')['generosity'])
+	# 	score2 = np.array(data.query('exploration==@ind1')['score'])
+	# 	gen2 = np.array(data.query('exploration==@ind1')['generosity'])
+	# 	Tval_score, pval_score = ttest_ind(score1, score2, equal_var=False)
+	# 	Tval_gen, pval_gen = ttest_ind(gen1, gen2, equal_var=False)
+	# 	print(f"{fourlabels[i]}, Exploration Welsh T test: SCORE p={pval_score:.5f}")
+	# 	print(f"{fourlabels[i]}, Exploration Welsh T test: GEN p={pval_gen:.5f}")
+	# fig, (ax, ax2) = plt.subplots(nrows=1, ncols=2, figsize=((6.5, 2)), sharex=True)
+	# sns.barplot(data=dfLast, x='fourgroup', y='generosity', order=fourgroups, hue='exploration', hue_order=independent, ax=ax)
+	# sns.barplot(data=dfLast, x='fourgroup', y='score', order=fourgroups, hue='exploration', hue_order=independent, ax=ax2)
+	# add_stat_annotation(ax, data=dfLast, x='fourgroup', y='generosity', order=fourgroups, hue='exploration', hue_order=independent,
+	# 	box_pairs=box_pairs, test='t-test_ind', text_format='star', loc='outside', verbose=0, pvalue_thresholds=pvalue_thresholds)
+	# add_stat_annotation(ax2, data=dfLast, x='fourgroup', y='score', order=fourgroups, hue='exploration', hue_order=independent,
+	# 	box_pairs=box_pairs, test='t-test_ind', text_format='star', loc='outside', verbose=0, pvalue_thresholds=pvalue_thresholds)
+	# for i, v in enumerate(y1s):
+	# 	plt.text(x=i/3, y=10*v, s=f"{v:.2f}", fontsize=8)
+	# for i, v in enumerate(y2s):
+	# 	plt.text(x=i/3, y=5+v/2, s=f"{v:.2f}", fontsize=8)
+	# ax.set(xlabel='', ylabel='', title='Generosity', yticks=(()))
+	# ax2.set(xlabel='', ylabel='', title='Score', yticks=(()))
+	# ax2.get_legend().remove()
+	# sns.despine(ax=ax, left=True, right=True, top=True)
+	# sns.despine(ax=ax2, left=True, right=True, top=True)
+	# plt.tight_layout()
+	# fig.savefig(f'plots/ScoreGenBarplot_{architecture}_Exploration.pdf')
+	# fig.savefig(f'plots/ScoreGenBarplot_{architecture}_Exploration.svg')

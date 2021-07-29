@@ -115,15 +115,14 @@ trials = 200
 repetitions = 1
 rOA = 0.2
 rOB = 0.8
-dEmin = 0.4
-dEmax = 0.8
+dEmin = 0.1
+dEmax = 0.9
 Gmin = 0.1
 Gmax = 0.9
 # runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, 'bandit', capital, match, turns, trials, repetitions, games, seed, nS)
 # runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, 'qlearn', capital, match, turns, trials, repetitions, games, seed, nS)
 # runFourGroups(rOA, rOB, dEmin, dEmax, Gmin, Gmax, 'modelbased', capital, match, turns, trials, repetitions, games, seed, nS)
-plotScoreGenFourGroupsAll()
-
+plotScoreGenDistribution('modelbased', load=True)
 
 
 
